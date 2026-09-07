@@ -116,9 +116,6 @@
   .td-control{font-size:13px;color:var(--accent);}
   .td-time{font-family:var(--mono);font-size:11px;color:var(--muted);}
   .td-energy{font-family:var(--mono);font-size:13px;}
-  .td-infiltration{font-family:var(--mono);font-size:12px;color:var(--ok);white-space:nowrap;}
-  .td-king{font-weight:600;color:var(--danger);white-space:nowrap;}
-  .td-workstation{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;}
   .empty-row td{text-align:center;color:var(--muted);padding:40px;font-size:14px;}
 
   /* 頁腳 */
@@ -171,9 +168,6 @@
         <th class="sortable" data-key="control_nation_name">主權國家<span class="sort-arrow"></span></th>
         <th class="sortable" data-key="control_name">控制方<span class="sort-arrow"></span></th>
         <th class="sortable" data-key="control_union_id">聯盟 ID<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="infiltration">滲透度<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="workstation_remaining_seconds">工作站剩餘<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="king_name">城市之王<span class="sort-arrow"></span></th>
         <th class="sortable" data-key="updated_at">最後更新<span class="sort-arrow"></span></th>
       </tr>
     </thead>
@@ -263,7 +257,7 @@
     document.getElementById("showCount").textContent = cities.length;
 
     if (cities.length === 0){
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="11">沒有符合條件的城市資料</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">沒有符合條件的城市資料</td></tr>';
       return;
     }
 
@@ -276,42 +270,11 @@
         <td><span class="td-nation">${esc(c.control_nation_name || '—')}</span></td>
         <td class="td-control">${esc(c.control_name || '—')}</td>
         <td class="td-id">${esc(c.control_union_id ?? '—')}</td>
-        <td class="td-infiltration">${formatInfiltration(c.infiltration ?? c.uw_dominance)}</td>
-        <td class="td-workstation">${formatRemaining(c.workstation_remaining_seconds, c.workstation_details)}</td>
-        <td class="td-king">${esc(c.king_name || '—')}</td>
         <td class="td-time">${formatTime(c.updated_at)}</td>
       </tr>
     `).join("");
   }
 
-  function formatInfiltration(value){
-    if (value === null || value === undefined || value === '') return '—';
-    let parsed = value;
-    try { if (typeof value === 'string') parsed = JSON.parse(value); } catch (_) {}
-    if (!parsed || typeof parsed !== 'object') return esc(value);
-    return Object.entries(parsed)
-      .map(([nation, points]) => `${esc(nation)}: ${esc(points)}%`)
-      .join(' / ') || '—';
-  }
-
-  function formatRemaining(seconds, details){
-    if (details) {
-      try {
-        const list = typeof details === 'string' ? JSON.parse(details) : details;
-        const active = list.filter(ws => ws.remaining_seconds > 0);
-        if (active.length) return active.map(ws => `${esc(ws.name || '工作站')} ${formatDuration(ws.remaining_seconds)}`).join(' / ');
-      } catch (_) {}
-    }
-    return seconds === null || seconds === undefined ? '—' : formatDuration(seconds);
-  }
-
-  function formatDuration(seconds){
-    const total = Math.max(0, Number(seconds) || 0);
-    const hours = Math.floor(total / 3600);
-    const minutes = Math.floor((total % 3600) / 60);
-    const secs = Math.floor(total % 60);
-    return hours ? `${hours} 小時 ${String(minutes).padStart(2, '0')} 分` : `${minutes}:${String(secs).padStart(2, '0')}`;
-  }
 
   function esc(s){
     return String(s == null ? "" : s)
@@ -327,8 +290,7 @@
       (c.name || '').toLowerCase().includes(q) ||
       (c.title || '').toLowerCase().includes(q) ||
       (c.control_name || '').toLowerCase().includes(q) ||
-      (c.control_nation_name || "").toLowerCase().includes(q) ||
-      (c.king_name || '').toLowerCase().includes(q)
+      (c.control_nation_name || "").toLowerCase().includes(q)
     );
     if (nation) filtered = filtered.filter(c => (c.control_nation_name || "") === nation);
     filtered = sortCities(filtered);
