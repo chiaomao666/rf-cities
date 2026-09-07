@@ -99,6 +99,7 @@
   tbody tr{border-bottom:1px solid var(--rule);}
   tbody tr:hover{background:var(--accent-light);}
   tbody td{padding:9px 10px;vertical-align:top;line-height:1.4;}
+  .td-id{font-family:var(--mono);font-size:12px;color:var(--muted);}
   .td-city{font-weight:600;color:var(--ink);}
   .td-chapter{color:var(--muted);font-size:13px;}
   .td-nation{
@@ -154,10 +155,13 @@
   <table id="cityTable" style="display:none;">
     <thead>
       <tr>
+        <th>城市 ID</th>
         <th>城市名稱</th>
+        <th>劇情標題</th>
         <th>章節</th>
         <th>主權國家</th>
         <th>控制方</th>
+        <th>聯盟 ID</th>
         <th>能量</th>
         <th>最後更新</th>
       </tr>
@@ -174,8 +178,8 @@
 (function(){
   // ========== 設定區 ==========
   // 跟 city_uploader.js 填一樣的值
-  const SUPABASE_URL = "https://bfecoizruicaaqxhmyqn.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWNvaXpydWljYWFxeGhteXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MjU1MzEsImV4cCI6MjEwNDMwMTUzMX0.k42rUGqjZSW77Nw4Ua9c2pBBjpZ-kGrttqvuiKX-I0c";
+  const SUPABASE_URL = "https://bfecoizruicaaqxhmyqn.supabase.co";     // 例如 https://abcxyz.supabase.co
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWNvaXpydWljYWFxeGhteXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MjU1MzEsImV4cCI6MjEwNDMwMTUzMX0.k42rUGqjZSW77Nw4Ua9c2pBBjpZ-kGrttqvuiKX-I0c";    // 以 eyJ 開頭的那個 anon public key
   const TABLE_NAME = "cities";
   // ============================
 
@@ -212,11 +216,14 @@
 
     tbody.innerHTML = cities.map(c => `
       <tr>
-        <td class="td-city">${esc(c.title || c.city_id)}</td>
-        <td class="td-chapter">${esc(c.chapter_name || "—")}${c.chapter_number ? " ch." + c.chapter_number : ""}</td>
-        <td><span class="td-nation">${esc(c.control_nation_name || "—")}</span></td>
-        <td class="td-control">${esc(c.control_name || "—")}</td>
-        <td class="td-energy">${c.energy_charge ?? "—"}</td>
+        <td class="td-id">${esc(c.city_id ?? '—')}</td>
+        <td class="td-city">${esc(c.name || '—')}</td>
+        <td class="td-chapter">${esc(c.title || '—')}</td>
+        <td class="td-chapter">${esc(c.chapter_name || '—')}${c.chapter_number ? ' ch.' + c.chapter_number : ''}</td>
+        <td><span class="td-nation">${esc(c.control_nation_name || '—')}</span></td>
+        <td class="td-control">${esc(c.control_name || '—')}</td>
+        <td class="td-id">${esc(c.control_union_id ?? '—')}</td>
+        <td class="td-energy">${c.energy_charge ?? '—'}</td>
         <td class="td-time">${formatTime(c.updated_at)}</td>
       </tr>
     `).join("");
@@ -232,8 +239,9 @@
     const nation = document.getElementById("nationFilter").value;
     let filtered = allCities;
     if (q) filtered = filtered.filter(c =>
-      (c.title || "").toLowerCase().includes(q) ||
-      (c.control_name || "").toLowerCase().includes(q) ||
+      (c.name || '').toLowerCase().includes(q) ||
+      (c.title || '').toLowerCase().includes(q) ||
+      (c.control_name || '').toLowerCase().includes(q) ||
       (c.control_nation_name || "").toLowerCase().includes(q)
     );
     if (nation) filtered = filtered.filter(c => (c.control_nation_name || "") === nation);
