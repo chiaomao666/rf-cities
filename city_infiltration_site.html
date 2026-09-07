@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RF 城市滲透監測</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root{--ink:#1a1a1a;--paper:#f8f6f0;--rule:#d4cfc4;--accent:#2e5c8a;--accent-light:#e8f0f8;--muted:#7a7570;--danger:#8b2e2e;--ok:#2e6b3e;--mono:'IBM Plex Mono',ui-monospace,monospace;--serif:'Noto Serif TC',serif;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--serif);min-height:100vh;}
+  .masthead{border-bottom:3px solid var(--ink);padding:20px 0 14px;text-align:center;}
+  .masthead-inner,.search-bar,.stats-row,.table-wrap{max-width:1180px;margin-left:auto;margin-right:auto;padding-left:20px;padding-right:20px;}
+  .masthead-tag,.masthead-sub,.stats-row,thead th,.td-id,.td-infiltration,.td-workstation,footer{font-family:var(--mono);}
+  .masthead-tag{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px;}
+  h1{font-size:clamp(28px,5vw,48px);line-height:1.1;}
+  .masthead-sub{font-size:12px;color:var(--muted);margin-top:6px;}.masthead-sub b{color:var(--accent);}
+  .search-bar{margin-top:24px;margin-bottom:24px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  input,select,button{border:1px solid var(--rule);background:#fff;color:var(--ink);font-family:var(--serif);font-size:14px;padding:10px 12px;}
+  input{flex:1;min-width:220px;}input:focus{outline:2px solid var(--accent);}
+  button{background:var(--ink);color:var(--paper);border:0;cursor:pointer;padding-left:22px;padding-right:22px;}button:hover{background:var(--accent);}
+  .stats-row{margin-bottom:18px;padding-bottom:12px;display:flex;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--rule);font-size:12px;color:var(--muted);}.stats-row b{color:var(--ink);}
+  .table-wrap{padding-bottom:60px;overflow-x:auto;}table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:500;border-bottom:2px solid var(--ink);padding:8px 10px;text-align:left;white-space:nowrap;}
+  th.sortable{cursor:pointer;user-select:none;}th.sortable:hover{color:var(--ink);}th .sort-arrow{margin-left:4px;color:var(--rule);}th.sort-active .sort-arrow{color:var(--accent);}
+  tbody tr{border-bottom:1px solid var(--rule);}tbody tr:hover{background:var(--accent-light);}td{padding:10px;vertical-align:top;line-height:1.45;}
+  .td-city{font-weight:600;}.td-nation{display:inline-block;padding:2px 8px;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px;}.td-king{font-weight:600;color:var(--danger);white-space:nowrap;}.td-player{font-family:var(--mono);font-size:12px;color:var(--muted);}.td-infiltration{font-size:12px;color:var(--ok);white-space:nowrap;}.td-workstation{font-size:12px;color:var(--accent);white-space:nowrap;}.empty-row td,.loading{text-align:center;color:var(--muted);padding:40px;}.loading{font-family:var(--mono);padding:60px 20px;}
+  footer{border-top:1px solid var(--rule);padding:16px 20px;text-align:center;font-size:11px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="masthead"><div class="masthead-inner"><div class="masthead-tag">Reversed Front — 城市滲透資料</div><h1>城市滲透監測</h1><div class="masthead-sub">資料由玩家側錄整理，最後更新：<b id="lastUpdate">讀取中…</b></div></div></div>
+<div class="search-bar"><input id="searchInput" type="text" placeholder="輸入城市 ID、城市名稱、主權國家、城市之王或玩家 ID…" /><select id="nationFilter"><option value="">所有國家</option></select><button id="searchBtn">查詢</button></div>
+<div class="stats-row"><span>共 <b id="totalCount">—</b> 座城市</span><span>有滲透資料 <b id="infiltrationCount">—</b> 座</span><span>顯示 <b id="showCount">—</b> 筆</span></div>
+<div class="table-wrap"><div class="loading" id="loadingMsg">正在從資料庫讀取城市資料…</div><table id="cityTable" style="display:none"><thead><tr id="cityTableHeadRow"><th class="sortable" data-key="city_id">城市 ID<span class="sort-arrow"></span></th><th class="sortable" data-key="name">城市名稱<span class="sort-arrow"></span></th><th class="sortable" data-key="control_nation_name">主權國家<span class="sort-arrow"></span></th><th class="sortable" data-key="king_name">城市之王<span class="sort-arrow"></span></th><th class="sortable" data-key="king_id">玩家 ID<span class="sort-arrow"></span></th><th class="sortable" data-key="infiltration">滲透度<span class="sort-arrow"></span></th><th class="sortable" data-key="workstation_remaining_seconds">工作站剩餘<span class="sort-arrow"></span></th><th class="sortable" data-key="updated_at">最後更新<span class="sort-arrow"></span></th></tr></thead><tbody id="cityTableBody"></tbody></table></div>
+<footer>資料由遊戲側錄整理，僅供參考 ‧ 非官方網站</footer>
+<script>
+(function(){
+  const SUPABASE_URL="https://bfecoizruicaaqxhmyqn.supabase.co";
+  const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWNvaXpydWljYWFxeGhteXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MjU1MzEsImV4cCI6MjEwNDMwMTUzMX0.k42rUGqjZSW77Nw4Ua9c2pBBjpZ-kGrttqvuiKX-I0c";
+  let allCities=[],sortState={key:null,dir:'asc'};
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function sortCities(cities){if(!sortState.key)return cities;const key=sortState.key,dir=sortState.dir==='desc'?-1:1;return cities.slice().sort((a,b)=>{let av=a[key],bv=b[key];const ae=av==null||av==='',be=bv==null||bv==='';if(ae||be)return ae&&be?0:ae?1:-1;if(key==='updated_at'){av=new Date(av).getTime();bv=new Date(bv).getTime();}else if(['city_id','king_id','workstation_remaining_seconds'].includes(key)){av=Number(av);bv=Number(bv);}else{av=String(av).toLowerCase();bv=String(bv).toLowerCase();}return av< bv?-dir:av>bv?dir:0;});}
+  function formatTime(value){return value?new Date(value).toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';}
+  function formatDuration(seconds){if(seconds==null)return'—';const total=Math.max(0,Number(seconds)||0),h=Math.floor(total/3600),m=Math.floor(total%3600/60),s=Math.floor(total%60);return h?`${h} 小時 ${String(m).padStart(2,'0')} 分`:`${m}:${String(s).padStart(2,'0')}`;}
+  function formatInfiltration(value){if(!value)return'—';let parsed=value;try{if(typeof value==='string')parsed=JSON.parse(value);}catch(_){return esc(value);}if(!parsed||typeof parsed!=='object')return esc(value);return Object.entries(parsed).map(([nation,points])=>`${esc(nation)}: ${esc(points)}%`).join(' / ')||'—';}
+  function formatWorkstations(seconds,details){if(details){try{const list=typeof details==='string'?JSON.parse(details):details;const active=list.filter(ws=>Number(ws.remaining_seconds)>0);if(active.length)return active.map(ws=>`${esc(ws.name||'工作站')} ${formatDuration(ws.remaining_seconds)}`).join(' / ');}catch(_){}}return formatDuration(seconds);}
+  function render(cities){document.getElementById('showCount').textContent=cities.length;const body=document.getElementById('cityTableBody');if(!cities.length){body.innerHTML='<tr class="empty-row"><td colspan="8">沒有符合條件的城市資料</td></tr>';return;}body.innerHTML=cities.map(c=>`<tr><td class="td-id">${esc(c.city_id??'—')}</td><td class="td-city">${esc(c.name||'—')}</td><td><span class="td-nation">${esc(c.control_nation_name||'—')}</span></td><td class="td-king">${esc(c.king_name||'—')}</td><td class="td-player">${esc(c.king_id??'—')}</td><td class="td-infiltration">${formatInfiltration(c.infiltration??c.uw_dominance)}</td><td class="td-workstation">${formatWorkstations(c.workstation_remaining_seconds,c.workstation_details)}</td><td class="td-id">${formatTime(c.updated_at)}</td></tr>`).join('');}
+  function apply(){const q=document.getElementById('searchInput').value.trim().toLowerCase(),nation=document.getElementById('nationFilter').value;let filtered=allCities;if(q)filtered=filtered.filter(c=>[c.city_id,c.name,c.control_nation_name,c.king_name,c.king_id].some(v=>String(v??'').toLowerCase().includes(q)));if(nation)filtered=filtered.filter(c=>(c.control_nation_name||'')===nation);render(sortCities(filtered));}
+  function updateArrows(){document.querySelectorAll('#cityTableHeadRow th').forEach(th=>{const arrow=th.querySelector('.sort-arrow');if(!arrow)return;arrow.textContent=th.dataset.key===sortState.key?(sortState.dir==='asc'?'▲':'▼'):'▲▼';});}
+  async function init(){try{const resp=await fetch(`${SUPABASE_URL}/rest/v1/cities?select=*&order=updated_at.desc`,{headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`}});if(!resp.ok)throw new Error('HTTP '+resp.status);allCities=await resp.json();document.getElementById('totalCount').textContent=allCities.length;document.getElementById('infiltrationCount').textContent=allCities.filter(c=>c.infiltration||c.uw_dominance).length;document.getElementById('lastUpdate').textContent=allCities[0]?.updated_at?formatTime(allCities[0].updated_at):'無資料';const nations=[...new Set(allCities.map(c=>c.control_nation_name).filter(Boolean))].sort(),select=document.getElementById('nationFilter');nations.forEach(n=>{const option=document.createElement('option');option.value=n;option.textContent=n;select.appendChild(option);});document.getElementById('loadingMsg').style.display='none';document.getElementById('cityTable').style.display='table';render(allCities);}catch(error){document.getElementById('loadingMsg').textContent='讀取資料失敗：'+error.message;}}
+  document.getElementById('searchBtn').addEventListener('click',apply);document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')apply();});document.getElementById('nationFilter').addEventListener('change',apply);document.getElementById('cityTableHeadRow').addEventListener('click',e=>{const th=e.target.closest('th.sortable');if(!th)return;if(sortState.key===th.dataset.key)sortState.dir=sortState.dir==='asc'?'desc':'asc';else{sortState.key=th.dataset.key;sortState.dir='asc';}updateArrows();apply();});updateArrows();init();
+})();
+</script>
+</body>
+</html>
