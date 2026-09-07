@@ -96,6 +96,12 @@
     border-bottom:2px solid var(--ink);
     padding:8px 10px;text-align:left;white-space:nowrap;
   }
+  thead th.sortable{cursor:pointer;user-select:none;}
+  thead th.sortable:hover{color:var(--ink);}
+  thead th .sort-arrow{
+    display:inline-block;margin-left:4px;font-size:10px;color:var(--rule);
+  }
+  thead th.sort-active .sort-arrow{color:var(--accent);}
   tbody tr{border-bottom:1px solid var(--rule);}
   tbody tr:hover{background:var(--accent-light);}
   tbody td{padding:9px 10px;vertical-align:top;line-height:1.4;}
@@ -137,7 +143,7 @@
 </div>
 
 <div class="search-bar">
-  <input type="text" id="searchInput" placeholder="輸入城市名稱、主權國家或控制聯盟…" />
+  <input type="text" id="searchInput" placeholder="輸入城市 ID、城市名稱、主權國家或控制聯盟…" />
   <select id="nationFilter">
     <option value="">所有國家</option>
   </select>
@@ -154,16 +160,15 @@
   <div class="loading" id="loadingMsg">正在從資料庫讀取城市資料…</div>
   <table id="cityTable" style="display:none;">
     <thead>
-      <tr>
-        <th>城市 ID</th>
-        <th>城市名稱</th>
-        <th>劇情標題</th>
-        <th>章節</th>
-        <th>主權國家</th>
-        <th>控制方</th>
-        <th>聯盟 ID</th>
-        <th>能量</th>
-        <th>最後更新</th>
+      <tr id="cityTableHeadRow">
+        <th class="sortable" data-key="city_id">城市 ID<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="name">城市名稱<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="title">劇情標題<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="chapter_number">章節<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="control_nation_name">主權國家<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="control_name">控制方<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="control_union_id">聯盟 ID<span class="sort-arrow"></span></th>
+        <th class="sortable" data-key="updated_at">最後更新<span class="sort-arrow"></span></th>
       </tr>
     </thead>
     <tbody id="cityTableBody"></tbody>
@@ -184,6 +189,48 @@
   // ============================
 
   let allCities = [];
+  let sortState = { key: null, dir: "asc" }; // dir: "asc" | "desc"
+
+  function sortCities(cities){
+    if (!sortState.key) return cities;
+    const key = sortState.key;
+    const dir = sortState.dir === "desc" ? -1 : 1;
+    return cities.slice().sort((a, b) => {
+      let av = a[key], bv = b[key];
+      const aEmpty = av === null || av === undefined || av === "";
+      const bEmpty = bv === null || bv === undefined || bv === "";
+      if (aEmpty && bEmpty) return 0;
+      if (aEmpty) return 1;  // 空值一律排到最後
+      if (bEmpty) return -1;
+      if (key === "updated_at") {
+        av = new Date(av).getTime();
+        bv = new Date(bv).getTime();
+      } else if (typeof av === "number" || typeof bv === "number" || key === "city_id" || key === "control_union_id" || key === "chapter_number") {
+        av = Number(av); bv = Number(bv);
+        if (isNaN(av)) av = -Infinity;
+        if (isNaN(bv)) bv = -Infinity;
+      } else {
+        av = String(av).toLowerCase();
+        bv = String(bv).toLowerCase();
+      }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return 1 * dir;
+      return 0;
+    });
+  }
+
+  function updateSortIndicators(){
+    document.querySelectorAll('#cityTableHeadRow th.sortable').forEach(th => {
+      const arrow = th.querySelector('.sort-arrow');
+      if (th.dataset.key === sortState.key) {
+        th.classList.add('sort-active');
+        arrow.textContent = sortState.dir === "asc" ? "▲" : "▼";
+      } else {
+        th.classList.remove('sort-active');
+        arrow.textContent = "▲▼";
+      }
+    });
+  }
 
   async function fetchCities(){
     const resp = await fetch(
@@ -210,7 +257,7 @@
     document.getElementById("showCount").textContent = cities.length;
 
     if (cities.length === 0){
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">沒有符合條件的城市資料</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">沒有符合條件的城市資料</td></tr>';
       return;
     }
 
@@ -223,7 +270,6 @@
         <td><span class="td-nation">${esc(c.control_nation_name || '—')}</span></td>
         <td class="td-control">${esc(c.control_name || '—')}</td>
         <td class="td-id">${esc(c.control_union_id ?? '—')}</td>
-        <td class="td-energy">${c.energy_charge ?? '—'}</td>
         <td class="td-time">${formatTime(c.updated_at)}</td>
       </tr>
     `).join("");
@@ -239,12 +285,14 @@
     const nation = document.getElementById("nationFilter").value;
     let filtered = allCities;
     if (q) filtered = filtered.filter(c =>
+      String(c.city_id ?? '').toLowerCase().includes(q) ||
       (c.name || '').toLowerCase().includes(q) ||
       (c.title || '').toLowerCase().includes(q) ||
       (c.control_name || '').toLowerCase().includes(q) ||
       (c.control_nation_name || "").toLowerCase().includes(q)
     );
     if (nation) filtered = filtered.filter(c => (c.control_nation_name || "") === nation);
+    filtered = sortCities(filtered);
     renderTable(filtered);
   }
 
@@ -285,6 +333,21 @@
   document.getElementById("searchInput").addEventListener("keydown", e => { if (e.key === "Enter") applyFilter(); });
   document.getElementById("nationFilter").addEventListener("change", applyFilter);
 
+  document.getElementById("cityTableHeadRow").addEventListener("click", e => {
+    const th = e.target.closest("th.sortable");
+    if (!th) return;
+    const key = th.dataset.key;
+    if (sortState.key === key) {
+      sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+    } else {
+      sortState.key = key;
+      sortState.dir = "asc";
+    }
+    updateSortIndicators();
+    applyFilter();
+  });
+
+  updateSortIndicators();
   init();
 })();
 </script>
