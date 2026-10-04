@@ -152,7 +152,7 @@
   <strong id="connectionState">正在連線…</strong>
   <span id="syncTime"></span><button id="refreshBtn" type="button">立即同步</button>
 </div>
-<p class="notice">僅列出收到據點戰標記的城市；一般城市及明確結束的戰鬥不顯示。資料依遊戲端上傳為準，報到截止不等於戰鬥結束。</p>
+<p class="notice">由獨立後端接收遊戲戰況，不需開啟遊戲或掛載模組。僅顯示交戰城市；後端斷線時保留的資料不代表最新戰況。</p>
 
 <div class="search-bar">
   <input type="text" id="searchInput" placeholder="搜尋交戰城市名稱、城市 ID 或活動 ID…" />
@@ -169,7 +169,7 @@
 </div>
 
 <div class="table-wrap">
-  <div class="loading" id="loadingMsg">正在從資料庫讀取城市資料…</div>
+  <div class="loading" id="loadingMsg">正在從獨立後端讀取戰況…</div>
   <table id="cityTable" style="display:none;">
     <thead>
       <tr id="cityTableHeadRow">
@@ -191,12 +191,8 @@
 
 <script>
 (function(){
-  // ========== 設定區 ==========
-  // 跟 city_uploader.js 填一樣的值
-  const SUPABASE_URL = "https://bfecoizruicaaqxhmyqn.supabase.co";     // 例如 https://abcxyz.supabase.co
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWNvaXpydWljYWFxeGhteXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MjU1MzEsImV4cCI6MjEwNDMwMTUzMX0.k42rUGqjZSW77Nw4Ua9c2pBBjpZ-kGrttqvuiKX-I0c";    // 以 eyJ 開頭的那個 anon public key
-  const TABLE_NAME = "cities";
-  // ============================
+  const API_BASE = '';
+  let sourceStatus = null;
 
   let allCities = [];
   let fetching = false;
@@ -281,22 +277,12 @@
   }
 
   async function fetchCities(){
-    // Supabase 預設回傳數量有限制；逐頁讀取，不能只顯示第一批城市。
-    const result = [];
-    const pageSize = 500;
-    for (let offset = 0; ; offset += pageSize){
-      const resp = await fetch(
-        `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&order=city_id.asc&limit=${pageSize}&offset=${offset}`,
-        {cache:"no-store", signal:AbortSignal.timeout(15000), headers:{
-          apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}`
-        }}
-      );
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
-      const page = await resp.json();
-      if (!Array.isArray(page)) throw new Error("資料格式錯誤");
-      result.push(...page);
-      if (page.length < pageSize) return result;
-    }
+    const resp = await fetch(API_BASE + '/api/battles', {cache:'no-store',signal:AbortSignal.timeout(15000)});
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    if (!Array.isArray(data.cities) || !data.status) throw new Error('後端資料格式錯誤');
+    sourceStatus = data.status;
+    return data.cities;
   }
 
   function formatTime(iso){
@@ -391,7 +377,10 @@
       table.style.display = "table";
       applyFilter();
       document.getElementById("syncTime").textContent = "同步於 " + new Date().toLocaleTimeString("zh-TW");
-      setConnection(realtimeReady ? "即時訂閱中" : "自動補查中（即時訂閱未連線）");
+      const labels = {waiting_credentials:'後端尚未設定採集帳號',connecting:'後端正在連接遊戲',
+        subscribing:'後端正在訂閱遊戲戰況',live:'後端已連上遊戲，持續接收戰況',
+        reconnecting:'後端與遊戲斷線，正在重連；顯示資料可能已過期',auth_error:'遊戲拒絕連線，請檢查採集帳號權限'};
+      setConnection((labels[sourceStatus?.state] || '後端狀態未知') + (sourceStatus?.error ? '：' + sourceStatus.error : ''), !sourceStatus?.connected);
 
     } catch (e) {
       failures++;
@@ -405,32 +394,10 @@
 
   function connectRealtime(){
     if (stopped) return;
-    socket = new WebSocket(SUPABASE_URL.replace(/^http/, 'ws') + '/realtime/v1/websocket?apikey=' + encodeURIComponent(SUPABASE_ANON_KEY) + '&vsn=1.0.0');
-    const topic = 'realtime:public:' + TABLE_NAME;
-    function send(event, payload, target = topic){
-      if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({topic:target,event,payload,ref:String(++reference)}));
-    }
-    socket.onopen = () => {
-      send('phx_join', {config:{broadcast:{self:false},presence:{key:''},postgres_changes:[{event:'*',schema:'public',table:TABLE_NAME}]},access_token:SUPABASE_ANON_KEY});
-      heartbeat = setInterval(() => send('heartbeat', {}, 'phoenix'), 25000);
-    };
-    socket.onmessage = event => {
-      let msg;
-      try { msg = JSON.parse(event.data); } catch { return; }
-      if (msg.event === 'system'){
-        realtimeReady = msg.payload?.status === 'ok';
-        setConnection(realtimeReady ? '即時訂閱中' : '即時訂閱未啟用，自動補查中');
-        if (realtimeReady) refresh();
-      }
-      if (msg.event === 'phx_reply' && msg.payload?.status === 'error') realtimeReady = false;
-      if (msg.event === 'postgres_changes') refresh();
-    };
-    socket.onclose = () => {
-      realtimeReady = false;
-      clearInterval(heartbeat);
-      if (!stopped){ setConnection('即時連線中斷，自動補查中'); reconnect = setTimeout(connectRealtime, 3000); }
-    };
-    socket.onerror = () => socket.close();
+    socket = new EventSource(API_BASE + '/api/events');
+    socket.onopen = () => { realtimeReady = true; refresh(); };
+    socket.addEventListener('change', refresh);
+    socket.onerror = () => { realtimeReady = false; setConnection('網站與後端連線中斷，自動重連中', true); };
   }
 
   // 即時事件收到就更新；未啟用 Realtime 時每秒補查，失敗時逐步退避。
