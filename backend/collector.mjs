@@ -3,10 +3,15 @@
 export class Collector {
   constructor({state, token, userId, locale='zh_TW', url='wss://api.komisureiya.com/socket', onChange=()=>{}, Socket=globalThis.WebSocket}) {
     Object.assign(this,{state,token,userId,locale,url,onChange,Socket});
-    this.status = {state:'waiting_credentials',connected:false,lastMessage:null,lastSnapshot:null,error:null};
-    this.ref=0; this.pending=new Map(); this.joins=new Map(); this.stopped=false; this.retry=0;
+    this.status = {state:'waiting_credentials',connected:false,lastMessage:null,lastSnapshot:null,error:null,transportCode:null};
+    this.ref=0; this.pending=new Map(); this.joins=new Map(); this.stopped=false; this.retry=0; this.closing=new WeakSet();
   }
   notify() { this.onChange(); }
+  close(socket=this.socket) {
+    if (!socket || this.closing.has(socket)) return;
+    this.closing.add(socket);
+    socket.close();
+  }
   start() {
     if (!this.token || !/^\d+$/.test(String(this.userId || ''))) { this.notify(); return; }
     this.status.state='connecting'; this.status.error=null; this.notify();
@@ -15,27 +20,45 @@ export class Collector {
     url.pathname=url.pathname.replace(/\/$/,'')+'/websocket';
     url.searchParams.set('vsn','2.0.0'); url.searchParams.set('userToken',this.token); url.searchParams.set('locale',this.locale);
     const socket = this.socket = new this.Socket(url.toString());
-    socket.addEventListener('open',()=>{
-      this.retry=0; this.status.state='subscribing'; this.notify();
-      for (const topic of ['all_players',`locale:${this.locale}`,`player:${this.userId}`]) this.send(topic,'phx_join',{},'join');
-      this.heartbeat=setInterval(()=>{
-        if (this.heartbeatRef) { socket.close(); return; }
-        this.heartbeatRef=this.send('phoenix','heartbeat',{},'heartbeat');
-      },25000);
-    });
-    socket.addEventListener('message',e=>this.receive(e.data));
-    socket.addEventListener('error',()=>{ this.status.error='遊戲連線失敗，請檢查網路與登入設定'; this.notify(); socket.close(); });
-    socket.addEventListener('close',()=>{
+    let closed=false;
+    const finish=()=>{
+      if (closed || this.socket!==socket) return;
+      closed=true;
       clearInterval(this.heartbeat); clearInterval(this.snapshotTimer); clearTimeout(this.joinTimer);
-      this.pending.clear(); this.joins.clear(); this.heartbeatRef=null;
+      this.pending.clear(); this.joins.clear(); this.heartbeatRef=null; this.buffer=null;
       this.status.connected=false;
       if (!this.stopped && this.status.state!=='auth_error') {
         this.status.state='reconnecting';
         this.reconnect=setTimeout(()=>this.start(),Math.min(60000,1000*2**Math.min(this.retry++,6)));
       }
       this.notify();
+    };
+    socket.addEventListener('open',()=>{
+      if (closed || this.stopped || this.socket!==socket) return;
+      this.status.transportCode=null;
+      this.retry=0; this.status.state='subscribing'; this.notify();
+      for (const topic of ['all_players',`locale:${this.locale}`,`player:${this.userId}`]) this.send(topic,'phx_join',{},'join');
+      this.heartbeat=setInterval(()=>{
+        if (this.heartbeatRef) { this.close(socket); return; }
+        this.heartbeatRef=this.send('phoenix','heartbeat',{},'heartbeat');
+      },25000);
     });
-    this.joinTimer=setTimeout(()=>{ if (!this.status.connected) {this.status.error='頻道訂閱逾時';socket.close();} },20000);
+    socket.addEventListener('message',e=>{if (!closed && !this.stopped && this.socket===socket) this.receive(e.data);});
+    socket.addEventListener('error',e=>{
+      if (closed || this.stopped || this.socket!==socket) return;
+      // 不依賴 error 後一定收到 close；先標記結束，再 close，避免同步遞迴。
+      // 不公開原始訊息／URL，因為可能含有登入權杖。
+      const codes=new Set(['ENOTFOUND','EAI_AGAIN','ECONNREFUSED','ECONNRESET','ETIMEDOUT',
+        'CERT_HAS_EXPIRED','UNABLE_TO_VERIFY_LEAF_SIGNATURE','DEPTH_ZERO_SELF_SIGNED_CERT',
+        'ERR_TLS_CERT_ALTNAME_INVALID','UND_ERR_CONNECT_TIMEOUT']);
+      const code=e.error?.cause?.code || e.error?.code;
+      this.status.transportCode=codes.has(code)?code:'WEBSOCKET_CONNECTION_FAILED';
+      this.status.error='遊戲連線失敗，請檢查網路與登入設定';
+      finish();
+      if (socket.readyState<2) this.close(socket);
+    });
+    socket.addEventListener('close',finish);
+    this.joinTimer=setTimeout(()=>{ if (!this.status.connected) {this.status.error='頻道訂閱逾時';this.close(socket);} },20000);
   }
   send(topic,event,payload,kind) {
     if (this.socket?.readyState!==1) return null;
@@ -60,14 +83,14 @@ export class Collector {
       if (payload?.status!=='ok') {
         // 拒絕訂閱就停下，不嘗試猜 token／其他玩家頻道或繞過資格。
         this.status.state='auth_error';this.status.error='遊戲拒絕訂閱或讀取；請確認採集帳號的登入與權限';
-        this.socket.close(); this.notify(); return;
+        this.close(); this.notify(); return;
       }
       if (request.kind==='join') {
         this.joins.set(topic,ref);
         if (this.joins.size===3) {
           clearTimeout(this.joinTimer);this.status.connected=true;this.status.state='live';this.snapshot();
           this.snapshotTimer=setInterval(()=>{
-            if ([...this.pending.values()].some(item=>Date.now()-item.time>20000)) {this.socket.close();return;}
+            if ([...this.pending.values()].some(item=>Date.now()-item.time>20000)) {this.close();return;}
             this.snapshot();
           },60000);
           this.notify();
@@ -83,7 +106,7 @@ export class Collector {
       this.status.lastMessage=new Date().toISOString();
       if (this.buffer) this.buffer.push(payload.cities);
       this.state.ingest(payload.cities);this.notify();
-    } else if (event==='phx_error' || event==='phx_close') this.socket.close();
+    } else if (event==='phx_error' || event==='phx_close') this.close();
   }
-  stop() { this.stopped=true;clearTimeout(this.reconnect);this.socket?.close(); }
+  stop() { this.stopped=true;clearTimeout(this.reconnect);this.close(); }
 }

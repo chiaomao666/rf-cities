@@ -1,3 +1,9 @@
-// 公開設定只填後端網址；不可填遊戲登入權杖。
-// 本機／與後端同站時留空，GitHub Pages 請填遠端 HTTPS 網址。
-window.RF_MONITOR_CONFIG = { apiBase: "" };
+// 公開設定只允許 publishable／anon 金鑰；禁止遊戲權杖或 secret／service_role。
+// GitHub Pages 填好 publishableKey 後直接讀取 Supabase，不用公開 Oracle HTTP 埠。
+// 本機頁面仍使用同站 API；forceSupabase 可在本機測試雲端資料。
+window.RF_MONITOR_CONFIG = {
+  apiBase: "",
+  supabaseUrl: "https://bfecoizruicaaqxhmyqn.supabase.co",
+  publishableKey: "",
+  forceSupabase: false
+};

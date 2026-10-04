@@ -53,3 +53,46 @@ test('訂閱拒絕停止，不嘗試其他身分',()=>{
     assert.equal(c.status.state,'auth_error');assert.equal(c.reconnect,undefined);
   } finally {c.stop();}
 });
+
+test('連線 error 先結束再 close，不遞迴且只安排重連一次',()=>{
+  class FailedSocket extends Socket {
+    constructor(url) {super(url);this.readyState=0;this.closeCalls=0;}
+    close() {
+      this.closeCalls++;
+      // 模擬 Node 原生 WebSocket：關閉未成功的連線會同步觸發 error。
+      this.emit('error');
+      super.close();
+    }
+  }
+  const c=new Collector({state:new CityState(),token:'test-token',userId:'42',Socket:FailedSocket});
+  try {
+    c.start();const socket=Socket.last;
+    assert.doesNotThrow(()=>socket.emit('error'));
+    assert.equal(socket.closeCalls,1);
+    assert.equal(c.status.connected,false);
+    assert(c.status.error);
+    assert.equal(c.status.state,'reconnecting');
+    assert.equal(c.status.transportCode,'WEBSOCKET_CONNECTION_FAILED');
+    socket.emit('close');
+    assert.equal(c.status.state,'reconnecting');
+    assert.equal(c.pending.size,0);
+    const reconnect=c.reconnect;
+    socket.emit('close');
+    assert.equal(c.reconnect,reconnect);
+    assert.equal(c.retry,1);
+  } finally {c.stop();}
+});
+
+test('主動關閉觸發同步 error 時也不會遞迴',()=>{
+  class ReentrantSocket extends Socket {
+    constructor(url) {super(url);this.closeCalls=0;}
+    close() {this.closeCalls++;this.emit('error');super.close();}
+  }
+  const c=new Collector({state:new CityState(),token:'test-token',userId:'42',Socket:ReentrantSocket});
+  try {
+    c.start();const socket=Socket.last;socket.emit('open');
+    assert.doesNotThrow(()=>socket.emit('message',JSON.stringify([null,null,'all_players','phx_error',{}])));
+    assert.equal(socket.closeCalls,1);
+    assert.equal(c.status.state,'reconnecting');
+  } finally {c.stop();}
+});

@@ -4,12 +4,14 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {CityState} from './model.mjs';
 import {Collector} from './collector.mjs';
+import {SupabasePublisher} from './publisher.mjs';
 
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const state=new CityState(), clients=new Set();
 let collector;
-function snapshot() { return {cities:state.rows(),status:{...collector.status,knownCities:state.cities.size}}; }
-function broadcast() { for (const res of clients) res.write('event: change\ndata: {}\n\n'); }
+function snapshot() { return {cities:state.rows(),status:{...collector.status,knownCities:state.cities.size,publication:{...publisher.status}}}; }
+const publisher=new SupabasePublisher({url:process.env.SUPABASE_URL,key:process.env.SUPABASE_WRITE_KEY,getSnapshot:snapshot});
+function broadcast() { publisher.request();for (const res of clients) res.write('event: change\ndata: {}\n\n'); }
 collector=new Collector({state,token:process.env.RF_USER_TOKEN,userId:process.env.RF_USER_ID,
   locale:process.env.RF_LOCALE || 'zh_TW',url:process.env.RF_SOCKET_URL || 'wss://api.komisureiya.com/socket',onChange:broadcast});
 const server=http.createServer(async (req,res)=>{
@@ -45,8 +47,9 @@ const server=http.createServer(async (req,res)=>{
 });
 server.listen(Number(process.env.PORT || 8787),process.env.HOST || '127.0.0.1',()=>{
   console.log('RF monitor listening on port '+(process.env.PORT || 8787));
+  publisher.start();
   collector.start();
 });
 for (const signal of ['SIGINT','SIGTERM']) process.on(signal,()=>{
-  collector.stop();for (const res of clients)res.end();server.close(()=>process.exit(0));
+  collector.stop();publisher.stop();for (const res of clients)res.end();server.close(()=>process.exit(0));
 });

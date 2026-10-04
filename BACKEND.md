@@ -1,59 +1,78 @@
-# 獨立據點戰監測
+# 獨立據點戰監測部署
 
-網站 → 自己的 Node.js 後端 → 遊戲授權 WebSocket。
-不需要遊戲頁面開啟，不需要遊戲模組，不使用 Supabase 舊城市資料。
-後端只讀取公開城市資料，以及採集帳號有權讀取的 cities 清單；不發送參戰指令。
+Oracle 採集主機連接授權遊戲 WebSocket，發布公開交戰清單至 Supabase。
+GitHub Pages 從 Supabase 讀取，收到即時通知就更新。
+Oracle 8787 只監聽本機，不需要公開後端網址或額外開啟連接埠。
 
-## 啟動
+## 1. 建立資料表
 
-1. 安裝 Node.js 22 以上（本機已驗證 Node.js 24）。不需安裝第三方套件。
-2. 在專案根目錄將 `.env.example` 複製為 `.env`。
-3. 使用你授權的採集帳號，填 `RF_USER_ID` 與 `RF_USER_TOKEN`。
-   現有遊戲主程式的 sessionStorage 名稱分別是 `userId`、`userToken`。
-   請僅在自己的電腦上填入，不要貼在聊天室，不要提交到 GitHub。
-4. 在此目錄執行 `npm start`。
-5. 開啟 http://127.0.0.1:8787 ，不要直接用 file:// 開啟 HTML。
+在 Supabase 專案 bfecoizruicaaqxhmyqn 的 SQL Editor 執行 `supabase/setup.sql` 全部內容。
+它新增 `battle_monitor_state`，不修改舊 cities 表。訪客只有讀取權限。
+完整交戰清單原子替換，結束的城市不會殘留；SQL 同時啟用 Realtime。
 
-缺少憑證時仍可預覽網站，會明確顯示「後端尚未設定採集帳號」，不會連遊戲。
-登入失效／訂閱遭拒會停止嘗試並顯示錯誤；更新合法憑證後重啟服務。
-採集帳號 userId 必須是該 token 本人的 ID。不要猜測其他人的頻道。
+## 2. 設定金鑰
 
-## 常駐部署
+Supabase Settings → API Keys：
 
-GitHub Pages 只能放前端，不能執行這個常駐服務。
-後端需部署至允許長時間運行 Node.js 與向外連線 WebSocket 的主機。
-以主機的秘密設定保存權杖，使用程序管理／容器重啟政策保持服務運行。
-部署時將 HOST 設為 0.0.0.0，並以 HTTPS 反向代理提供網站。
+- Publishable（或舊 anon）公開金鑰：填本機 `monitor-config.js` 的 `publishableKey`，隨前端發布。
+- Secret（或舊 service_role）私密金鑰：只填 Oracle `/home/opc/rf-cities/.env` 的 `SUPABASE_WRITE_KEY`。
 
-最簡單是同一後端同時提供網站，不必設定額外 API 網址。
-若前端放在 https://chiaomao666.github.io/rf-cities/city_query_site.html ：
+主機 `.env` 保留既有 RF_USER_ID、RF_USER_TOKEN，另外加入：
 
-1. 將後端部署至可常駐運行的主機，取得公開的 HTTPS 網址。
-2. 在主機秘密設定填 RF_USER_ID、RF_USER_TOKEN、HOST=0.0.0.0，
-   並將 PUBLIC_ORIGIN 設為 https://chiaomao666.github.io （不含 /rf-cities）。
-3. 在 monitor-config.js 的 apiBase 填入後端 HTTPS 網址。
-4. 將 city_query_site.html 與 monitor-config.js 一起發布到 GitHub Pages。
-5. 開啟網站，確認顯示「後端已連上遊戲」。
+```dotenv
+SUPABASE_URL=https://bfecoizruicaaqxhmyqn.supabase.co
+SUPABASE_WRITE_KEY=在主機自行填入私密金鑰
+```
 
-後端網址不是遊戲 WebSocket 網址，也不能填 127.0.0.1 本機網址。
-monitor-config.js 不得包含遊戲權杖；憑證僅放在後端主機秘密設定。
-不要在 HTTPS 前端呼叫 HTTP 後端。代理需允許 /api/events 的 SSE 長連線。
+私密金鑰、遊戲權杖不要貼到聊天、網頁或 GitHub。
+`apiBase` 留空，GitHub Pages 自動使用 Supabase。本機仍用同站 API。
+`forceSupabase: true` 可供本機測試雲端讀取。
 
-## 已實作／待驗證
+## 3. 更新 Oracle 程式
 
-- Phoenix v2 連線：使用主程式中的正式 socket 網址、userToken、locale。
-- 訂閱 all_players、locale:zh_TW、採集帳號本人的 player 頻道。
-- 初次取得完整 cities，之後即時合併 update_data；每分鐘完整補查一次。
-- 更新不等待補查；報到截止不當成戰鬥結束；明確結束移除。
-- 心跳、斷線退避重連、初始訂閱逾時、權限拒絕停止。
-- 網站與後端透過 SSE 更新；後端狀態會顯示在網站。
-- API 只回傳白名單公開欄位；不提供憑證、帳號資料、原始封包或任意靜態檔。
-- 狀態保留於記憶體；服務重啟後重新取得清單，不以舊快取冒充即時戰況。
+Windows PowerShell：
 
-尚未使用真實帳號連到遊戲驗證：沒有提供採集憑證，也尚未指定後端部署主機。
-主程式能證明協議與讀取流程，但不能保證伺服器允許第三方常駐連線、
-同帳號多處登入，或保證公開頻道包含每個城市的攻守戰力。
-目前只監測交戰城市、活動 ID、報到時間與伺服器提供的比分；
-未收到的攻守戰力、人數不會造假成 0，也不繞過參戰資格。
+```powershell
+cd C:\Users\wuser\Desktop\rf-cities-main
+scp -i "C:\Users\wuser\Downloads\ssh-key-2026-10-04.key" -r backend package.json city_query_site.html monitor-config.js .env.example opc@161.118.249.117:/home/opc/rf-cities/
+ssh -i "C:\Users\wuser\Downloads\ssh-key-2026-10-04.key" opc@161.118.249.117
+```
 
-測試：`npm test`。測試使用模擬連線，不登入遊戲、不送假戰況到線上資料庫。
+Oracle SSH 終端：
+
+```sh
+cd /home/opc/rf-cities
+nano .env
+chmod 600 .env
+npm test
+sudo systemctl restart rf-cities
+systemctl is-active rf-cities
+curl -s http://127.0.0.1:8787/api/status
+```
+
+確認 `state: live`、`connected: true`；`publication.enabled: true`、
+`publication.lastPublished` 有時間、`publication.error: null`。
+`active` 只代表程序在跑，不能代替遊戲連線與資料發布檢查。
+發布 401/403 檢查私密金鑰；404 檢查同一專案 SQL 是否已執行。
+遊戲登入失效時更新本人有效 RF_USER_ID／RF_USER_TOKEN 再重啟。
+
+## 4. GitHub Pages
+
+將程式、HTML 與公開 monitor-config.js 提交推送至 rf-cities 倉庫。
+先检查待提交檔案，不可包含 `.env` 或 SSH 私鑰。
+待 Pages 部署後開啟 https://chiaomao666.github.io/rf-cities/city_query_site.html 。
+
+## 更新與限制
+
+遊戲增量立即合併；發布合併等待 250 毫秒，不是 5 秒。
+每分鐘完整清單補查，增量不等待補查。每 30 秒發布採集心跳。
+超過 90 秒未回報，網站標記過期；即時通知失效時自動補查與退避。
+報到截止不是戰鬥結束。缺少比分、戰力不偽造為 0。
+
+免費配額不是無限制服務。頻繁更新、大量訪客會消耗 Supabase 配額。
+專案暫停、Oracle 資源回收、登入失效會中斷監測；不自動升級付費。
+模擬測試不等於線上驗證，部署後需確認實際清單、即時更新與用量。
+
+官方說明：
+https://supabase.com/docs/guides/getting-started/api-keys
+https://supabase.com/docs/guides/realtime/postgres-changes

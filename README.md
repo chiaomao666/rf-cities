@@ -1,19 +1,13 @@
 # rf-cities
 
-獨立的逆統戰據點戰監測站。
+獨立的逆統戰據點戰監測站，只顯示正在交戰的城市。
 
-現在採用常駐 Node.js 後端直接連接遊戲授權 WebSocket，網站透過 API 與 SSE
-接收戰況，不依賴遊戲模組，也不使用先前的 Supabase 城市上傳資料。
+Oracle 常駐採集 → Supabase 公開快照與即時通知 → GitHub Pages。
+不需要遊戲模組，也不需要自己的電腦或遊戲画面保持開啟。
+遊戲權杖、Supabase 寫入金鑰只保存在採集主機，不可提交到 GitHub。
 
-主頁為 `city_query_site.html`，僅顯示交戰城市。
+部署見 [BACKEND.md](BACKEND.md)，SQL 見 [supabase/setup.sql](supabase/setup.sql)。
+本機：設定 `.env` 後 `npm start`，開啟 http://127.0.0.1:8787 。
+測試：`npm test`，不登入遊戲、不向線上資料庫發送測試戰況。
 
-## 本機使用
-
-將 `.env.example` 複製成 `.env`，在自己的電腦填入授權採集帳號的
-`RF_USER_ID` 和 `RF_USER_TOKEN`，執行 `npm start`，開啟 http://127.0.0.1:8787 。
-不要直接以 file:// 開啟網站；登入憑證不要放入網頁或提交到 GitHub。
-
-完整的連線限制、部署步驟與已驗證範圍見 [BACKEND.md](BACKEND.md)。
-GitHub Pages 無法執行常駐後端，需另有 Node.js 主機；尚未部署至遠端主機。
-
-測試：`npm test`。目前使用模擬連線驗證，實際遊戲連線仍需有效採集憑證。
+免費方案有配額與平台限制，不保證不限量或永不中斷；請勿升級付費帳戶。

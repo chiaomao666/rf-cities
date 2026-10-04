@@ -194,7 +194,21 @@
 (function(){
   let API_BASE = String(window.RF_MONITOR_CONFIG?.apiBase || '').trim().replace(/\/$/, '');
   let configError = '';
-  if (API_BASE) {
+  const config = window.RF_MONITOR_CONFIG || {};
+  const useSupabase = config.forceSupabase === true || (!API_BASE && /\.github\.io$/i.test(location.hostname));
+  let supabaseUrl = '', publicKey = '', cloudUpdatedAt = null, supabaseClient = null;
+  if (useSupabase) {
+    try {
+      const url = new URL(config.supabaseUrl);
+      if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error();
+      publicKey = String(config.publishableKey || '').trim();
+      let anon = false;
+      try { anon = JSON.parse(atob(publicKey.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).role === 'anon'; } catch {}
+      if (!publicKey.startsWith('sb_publishable_') && !anon) throw new Error();
+      supabaseUrl = url.origin;
+    } catch { configError = '請在 monitor-config.js 設定 Supabase 網址與公開 publishable／anon 金鑰；不可使用私密寫入金鑰。'; }
+  }
+  if (!useSupabase && API_BASE) {
     try {
       const url = new URL(API_BASE);
       if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash)
@@ -202,8 +216,6 @@
       if (location.protocol === 'https:' && url.protocol !== 'https:') throw new Error('HTTPS 網站必須使用 HTTPS 後端');
       API_BASE = url.href.replace(/\/$/, '');
     } catch (e) { configError = e.message; }
-  } else if (/\.github\.io$/i.test(location.hostname)) {
-    configError = 'GitHub Pages 尚未設定遠端後端；請在 monitor-config.js 填入後端 HTTPS 網址。';
   }
   let sourceStatus = null;
 
@@ -290,9 +302,19 @@
   }
 
   async function fetchCities(){
-    const resp = await fetch(API_BASE + '/api/battles', {cache:'no-store',signal:AbortSignal.timeout(15000)});
+    const headers = useSupabase ? {apikey:publicKey} : {};
+    if (useSupabase && !publicKey.startsWith('sb_publishable_')) headers.Authorization = 'Bearer ' + publicKey;
+    const endpoint = useSupabase ? supabaseUrl + '/rest/v1/battle_monitor_state?id=eq.1&select=cities,status,updated_at' : API_BASE + '/api/battles';
+    const resp = await fetch(endpoint, {headers,cache:'no-store',signal:AbortSignal.timeout(15000)});
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
+    let data = await resp.json();
+    if (useSupabase) {
+      if (!Array.isArray(data)) throw new Error('雲端資料格式錯誤');
+      if (!data.length) throw new Error('等待採集主機首次發布戰況');
+      data = data[0];
+      cloudUpdatedAt = data.updated_at;
+      if (!Number.isFinite(Date.parse(cloudUpdatedAt))) throw new Error('雲端更新時間無效');
+    }
     if (!Array.isArray(data.cities) || !data.status) throw new Error('後端資料格式錯誤');
     sourceStatus = data.status;
     return data.cities;
@@ -390,10 +412,7 @@
       table.style.display = "table";
       applyFilter();
       document.getElementById("syncTime").textContent = "同步於 " + new Date().toLocaleTimeString("zh-TW");
-      const labels = {waiting_credentials:'後端尚未設定採集帳號',connecting:'後端正在連接遊戲',
-        subscribing:'後端正在訂閱遊戲戰況',live:'後端已連上遊戲，持續接收戰況',
-        reconnecting:'後端與遊戲斷線，正在重連；顯示資料可能已過期',auth_error:'遊戲拒絕連線，請檢查採集帳號權限'};
-      setConnection((labels[sourceStatus?.state] || '後端狀態未知') + (sourceStatus?.error ? '：' + sourceStatus.error : ''), !sourceStatus?.connected);
+      showSourceStatus();
 
     } catch (e) {
       failures++;
@@ -405,8 +424,36 @@
     }
   }
 
-  function connectRealtime(){
+  function showSourceStatus(){
+      if (useSupabase && cloudUpdatedAt && Date.now() - Date.parse(cloudUpdatedAt) > 90000) {
+        setConnection('採集主機超過 90 秒未回報；顯示的是上次戰況，不代表目前仍在交戰', true);
+        return;
+      }
+      const labels = {waiting_credentials:'後端尚未設定採集帳號',connecting:'後端正在連接遊戲',
+        subscribing:'後端正在訂閱遊戲戰況',live:'後端已連上遊戲，持續接收戰況',
+        reconnecting:'後端與遊戲斷線，正在重連；顯示資料可能已過期',auth_error:'遊戲拒絕連線，請檢查採集帳號權限'};
+      setConnection((labels[sourceStatus?.state] || '後端狀態未知') + (sourceStatus?.error ? '：' + sourceStatus.error : ''), !sourceStatus?.connected);
+
+  }
+
+  async function connectRealtime(){
     if (stopped) return;
+    if (useSupabase) {
+      try {
+        const {createClient} = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+        if (stopped) return;
+        supabaseClient ||= createClient(supabaseUrl,publicKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+        socket = supabaseClient.channel('rf-city-battles')
+          .on('postgres_changes',{event:'*',schema:'public',table:'battle_monitor_state',filter:'id=eq.1'},()=>{if (!stopped) refresh();})
+          .subscribe(state=>{
+            if (stopped) return;
+            realtimeReady = state === 'SUBSCRIBED';
+            if (realtimeReady) refresh();
+            else if (['CHANNEL_ERROR','TIMED_OUT','CLOSED'].includes(state)) setConnection('雲端即時通知中斷，改用自動補查',true);
+          });
+      } catch {realtimeReady=false;setConnection('即時通知尚未連上，使用自動補查',true);}
+      return;
+    }
     socket = new EventSource(API_BASE + '/api/events');
     socket.onopen = () => { realtimeReady = true; refresh(); };
     socket.addEventListener('change', refresh);
@@ -417,11 +464,11 @@
   async function poll(){
     if (stopped) return;
     await refresh();
-    if (!stopped) setTimeout(poll, realtimeReady ? 60000 : Math.min(30000, 1000 * 2 ** Math.min(failures, 5)));
+    if (!stopped) reconnect = setTimeout(poll, realtimeReady ? 60000 : Math.min(30000, 1000 * 2 ** Math.min(failures, 5)));
   }
   document.getElementById('refreshBtn').addEventListener('click', refresh);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
-  window.addEventListener('pagehide', () => { stopped = true; clearTimeout(reconnect); clearInterval(heartbeat); socket?.close(); });
+  window.addEventListener('pagehide', () => { stopped = true; realtimeReady=false; clearTimeout(reconnect); if (useSupabase) {if (socket) supabaseClient?.removeChannel(socket);} else socket?.close(); });
   window.addEventListener('pageshow', event => { if (event.persisted && !configError){ stopped = false; connectRealtime(); poll(); } });
 
   document.getElementById("searchBtn").addEventListener("click", applyFilter);
@@ -446,6 +493,7 @@
   updateSortIndicators();
   // 只更新倒數文字，不重建表格，避免捲動與選取被打斷。
   setInterval(() => {
+    if (!stopped && !configError && sourceStatus && !failures) showSourceStatus();
     const byId = new Map(allCities.map(c => [String(c.city_id), c]));
     document.querySelectorAll('[data-countdown-city]').forEach(el => {
       const city = byId.get(el.dataset.countdownCity);
@@ -454,7 +502,7 @@
   }, 1000);
   if (configError) {
     setConnection(configError, true);
-    document.getElementById('loadingMsg').textContent = '等待遠端後端設定；GitHub Pages 本身不會執行採集服務。';
+    document.getElementById('loadingMsg').textContent = '等待雲端連線設定；請只填公開讀取金鑰，登入權杖留在採集主機。';
     document.getElementById('refreshBtn').disabled = true;
   } else {
     connectRealtime();
