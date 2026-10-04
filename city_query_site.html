@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RF 城市主權查詢</title>
+<title>RF 據點戰監測</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -130,20 +130,32 @@
     text-align:center;padding:60px 20px;
     font-family:var(--mono);font-size:13px;color:var(--muted);
   }
+  .connection{max-width:960px;margin:16px auto 0;padding:0 20px;font-size:13px;color:var(--muted);line-height:1.8;}
+  .connection strong{color:var(--accent);}
+  .connection.error strong{color:var(--danger);}
+  .connection button{margin-left:12px;padding:4px 10px;cursor:pointer;}
+  .notice{max-width:960px;margin:0 auto 16px;padding:0 20px;font-size:12px;color:var(--muted);}
+  tbody tr.changed{background:#fff0bd;}
 </style>
 </head>
 <body>
 
 <div class="masthead">
   <div class="masthead-inner">
-    <div class="masthead-tag">Reversed Front — 城市資料</div>
-    <h1>城市主權查詢</h1>
-    <div class="masthead-sub">資料由玩家側錄整理，最後更新：<b id="lastUpdate">讀取中…</b></div>
+    <div class="masthead-tag">Reversed Front — 據點戰</div>
+    <h1>進行中的據點戰</h1>
+    <div class="masthead-sub">最新城市資料時間：<b id="lastUpdate">讀取中…</b></div>
   </div>
 </div>
 
+<div class="connection" id="connection" role="status" aria-live="polite">
+  <strong id="connectionState">正在連線…</strong>
+  <span id="syncTime"></span><button id="refreshBtn" type="button">立即同步</button>
+</div>
+<p class="notice">僅列出收到據點戰標記的城市；一般城市及明確結束的戰鬥不顯示。資料依遊戲端上傳為準，報到截止不等於戰鬥結束。</p>
+
 <div class="search-bar">
-  <input type="text" id="searchInput" placeholder="輸入城市 ID、城市名稱、主權國家或控制聯盟…" />
+  <input type="text" id="searchInput" placeholder="搜尋交戰城市名稱、城市 ID 或活動 ID…" />
   <select id="nationFilter">
     <option value="">所有國家</option>
   </select>
@@ -151,7 +163,7 @@
 </div>
 
 <div class="stats-row" id="statsRow">
-  <span>共 <b id="totalCount">—</b> 座城市</span>
+  <span>交戰城市 <b id="totalCount">—</b> 座</span>
   <span>主權國家 <b id="nationCount">—</b> 個</span>
   <span>顯示 <b id="showCount">—</b> 筆</span>
 </div>
@@ -163,11 +175,9 @@
       <tr id="cityTableHeadRow">
         <th class="sortable" data-key="city_id">城市 ID<span class="sort-arrow"></span></th>
         <th class="sortable" data-key="name">城市名稱<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="title">劇情標題<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="chapter_number">章節<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="control_nation_name">主權國家<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="control_name">控制方<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="control_union_id">聯盟 ID<span class="sort-arrow"></span></th>
+        <th>活動 ID</th>
+        <th>報到倒數</th>
+        <th>據點戰比分</th>
         <th class="sortable" data-key="updated_at">最後更新<span class="sort-arrow"></span></th>
       </tr>
     </thead>
@@ -189,7 +199,44 @@
   // ============================
 
   let allCities = [];
+  let fetching = false;
+  let refreshAgain = false;
+  let realtimeReady = false;
+  let socket = null;
+  let heartbeat = null;
+  let reconnect = null;
+  let reference = 0;
+  let failures = 0;
+  let stopped = false;
+  const changedAt = new Map();
   let sortState = { key: null, dir: "asc" }; // dir: "asc" | "desc"
+
+  function parseBattle(value){
+    if (typeof value === 'string'){
+      try { value = JSON.parse(value); } catch { return null; }
+    }
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+  }
+
+  function activeBattle(city){
+    // 與地圖交叉劍標記一致：sword 是戰鬥標記，knife 可能只是可發起攻擊。
+    // 若採集端有明確的 sword 值，優先採用它；舊資料則讀取結構化戰況。
+    if (city.sword === false || city.sword === 'false') return false;
+    const battle = parseBattle(city.nation_battle);
+    if (battle?.ended_at || battle?.finished_at || battle?.ended === true || battle?.finished === true) return false;
+    if (city.sword === true || city.sword === 'true') return true;
+    const score = String(city.nation_battle_score ?? '').trim();
+    if (score && !['null', 'false', 'undefined'].includes(score)) return true;
+    // 不以 close_roll_call_at 是否過期判斷結束，也不拿 knife 或國家 ID 當戰鬥依據。
+    return Boolean(battle && (battle.id != null || battle.close_roll_call_at));
+  }
+
+  function countdown(city){
+    const deadline = Date.parse(parseBattle(city.nation_battle)?.close_roll_call_at);
+    if (!Number.isFinite(deadline)) return '未取得';
+    const seconds = Math.ceil((deadline - Date.now()) / 1000);
+    return seconds > 0 ? `${Math.floor(seconds / 60)}分 ${seconds % 60}秒` : '報到已截止';
+  }
 
   function sortCities(cities){
     if (!sortState.key) return cities;
@@ -233,17 +280,22 @@
   }
 
   async function fetchCities(){
-    const resp = await fetch(
-      `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&order=updated_at.desc`,
-      {
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-        }
-      }
-    );
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
-    return resp.json();
+    // Supabase 預設回傳數量有限制；逐頁讀取，不能只顯示第一批城市。
+    const result = [];
+    const pageSize = 500;
+    for (let offset = 0; ; offset += pageSize){
+      const resp = await fetch(
+        `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&order=city_id.asc&limit=${pageSize}&offset=${offset}`,
+        {cache:"no-store", signal:AbortSignal.timeout(15000), headers:{
+          apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}`
+        }}
+      );
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      const page = await resp.json();
+      if (!Array.isArray(page)) throw new Error("資料格式錯誤");
+      result.push(...page);
+      if (page.length < pageSize) return result;
+    }
   }
 
   function formatTime(iso){
@@ -257,19 +309,17 @@
     document.getElementById("showCount").textContent = cities.length;
 
     if (cities.length === 0){
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">沒有符合條件的城市資料</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">目前沒有符合條件、且已收到據點戰標記的城市</td></tr>';
       return;
     }
 
     tbody.innerHTML = cities.map(c => `
-      <tr>
+      <tr class="${Date.now() - (changedAt.get(String(c.city_id)) || 0) < 3000 ? 'changed' : ''}">
         <td class="td-id">${esc(c.city_id ?? '—')}</td>
         <td class="td-city">${esc(c.name || '—')}</td>
-        <td class="td-chapter">${esc(c.title || '—')}</td>
-        <td class="td-chapter">${esc(c.chapter_name || '—')}${c.chapter_number ? ' ch.' + c.chapter_number : ''}</td>
-        <td><span class="td-nation">${esc(c.control_nation_name || '—')}</span></td>
-        <td class="td-control">${esc(c.control_name || '—')}</td>
-        <td class="td-id">${esc(c.control_union_id ?? '—')}</td>
+        <td class="td-id">${esc(parseBattle(c.nation_battle)?.id ?? '—')}</td>
+        <td class="td-time" data-countdown-city="${esc(c.city_id)}">${esc(countdown(c))}</td>
+        <td>${esc(c.nation_battle_score ?? '未取得')}</td>
         <td class="td-time">${formatTime(c.updated_at)}</td>
       </tr>
     `).join("");
@@ -284,53 +334,117 @@
   function applyFilter(){
     const q = document.getElementById("searchInput").value.trim().toLowerCase();
     const nation = document.getElementById("nationFilter").value;
-    let filtered = allCities;
+    let filtered = allCities.filter(activeBattle);
     if (q) filtered = filtered.filter(c =>
       String(c.city_id ?? '').toLowerCase().includes(q) ||
       (c.name || '').toLowerCase().includes(q) ||
-      (c.title || '').toLowerCase().includes(q) ||
-      (c.control_name || '').toLowerCase().includes(q) ||
-      (c.control_nation_name || "").toLowerCase().includes(q)
+      String(parseBattle(c.nation_battle)?.id ?? '').includes(q)
     );
     if (nation) filtered = filtered.filter(c => (c.control_nation_name || "") === nation);
     filtered = sortCities(filtered);
     renderTable(filtered);
   }
 
-  async function init(){
+  function setConnection(text, error = false){
+    document.getElementById("connectionState").textContent = text;
+    document.getElementById("connection").classList.toggle("error", error);
+  }
+
+  async function refresh(){
+    if (fetching){ refreshAgain = true; return; }
+    fetching = true;
     const loadingMsg = document.getElementById("loadingMsg");
     const table = document.getElementById("cityTable");
 
     try {
-      allCities = await fetchCities();
+      const next = await fetchCities();
+      const previous = new Map(allCities.map(c => [String(c.city_id), JSON.stringify(c)]));
+      if (previous.size) next.forEach(c => {
+        if (previous.get(String(c.city_id)) !== JSON.stringify(c)) changedAt.set(String(c.city_id), Date.now());
+      });
+      allCities = next;
+      failures = 0;
 
       // 統計
-      document.getElementById("totalCount").textContent = allCities.length;
-      const nations = [...new Set(allCities.map(c => c.control_nation_name).filter(Boolean))].sort();
+      const activeCities = allCities.filter(activeBattle);
+      document.getElementById("totalCount").textContent = activeCities.length;
+      const nations = [...new Set(activeCities.map(c => c.control_nation_name).filter(Boolean))].sort();
       document.getElementById("nationCount").textContent = nations.length;
 
       // 國家篩選下拉
       const sel = document.getElementById("nationFilter");
+      const selected = sel.value;
+      sel.replaceChildren(new Option("所有國家", ""));
       nations.forEach(n => {
         const opt = document.createElement("option");
         opt.value = n; opt.textContent = n;
         sel.appendChild(opt);
       });
+      if (nations.includes(selected)) sel.value = selected;
 
       // 最後更新時間
-      const latest = allCities[0]?.updated_at;
+      const latest = activeCities.reduce((a, c) => Date.parse(c.updated_at) > Date.parse(a || '1970-01-01') ? c.updated_at : a, null);
       document.getElementById("lastUpdate").textContent = latest ? formatTime(latest) : "無資料";
 
       loadingMsg.style.display = "none";
       table.style.display = "table";
-      renderTable(allCities);
+      applyFilter();
+      document.getElementById("syncTime").textContent = "同步於 " + new Date().toLocaleTimeString("zh-TW");
+      setConnection(realtimeReady ? "即時訂閱中" : "自動補查中（即時訂閱未連線）");
 
     } catch (e) {
-      loadingMsg.textContent = "讀取資料失敗：" + e.message + "（請確認 Supabase 設定是否正確）";
+      failures++;
+      setConnection("同步失敗：" + e.message + "；保留上次資料並自動重試", true);
+      if (!allCities.length) loadingMsg.textContent = "讀取資料失敗：" + e.message;
+    } finally {
+      fetching = false;
+      if (refreshAgain && !stopped){ refreshAgain = false; queueMicrotask(refresh); }
     }
   }
 
+  function connectRealtime(){
+    if (stopped) return;
+    socket = new WebSocket(SUPABASE_URL.replace(/^http/, 'ws') + '/realtime/v1/websocket?apikey=' + encodeURIComponent(SUPABASE_ANON_KEY) + '&vsn=1.0.0');
+    const topic = 'realtime:public:' + TABLE_NAME;
+    function send(event, payload, target = topic){
+      if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({topic:target,event,payload,ref:String(++reference)}));
+    }
+    socket.onopen = () => {
+      send('phx_join', {config:{broadcast:{self:false},presence:{key:''},postgres_changes:[{event:'*',schema:'public',table:TABLE_NAME}]},access_token:SUPABASE_ANON_KEY});
+      heartbeat = setInterval(() => send('heartbeat', {}, 'phoenix'), 25000);
+    };
+    socket.onmessage = event => {
+      let msg;
+      try { msg = JSON.parse(event.data); } catch { return; }
+      if (msg.event === 'system'){
+        realtimeReady = msg.payload?.status === 'ok';
+        setConnection(realtimeReady ? '即時訂閱中' : '即時訂閱未啟用，自動補查中');
+        if (realtimeReady) refresh();
+      }
+      if (msg.event === 'phx_reply' && msg.payload?.status === 'error') realtimeReady = false;
+      if (msg.event === 'postgres_changes') refresh();
+    };
+    socket.onclose = () => {
+      realtimeReady = false;
+      clearInterval(heartbeat);
+      if (!stopped){ setConnection('即時連線中斷，自動補查中'); reconnect = setTimeout(connectRealtime, 3000); }
+    };
+    socket.onerror = () => socket.close();
+  }
+
+  // 即時事件收到就更新；未啟用 Realtime 時每秒補查，失敗時逐步退避。
+  async function poll(){
+    if (stopped) return;
+    await refresh();
+    if (!stopped) setTimeout(poll, realtimeReady ? 60000 : Math.min(30000, 1000 * 2 ** Math.min(failures, 5)));
+  }
+  document.getElementById('refreshBtn').addEventListener('click', refresh);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  window.addEventListener('pagehide', () => { stopped = true; clearTimeout(reconnect); clearInterval(heartbeat); socket?.close(); });
+  window.addEventListener('pageshow', event => { if (event.persisted){ stopped = false; connectRealtime(); poll(); } });
+
   document.getElementById("searchBtn").addEventListener("click", applyFilter);
+  document.getElementById("searchInput").addEventListener("input", applyFilter);
   document.getElementById("searchInput").addEventListener("keydown", e => { if (e.key === "Enter") applyFilter(); });
   document.getElementById("nationFilter").addEventListener("change", applyFilter);
 
@@ -349,7 +463,16 @@
   });
 
   updateSortIndicators();
-  init();
+  // 只更新倒數文字，不重建表格，避免捲動與選取被打斷。
+  setInterval(() => {
+    const byId = new Map(allCities.map(c => [String(c.city_id), c]));
+    document.querySelectorAll('[data-countdown-city]').forEach(el => {
+      const city = byId.get(el.dataset.countdownCity);
+      if (city) el.textContent = countdown(city);
+    });
+  }, 1000);
+  connectRealtime();
+  poll();
 })();
 </script>
 </body>
