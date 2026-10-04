@@ -30,6 +30,13 @@ const server=http.createServer(async (req,res)=>{
     req.on('close',()=>{clients.delete(res);clearInterval(keepalive);});return;
   }
   // 不公開任意檔案：.env、後端原始碼、憑證一律不會被靜態網站送出。
+  if (pathname==='/monitor-config.js') {
+    try {
+      const config=await readFile(path.join(root,'monitor-config.js'));
+      res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-cache'});res.end(config);
+    } catch {res.writeHead(404);res.end();}
+    return;
+  }
   if (!['/','/city_query_site.html'].includes(pathname)) {res.writeHead(404);res.end();return;}
   try {
     const html=await readFile(path.join(root,'city_query_site.html'));

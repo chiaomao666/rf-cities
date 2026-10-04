@@ -26,8 +26,17 @@ GitHub Pages 只能放前端，不能執行這個常駐服務。
 部署時將 HOST 設為 0.0.0.0，並以 HTTPS 反向代理提供網站。
 
 最簡單是同一後端同時提供網站，不必設定額外 API 網址。
-若前端仍放 GitHub Pages，在網頁「設定後端」填後端 HTTPS 網址，
-並將後端 PUBLIC_ORIGIN 設為 GitHub Pages 的精確 origin。
+若前端放在 https://chiaomao666.github.io/rf-cities/city_query_site.html ：
+
+1. 將後端部署至可常駐運行的主機，取得公開的 HTTPS 網址。
+2. 在主機秘密設定填 RF_USER_ID、RF_USER_TOKEN、HOST=0.0.0.0，
+   並將 PUBLIC_ORIGIN 設為 https://chiaomao666.github.io （不含 /rf-cities）。
+3. 在 monitor-config.js 的 apiBase 填入後端 HTTPS 網址。
+4. 將 city_query_site.html 與 monitor-config.js 一起發布到 GitHub Pages。
+5. 開啟網站，確認顯示「後端已連上遊戲」。
+
+後端網址不是遊戲 WebSocket 網址，也不能填 127.0.0.1 本機網址。
+monitor-config.js 不得包含遊戲權杖；憑證僅放在後端主機秘密設定。
 不要在 HTTPS 前端呼叫 HTTP 後端。代理需允許 /api/events 的 SSE 長連線。
 
 ## 已實作／待驗證

@@ -189,9 +189,22 @@
   資料由遊戲側錄整理，僅供參考 ‧ 非官方網站
 </footer>
 
+<script src="./monitor-config.js"></script>
 <script>
 (function(){
-  const API_BASE = '';
+  let API_BASE = String(window.RF_MONITOR_CONFIG?.apiBase || '').trim().replace(/\/$/, '');
+  let configError = '';
+  if (API_BASE) {
+    try {
+      const url = new URL(API_BASE);
+      if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash)
+        throw new Error('後端網址格式不正確');
+      if (location.protocol === 'https:' && url.protocol !== 'https:') throw new Error('HTTPS 網站必須使用 HTTPS 後端');
+      API_BASE = url.href.replace(/\/$/, '');
+    } catch (e) { configError = e.message; }
+  } else if (/\.github\.io$/i.test(location.hostname)) {
+    configError = 'GitHub Pages 尚未設定遠端後端；請在 monitor-config.js 填入後端 HTTPS 網址。';
+  }
   let sourceStatus = null;
 
   let allCities = [];
@@ -409,7 +422,7 @@
   document.getElementById('refreshBtn').addEventListener('click', refresh);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
   window.addEventListener('pagehide', () => { stopped = true; clearTimeout(reconnect); clearInterval(heartbeat); socket?.close(); });
-  window.addEventListener('pageshow', event => { if (event.persisted){ stopped = false; connectRealtime(); poll(); } });
+  window.addEventListener('pageshow', event => { if (event.persisted && !configError){ stopped = false; connectRealtime(); poll(); } });
 
   document.getElementById("searchBtn").addEventListener("click", applyFilter);
   document.getElementById("searchInput").addEventListener("input", applyFilter);
@@ -439,8 +452,14 @@
       if (city) el.textContent = countdown(city);
     });
   }, 1000);
-  connectRealtime();
-  poll();
+  if (configError) {
+    setConnection(configError, true);
+    document.getElementById('loadingMsg').textContent = '等待遠端後端設定；GitHub Pages 本身不會執行採集服務。';
+    document.getElementById('refreshBtn').disabled = true;
+  } else {
+    connectRealtime();
+    poll();
+  }
 })();
 </script>
 </body>
