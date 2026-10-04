@@ -4,6 +4,6 @@
 window.RF_MONITOR_CONFIG = {
   apiBase: "",
   supabaseUrl: "https://bfecoizruicaaqxhmyqn.supabase.co",
-  publishableKey: "",
+  publishableKey: "sb_publishable_1rZAuHtmtEORxK73dbg4eQ_WavHHSMf",
   forceSupabase: false
 };
