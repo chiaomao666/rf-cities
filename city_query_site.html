@@ -223,6 +223,7 @@
     // 若採集端有明確的 sword 值，優先採用它；舊資料則讀取結構化戰況。
     if (city.sword === false || city.sword === 'false') return false;
     const battle = parseBattle(city.nation_battle);
+    if (typeof battle?._rf_monitor?.active === 'boolean') return battle._rf_monitor.active;
     if (battle?.ended_at || battle?.finished_at || battle?.ended === true || battle?.finished === true) return false;
     if (city.sword === true || city.sword === 'true') return true;
     const score = String(city.nation_battle_score ?? '').trim();
@@ -319,7 +320,7 @@
         <td class="td-city">${esc(c.name || '—')}</td>
         <td class="td-id">${esc(parseBattle(c.nation_battle)?.id ?? '—')}</td>
         <td class="td-time" data-countdown-city="${esc(c.city_id)}">${esc(countdown(c))}</td>
-        <td>${esc(c.nation_battle_score ?? '未取得')}</td>
+        <td>${esc(parseBattle(c.nation_battle)?._rf_monitor?.score ?? c.nation_battle_score ?? '未取得')}</td>
         <td class="td-time">${formatTime(c.updated_at)}</td>
       </tr>
     `).join("");
