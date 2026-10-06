@@ -27,6 +27,23 @@ class Element {
   addEventListener(){}
   getContext(){return {};}
 }
+test('較舊戰況不能覆蓋新控制權；較新控制權仍可更新',()=>{
+ const code=script.slice(script.indexOf('function mergeCity('),script.indexOf('function rebuildCities('));
+ const context=vm.createContext({Date});vm.runInContext(code,context);
+ const base={control_nation_name:'香港',control_nation_id:3,control_observed_at:'2026-10-06T20:39:02Z',sovereign:'哈里發聯盟'};
+ const old=context.mergeCity(base,{control_nation_name:'紅軍',updated_at:'2026-10-06T20:09:00Z',nation_battle:'active'});
+ assert.equal(old.control_nation_name,'香港');assert.equal(old.control_nation_id,3);
+ assert.equal(old.nation_battle,'active');assert.equal(old.sovereign,'哈里發聯盟');
+ const fresh=context.mergeCity(base,{control_nation_name:'臺灣',updated_at:'2026-10-06T20:45:00Z'});
+ assert.equal(fresh.control_nation_name,'臺灣');assert.equal(fresh.control_nation_id,null);
+});
+test('城市資料保留遊戲擷取的控制權、主權與座標',async()=>{
+ const catalog=JSON.parse(await readFile(new URL('../cities-map.json',import.meta.url),'utf8'));
+ assert.equal(catalog.length,273);assert.equal(new Set(catalog.map(c=>c.city_id)).size,273);
+ const city=catalog.find(c=>c.name==='拉瓦爾品第');
+ assert.equal(city.control_nation_name,'香港');assert.equal(city.sovereign,'哈里發聯盟');
+ assert.ok(catalog.every(c=>Number.isFinite(c.x_position)&&Number.isFinite(c.y_position)));
+});
 test('完整地圖沿用即時快照：開始、比分更新、清除戰況與城市搜尋',async()=>{
   let current={cities:[{city_id:3,name:'基隆',nation_battle:JSON.stringify({id:9,_rf_monitor:{active:true,score:'0:0'}})}],status:{state:'live',connected:true}};
   const elements=new Map(),intervals=[];let eventSource;

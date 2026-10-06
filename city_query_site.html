@@ -127,12 +127,28 @@ function battleState(city){
  const deadline=Date.parse(battle.close_roll_call_at);
  return {label:stale()?"上次戰況":deadline>Date.now()?"集結中":"交戰中",battle};
 }
+function mergeCity(base,live){
+ const merged={...base,...live};
+ const oldTime=Date.parse(base?.control_observed_at);
+ const liveTime=Date.parse(live.updated_at);
+ if(Number.isFinite(oldTime)&&(!Number.isFinite(liveTime)||liveTime<oldTime)){
+  merged.control_nation_name=base.control_nation_name;
+  merged.control_nation_id=base.control_nation_id;
+ }else if(live.control_nation_name){
+  merged.control_observed_at=live.updated_at;
+  // 後端僅提供名稱時，不能沿用舊陣營的 ID。
+  if(live.control_nation_id==null&&live.control_nation_name!==base?.control_nation_name)merged.control_nation_id=null;
+ }
+ return merged;
+}
 function rebuildCities(){
- // 快照目前僅含交戰城市；結束後保留最後收到的控制陣營，不退回初始資料。
- const ownership=new Map(allCities.filter(c=>c.control_nation_name).map(c=>[String(c.city_id),c.control_nation_name]));
- catalog=catalog.map(c=>ownership.has(String(c.city_id))?{...c,control_nation_name:ownership.get(String(c.city_id))}:c);
  const byId=new Map(catalog.map(c=>[String(c.city_id),{...c,nation_battle:null,nation_battle_score:null}]));
- for(const city of allCities)byId.set(String(city.city_id),{...byId.get(String(city.city_id)),...city});
+ for(const city of allCities)byId.set(String(city.city_id),mergeCity(byId.get(String(city.city_id)),city));
+ // 結束後保留最後收到的控制陣營；戰況仍由即時快照獨立清除。
+ catalog=catalog.map(c=>{
+  const merged=byId.get(String(c.city_id));
+  return {...c,control_nation_name:merged.control_nation_name,control_nation_id:merged.control_nation_id,control_observed_at:merged.control_observed_at};
+ });
  cities=[...byId.values()];
  if(selected)selected=cities.find(c=>String(c.city_id)===String(selected.city_id))||null;
  renderBattleList();updateDetail();requestDraw();
@@ -227,6 +243,8 @@ function updateDetail(){
  const title=document.createElement("h2");title.textContent=city.name||String(city.city_id);
  const text=document.createElement("p");
  text.textContent=`城市 #${city.city_id}\n${battle?"⚔ "+battle.label:"目前沒有據點戰標記"}\n控制陣營：${city.control_nation_name||"未知"}`;
+ text.textContent+=`\n主權：${city.sovereign||"未知"}`;
+ if(city.control_observed_at)text.textContent+=`\n控制資料時間：${new Date(city.control_observed_at).toLocaleString("zh-TW")}`;
  if(battle){text.textContent+=`\n活動 ID：${battle.battle.id??"未取得"}\n報到倒數：${countdown(city)}\n比分：${battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得"}\n更新：${city.updated_at?new Date(city.updated_at).toLocaleString("zh-TW"):"未知"}`;}
  if(!hasPosition(city))text.textContent+="\n尚未取得城市座標";
  detail.append(close,title,text);
