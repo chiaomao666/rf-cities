@@ -1,197 +1,27 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RF 據點戰監測</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-  :root{
-    --ink:#1a1a1a;
-    --paper:#f8f6f0;
-    --rule:#d4cfc4;
-    --accent:#2e5c8a;
-    --accent-light:#e8f0f8;
-    --muted:#7a7570;
-    --danger:#8b2e2e;
-    --ok:#2e6b3e;
-    --mono:'IBM Plex Mono', ui-monospace, monospace;
-    --serif:'Noto Serif TC', serif;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{font-size:16px;}
-  body{
-    background:var(--paper);color:var(--ink);
-    font-family:var(--serif);
-    min-height:100vh;
-  }
-
-  /* 頂部橫幅 */
-  .masthead{
-    border-bottom:3px solid var(--ink);
-    padding:20px 0 14px;
-    text-align:center;
-  }
-  .masthead-inner{max-width:960px;margin:0 auto;padding:0 20px;}
-  .masthead-tag{
-    font-family:var(--mono);font-size:11px;letter-spacing:.12em;
-    color:var(--muted);text-transform:uppercase;margin-bottom:6px;
-  }
-  h1{
-    font-size:clamp(28px, 5vw, 48px);font-weight:700;line-height:1.1;
-    letter-spacing:-.01em;
-  }
-  .masthead-sub{
-    font-family:var(--mono);font-size:12px;color:var(--muted);
-    margin-top:6px;
-  }
-  .masthead-sub b{color:var(--accent);}
-
-  /* 搜尋列 */
-  .search-bar{
-    max-width:960px;margin:24px auto;padding:0 20px;
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-  }
-  .search-bar input{
-    flex:1;min-width:200px;
-    border:1px solid var(--rule);border-radius:0;
-    background:#fff;color:var(--ink);
-    font-family:var(--serif);font-size:15px;
-    padding:10px 14px;
-  }
-  .search-bar input:focus{outline:2px solid var(--accent);outline-offset:0;}
-  .search-bar select{
-    border:1px solid var(--rule);background:#fff;color:var(--ink);
-    font-family:var(--serif);font-size:14px;padding:10px 10px;
-  }
-  .search-bar button{
-    background:var(--ink);color:var(--paper);
-    border:none;padding:10px 22px;cursor:pointer;
-    font-family:var(--serif);font-size:14px;
-  }
-  .search-bar button:hover{background:var(--accent);}
-
-  /* 統計列 */
-  .stats-row{
-    max-width:960px;margin:0 auto 18px;padding:0 20px;
-    font-family:var(--mono);font-size:12px;color:var(--muted);
-    display:flex;gap:20px;flex-wrap:wrap;
-    border-bottom:1px solid var(--rule);padding-bottom:12px;
-  }
-  .stats-row b{color:var(--ink);}
-
-  /* 城市表格 */
-  .table-wrap{
-    max-width:960px;margin:0 auto;padding:0 20px 60px;
-    overflow-x:auto;
-  }
-  table{
-    width:100%;border-collapse:collapse;
-    font-size:14px;
-  }
-  thead th{
-    font-family:var(--mono);font-size:11px;letter-spacing:.06em;
-    color:var(--muted);font-weight:500;
-    border-bottom:2px solid var(--ink);
-    padding:8px 10px;text-align:left;white-space:nowrap;
-  }
-  thead th.sortable{cursor:pointer;user-select:none;}
-  thead th.sortable:hover{color:var(--ink);}
-  thead th .sort-arrow{
-    display:inline-block;margin-left:4px;font-size:10px;color:var(--rule);
-  }
-  thead th.sort-active .sort-arrow{color:var(--accent);}
-  tbody tr{border-bottom:1px solid var(--rule);}
-  tbody tr:hover{background:var(--accent-light);}
-  tbody td{padding:9px 10px;vertical-align:top;line-height:1.4;}
-  .td-id{font-family:var(--mono);font-size:12px;color:var(--muted);}
-  .td-city{font-weight:600;color:var(--ink);}
-  .td-chapter{color:var(--muted);font-size:13px;}
-  .td-nation{
-    display:inline-block;padding:2px 8px;
-    background:var(--ink);color:var(--paper);
-    font-family:var(--mono);font-size:11px;
-  }
-  .td-control{font-size:13px;color:var(--accent);}
-  .td-time{font-family:var(--mono);font-size:11px;color:var(--muted);}
-  .td-energy{font-family:var(--mono);font-size:13px;}
-  .empty-row td{text-align:center;color:var(--muted);padding:40px;font-size:14px;}
-
-  /* 頁腳 */
-  footer{
-    border-top:1px solid var(--rule);
-    padding:16px 20px;
-    text-align:center;
-    font-family:var(--mono);font-size:11px;color:var(--muted);
-  }
-
-  .loading{
-    text-align:center;padding:60px 20px;
-    font-family:var(--mono);font-size:13px;color:var(--muted);
-  }
-  .connection{max-width:960px;margin:16px auto 0;padding:0 20px;font-size:13px;color:var(--muted);line-height:1.8;}
-  .connection strong{color:var(--accent);}
-  .connection.error strong{color:var(--danger);}
-  .connection button{margin-left:12px;padding:4px 10px;cursor:pointer;}
-  .notice{max-width:960px;margin:0 auto 16px;padding:0 20px;font-size:12px;color:var(--muted);}
-  tbody tr.changed{background:#fff0bd;}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>逆統戰 · 即時據點戰地圖</title>
+<link rel="stylesheet" href="./battle-map.css">
 </head>
 <body>
-
-<div class="masthead">
-  <div class="masthead-inner">
-    <div class="masthead-tag">Reversed Front — 據點戰</div>
-    <h1>進行中的據點戰</h1>
-    <div class="masthead-sub">最新城市資料時間：<b id="lastUpdate">讀取中…</b></div>
-  </div>
-</div>
-
-<div class="connection" id="connection" role="status" aria-live="polite">
-  <strong id="connectionState">正在連線…</strong>
-  <span id="syncTime"></span><button id="refreshBtn" type="button">立即同步</button>
-</div>
-<p class="notice">由獨立後端接收遊戲戰況，不需開啟遊戲或掛載模組。僅顯示交戰城市；後端斷線時保留的資料不代表最新戰況。</p>
-
-<div class="search-bar">
-  <input type="text" id="searchInput" placeholder="搜尋交戰城市名稱、城市 ID 或活動 ID…" />
-  <select id="nationFilter">
-    <option value="">所有國家</option>
-  </select>
-  <button id="searchBtn">查詢</button>
-</div>
-
-<div class="stats-row" id="statsRow">
-  <span>交戰城市 <b id="totalCount">—</b> 座</span>
-  <span>主權國家 <b id="nationCount">—</b> 個</span>
-  <span>顯示 <b id="showCount">—</b> 筆</span>
-</div>
-
-<div class="table-wrap">
-  <div class="loading" id="loadingMsg">正在從獨立後端讀取戰況…</div>
-  <table id="cityTable" style="display:none;">
-    <thead>
-      <tr id="cityTableHeadRow">
-        <th class="sortable" data-key="city_id">城市 ID<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="name">城市名稱<span class="sort-arrow"></span></th>
-        <th class="sortable" data-key="battle_id">活動 ID<span class="sort-arrow"></span></th>
-        <th>報到倒數</th>
-        <th>據點戰比分</th>
-        <th class="sortable" data-key="updated_at">最後更新<span class="sort-arrow"></span></th>
-      </tr>
-    </thead>
-    <tbody id="cityTableBody"></tbody>
-  </table>
-</div>
-
-<footer>
-  資料由遊戲側錄整理，僅供參考 ‧ 非官方網站
-</footer>
-
+<canvas id="map" aria-label="逆統戰城市與據點戰地圖"></canvas>
+<header class="panel toolbar">
+<div><small>REVERSED FRONT · LIVE MAP</small><h1>逆統戰據點戰地圖</h1></div>
+<form id="search"><input id="query" aria-label="搜尋城市" placeholder="搜尋城市名稱或 ID" autocomplete="off"><button>搜尋</button></form>
+<label><input id="onlyBattle" type="checkbox">只顯示戰況</label>
+<button id="refresh" type="button">更新</button>
+</header>
+<aside class="panel battles"><h2>⚔ 據點戰</h2><p id="summary">正在讀取城市資料…</p><div id="battleList"></div></aside>
+<section class="panel detail" id="detail" hidden></section>
+<nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
+<footer class="panel status"><span id="status" role="status">連線中…</span><span>⚔ 據點戰 · Oracle 持續採集</span></footer>
 <script src="./monitor-config.js"></script>
 <script>
 (function(){
+"use strict";
   let API_BASE = String(window.RF_MONITOR_CONFIG?.apiBase || '').trim().replace(/\/$/, '');
   let configError = '';
   const config = window.RF_MONITOR_CONFIG || {};
@@ -217,21 +47,13 @@
       API_BASE = url.href.replace(/\/$/, '');
     } catch (e) { configError = e.message; }
   }
-  let sourceStatus = null;
 
-  let allCities = [];
-  let fetching = false;
-  let refreshAgain = false;
-  let realtimeReady = false;
-  let socket = null;
-  let heartbeat = null;
-  let reconnect = null;
-  let reference = 0;
-  let failures = 0;
-  let stopped = false;
-  const changedAt = new Map();
-  let sortState = { key: null, dir: "asc" }; // dir: "asc" | "desc"
-
+  let sourceStatus=null, allCities=[], cities=[], catalog=[];
+let fetching=false,refreshAgain=false,realtimeReady=false,socket=null,reconnect=null,failures=0,stopped=false;
+let scale=1,offsetX=0,offsetY=0,width=0,height=0,selected=null,frame=0,dragDistance=0,listSignature="",detailSignature="";
+const CONFIG={tiles:"./tiles",width:11036,height:7505};
+const $=id=>document.getElementById(id);
+const canvas=$("map"),ctx=canvas.getContext("2d"),tiles=new Map(),pointers=new Map();
   function parseBattle(value){
     if (typeof value === 'string'){
       try { value = JSON.parse(value); } catch { return null; }
@@ -260,54 +82,6 @@
     return seconds > 0 ? `${Math.floor(seconds / 60)}分 ${seconds % 60}秒` : '報到已截止';
   }
 
-  function sortCities(cities){
-    if (!sortState.key) return cities;
-    const key = sortState.key;
-    const dir = sortState.dir === "desc" ? -1 : 1;
-    return cities.slice().sort((a, b) => {
-      let av = a[key], bv = b[key];
-      if (key === 'battle_id') {
-        const numericId = city => {
-          const id = parseBattle(city.nation_battle)?.id;
-          if (id == null || String(id).trim() === '' || !Number.isSafeInteger(Number(id)) || Number(id) <= 0) return null;
-          return Number(id);
-        };
-        av = numericId(a); bv = numericId(b);
-      }
-      const aEmpty = av === null || av === undefined || av === "";
-      const bEmpty = bv === null || bv === undefined || bv === "";
-      if (aEmpty && bEmpty) return 0;
-      if (aEmpty) return 1;  // 空值一律排到最後
-      if (bEmpty) return -1;
-      if (key === "updated_at") {
-        av = new Date(av).getTime();
-        bv = new Date(bv).getTime();
-      } else if (typeof av === "number" || typeof bv === "number" || key === "city_id" || key === "control_union_id" || key === "chapter_number") {
-        av = Number(av); bv = Number(bv);
-        if (isNaN(av)) av = -Infinity;
-        if (isNaN(bv)) bv = -Infinity;
-      } else {
-        av = String(av).toLowerCase();
-        bv = String(bv).toLowerCase();
-      }
-      if (av < bv) return -1 * dir;
-      if (av > bv) return 1 * dir;
-      return 0;
-    });
-  }
-
-  function updateSortIndicators(){
-    document.querySelectorAll('#cityTableHeadRow th.sortable').forEach(th => {
-      const arrow = th.querySelector('.sort-arrow');
-      if (th.dataset.key === sortState.key) {
-        th.classList.add('sort-active');
-        arrow.textContent = sortState.dir === "asc" ? "▲" : "▼";
-      } else {
-        th.classList.remove('sort-active');
-        arrow.textContent = "▲▼";
-      }
-    });
-  }
 
   async function fetchCities(){
     const headers = useSupabase ? {apikey:publicKey} : {};
@@ -328,122 +102,139 @@
     return data.cities;
   }
 
-  function formatTime(iso){
-    if (!iso) return "—";
-    const d = new Date(iso);
-    return d.toLocaleString("zh-TW", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
-  }
 
-  function renderTable(cities){
-    const tbody = document.getElementById("cityTableBody");
-    document.getElementById("showCount").textContent = cities.length;
-
-    if (cities.length === 0){
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">目前沒有符合條件、且已收到據點戰標記的城市</td></tr>';
-      return;
+function stale(){
+ return !sourceStatus?.connected || (useSupabase&&(!cloudUpdatedAt||Date.now()-Date.parse(cloudUpdatedAt)>90000));
+}
+function battleState(city){
+ if(!activeBattle(city))return null;
+ const battle=parseBattle(city.nation_battle)||{};
+ const deadline=Date.parse(battle.close_roll_call_at);
+ return {label:stale()?"上次戰況":deadline>Date.now()?"集結中":"交戰中",battle};
+}
+function rebuildCities(){
+ const byId=new Map(catalog.map(c=>[String(c.city_id),{...c,nation_battle:null,nation_battle_score:null}]));
+ for(const city of allCities)byId.set(String(city.city_id),{...byId.get(String(city.city_id)),...city});
+ cities=[...byId.values()];
+ if(selected)selected=cities.find(c=>String(c.city_id)===String(selected.city_id))||null;
+ renderBattleList();updateDetail();requestDraw();
+}
+function hasPosition(city){return city.x_position!=null&&city.y_position!=null&&Number.isFinite(Number(city.x_position))&&Number.isFinite(Number(city.y_position));}
+function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBattle):cities).filter(hasPosition);}
+    function requestDraw() {
+        if (!frame) frame = requestAnimationFrame(draw);
+    }
+    function tileImage(z, x, y) {
+        const key = `${z}/${x}/${y}`;
+        if (tiles.has(key)) return tiles.get(key);
+        const image = new Image();
+        const entry = {image, ready: false};
+        tiles.set(key, entry);
+        image.onload = () => { entry.ready = true; requestDraw(); };
+        image.onerror = () => { entry.failed = true; };
+        image.src = `${CONFIG.tiles}/${key}.png`;
+        // 固定容量；只保留最近使用的圖塊，避免長期縮放堆積圖片。
+        if (tiles.size > 600) tiles.delete(tiles.keys().next().value);
+        return entry;
+    }
+    function draw() {
+        frame = 0;
+        const dpr = window.devicePixelRatio || 1;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.fillStyle = "#081614"; ctx.fillRect(0, 0, width, height);
+        const z = Math.max(0, Math.min(6, Math.ceil(6 + Math.log2(scale))));
+        const span = 256 * Math.pow(2, 6 - z);
+        const minX = Math.max(0, Math.floor(-offsetX / scale / span));
+        const minY = Math.max(0, Math.floor(-offsetY / scale / span));
+        const maxX = Math.min(Math.ceil(CONFIG.width / span) - 1, Math.floor((width - offsetX) / scale / span));
+        const maxY = Math.min(Math.ceil(CONFIG.height / span) - 1, Math.floor((height - offsetY) / scale / span));
+        ctx.save();
+        ctx.beginPath();ctx.rect(offsetX, offsetY, CONFIG.width * scale, CONFIG.height * scale);ctx.clip();
+        for (let x = minX; x <= maxX; x++) for (let y = minY; y <= maxY; y++) {
+            const tile = tileImage(z, x, y);
+            if (tile.ready) ctx.drawImage(tile.image, offsetX + x * span * scale, offsetY + y * span * scale, span * scale + .5, span * scale + .5);
+        }
+        ctx.restore();
+        const pulse = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : (Math.sin(Date.now()/350) + 1)/2;
+        ctx.textAlign = "center";
+        for (const city of visibleCities()) {
+            const x = offsetX + city.x_position * scale, y = offsetY + city.y_position * scale;
+            if (x < -80 || y < -40 || x > width + 80 || y > height + 40) continue;
+            const battle = battleState(city);
+            if (battle) {
+                ctx.beginPath(); ctx.arc(x,y,13+pulse*9,0,Math.PI*2);
+                ctx.strokeStyle = stale()?`rgba(224,177,92,${.8-pulse*.4})`:`rgba(255,86,87,${.8-pulse*.4})`;ctx.lineWidth=2;ctx.stroke();
+                ctx.font="bold 25px sans-serif";ctx.fillStyle=stale()?"#e0b15c":"#ff8383";ctx.fillText("⚔",x,y+8);
+            } else {
+                ctx.beginPath();ctx.arc(x,y,selected===city?7:4,0,Math.PI*2);
+                ctx.fillStyle=selected===city?"#9affd8":"#bdccc5";ctx.fill();
+            }
+            if (scale > .12 || battle || selected===city) {
+                ctx.font="600 12px sans-serif";ctx.lineWidth=4;ctx.strokeStyle="#071412";
+                ctx.strokeText(city.name || String(city.city_id),x,y+27);
+                ctx.fillStyle=battle?(stale()?"#e0b15c":"#ffbdbd"):"#fff";ctx.fillText(city.name || String(city.city_id),x,y+27);
+            }
+        }
+    }
+    function zoom(factor,x=width/2,y=height/2) {
+        const next = Math.max(.035,Math.min(2,scale*factor)), ratio=next/scale;
+        offsetX=x-(x-offsetX)*ratio;offsetY=y-(y-offsetY)*ratio;scale=next;requestDraw();
+    }
+    function fit() {
+        scale=Math.max(.035,Math.min(width/CONFIG.width,height/CONFIG.height)*.94);
+        offsetX=(width-CONFIG.width*scale)/2;offsetY=(height-CONFIG.height*scale)/2;requestDraw();
+    }
+    function resize() {
+        width=innerWidth;height=innerHeight;
+        canvas.width=Math.round(width*(devicePixelRatio||1));canvas.height=Math.round(height*(devicePixelRatio||1));requestDraw();
     }
 
-    tbody.innerHTML = cities.map(c => `
-      <tr class="${Date.now() - (changedAt.get(String(c.city_id)) || 0) < 3000 ? 'changed' : ''}">
-        <td class="td-id">${esc(c.city_id ?? '—')}</td>
-        <td class="td-city">${esc(c.name || '—')}</td>
-        <td class="td-id">${esc(parseBattle(c.nation_battle)?.id ?? '—')}</td>
-        <td class="td-time" data-countdown-city="${esc(c.city_id)}">${esc(countdown(c))}</td>
-        <td>${esc(parseBattle(c.nation_battle)?._rf_monitor?.score ?? c.nation_battle_score ?? '未取得')}</td>
-        <td class="td-time">${formatTime(c.updated_at)}</td>
-      </tr>
-    `).join("");
-  }
-
-
-  function esc(s){
-    return String(s == null ? "" : s)
-      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-
-  function applyFilter(){
-    const q = document.getElementById("searchInput").value.trim().toLowerCase();
-    const nation = document.getElementById("nationFilter").value;
-    let filtered = allCities.filter(activeBattle);
-    if (q) filtered = filtered.filter(c =>
-      String(c.city_id ?? '').toLowerCase().includes(q) ||
-      (c.name || '').toLowerCase().includes(q) ||
-      String(parseBattle(c.nation_battle)?.id ?? '').includes(q)
-    );
-    if (nation) filtered = filtered.filter(c => (c.control_nation_name || "") === nation);
-    filtered = sortCities(filtered);
-    renderTable(filtered);
-  }
-
-  function setConnection(text, error = false){
-    document.getElementById("connectionState").textContent = text;
-    document.getElementById("connection").classList.toggle("error", error);
-  }
-
-  async function refresh(){
-    if (fetching){ refreshAgain = true; return; }
-    fetching = true;
-    const loadingMsg = document.getElementById("loadingMsg");
-    const table = document.getElementById("cityTable");
-
-    try {
-      const next = await fetchCities();
-      const previous = new Map(allCities.map(c => [String(c.city_id), JSON.stringify(c)]));
-      if (previous.size) next.forEach(c => {
-        if (previous.get(String(c.city_id)) !== JSON.stringify(c)) changedAt.set(String(c.city_id), Date.now());
-      });
-      allCities = next;
-      failures = 0;
-
-      // 統計
-      const activeCities = allCities.filter(activeBattle);
-      document.getElementById("totalCount").textContent = activeCities.length;
-      const nations = [...new Set(activeCities.map(c => c.control_nation_name).filter(Boolean))].sort();
-      document.getElementById("nationCount").textContent = nations.length;
-
-      // 國家篩選下拉
-      const sel = document.getElementById("nationFilter");
-      const selected = sel.value;
-      sel.replaceChildren(new Option("所有國家", ""));
-      nations.forEach(n => {
-        const opt = document.createElement("option");
-        opt.value = n; opt.textContent = n;
-        sel.appendChild(opt);
-      });
-      if (nations.includes(selected)) sel.value = selected;
-
-      // 最後更新時間
-      const latest = activeCities.reduce((a, c) => Date.parse(c.updated_at) > Date.parse(a || '1970-01-01') ? c.updated_at : a, null);
-      document.getElementById("lastUpdate").textContent = latest ? formatTime(latest) : "無資料";
-
-      loadingMsg.style.display = "none";
-      table.style.display = "table";
-      applyFilter();
-      document.getElementById("syncTime").textContent = "同步於 " + new Date().toLocaleTimeString("zh-TW");
-      showSourceStatus();
-
-    } catch (e) {
-      failures++;
-      setConnection("同步失敗：" + e.message + "；保留上次資料並自動重試", true);
-      if (!allCities.length) loadingMsg.textContent = "讀取資料失敗：" + e.message;
-    } finally {
-      fetching = false;
-      if (refreshAgain && !stopped){ refreshAgain = false; queueMicrotask(refresh); }
-    }
-  }
-
-  function showSourceStatus(){
-      if (useSupabase && cloudUpdatedAt && Date.now() - Date.parse(cloudUpdatedAt) > 90000) {
-        setConnection('採集主機超過 90 秒未回報；顯示的是上次戰況，不代表目前仍在交戰', true);
-        return;
-      }
-      const labels = {waiting_credentials:'後端尚未設定採集帳號',connecting:'後端正在連接遊戲',
-        subscribing:'後端正在訂閱遊戲戰況',live:'後端已連上遊戲，持續接收戰況',
-        reconnecting:'後端與遊戲斷線，正在重連；顯示資料可能已過期',auth_error:'遊戲拒絕連線，請檢查採集帳號權限'};
-      setConnection((labels[sourceStatus?.state] || '後端狀態未知') + (sourceStatus?.error ? '：' + sourceStatus.error : ''), !sourceStatus?.connected);
-
-  }
-
+function focusCity(city){
+ selected=city;
+ if(hasPosition(city)){scale=Math.max(scale,.4);offsetX=width/2-Number(city.x_position)*scale;offsetY=height/2-Number(city.y_position)*scale;}
+ $("detail").hidden=false;detailSignature="";updateDetail();requestDraw();
+}
+function updateDetail(){
+ const detail=$("detail");if(detail.hidden||!selected)return;
+ const city=selected,battle=battleState(city);
+ const signature=JSON.stringify([city,battle?.label,battle?countdown(city):null]);
+ if(signature===detailSignature)return;detailSignature=signature;detail.replaceChildren();
+ const close=document.createElement("button");close.textContent="關閉";close.onclick=()=>{detail.hidden=true;};
+ const title=document.createElement("h2");title.textContent=city.name||String(city.city_id);
+ const text=document.createElement("p");
+ text.textContent=`城市 #${city.city_id}\n${battle?"⚔ "+battle.label:"目前沒有據點戰標記"}\n國家：${city.control_nation_name||"未知"}`;
+ if(battle){text.textContent+=`\n活動 ID：${battle.battle.id??"未取得"}\n報到倒數：${countdown(city)}\n比分：${battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得"}\n更新：${city.updated_at?new Date(city.updated_at).toLocaleString("zh-TW"):"未知"}`;}
+ if(!hasPosition(city))text.textContent+="\n尚未取得城市座標";
+ detail.append(close,title,text);
+}
+function renderBattleList(){
+ const active=cities.filter(activeBattle),list=$("battleList");
+ $("summary").textContent=`${cities.filter(hasPosition).length} 座城市 · ${active.length} 處${stale()?"上次":"即時"}戰況`;
+ const signature=JSON.stringify(active.map(c=>[c.city_id,c.name,battleState(c).label,c.nation_battle,c.updated_at]));
+ if(signature===listSignature)return;listSignature=signature;list.replaceChildren();
+ for(const city of active){
+   const button=document.createElement("button");button.className="battle";button.textContent=`⚔ ${city.name||city.city_id}`;
+   const small=document.createElement("small");small.textContent=`${battleState(city).label} · 比分 ${parseBattle(city.nation_battle)?._rf_monitor?.score??"未取得"}`;
+   button.append(small);button.onclick=()=>focusCity(city);list.append(button);
+ }
+ if(!active.length)list.textContent=sourceStatus?.connected?"目前沒有收到據點戰標記。":"等待 Oracle 採集主機的戰況。";
+}
+function setConnection(text,error=false){$("status").textContent=text;$("status").classList.toggle("error",error);}
+function showSourceStatus(){
+ if(useSupabase&&cloudUpdatedAt&&Date.now()-Date.parse(cloudUpdatedAt)>90000){
+  setConnection("採集主機超過 90 秒未回報；雙刀顯示上次戰況，資料可能過期",true);return;
+ }
+ const labels={waiting_credentials:"採集主機尚未設定帳號",connecting:"Oracle 正在連接遊戲",subscribing:"Oracle 正在訂閱戰況",live:"Oracle 已連上遊戲，持續接收戰況",reconnecting:"Oracle 與遊戲斷線，正在重連；資料可能過期",auth_error:"遊戲拒絕採集主機連線"};
+ setConnection((labels[sourceStatus?.state]||"等待採集主機")+(sourceStatus?.error?"："+sourceStatus.error:"")+
+ (cloudUpdatedAt?" · 更新 "+new Date(cloudUpdatedAt).toLocaleTimeString("zh-TW"):"")+(realtimeReady?" · 即時通知已連接":" · 自動補查"),!sourceStatus?.connected);
+}
+async function refresh(){
+ if(stopped||configError)return;
+ if(fetching){refreshAgain=true;return;}fetching=true;$("refresh").disabled=true;
+ try{allCities=await fetchCities();failures=0;rebuildCities();showSourceStatus();}
+ catch(error){failures++;setConnection("同步失敗："+error.message+"；保留上次戰況並自動重試",true);}
+ finally{fetching=false;$("refresh").disabled=false;if(refreshAgain&&!stopped){refreshAgain=false;queueMicrotask(refresh);}}
+}
   async function connectRealtime(){
     if (stopped) return;
     if (useSupabase) {
@@ -474,48 +265,54 @@
     await refresh();
     if (!stopped) reconnect = setTimeout(poll, realtimeReady ? 60000 : Math.min(30000, 1000 * 2 ** Math.min(failures, 5)));
   }
-  document.getElementById('refreshBtn').addEventListener('click', refresh);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
-  window.addEventListener('pagehide', () => { stopped = true; realtimeReady=false; clearTimeout(reconnect); if (useSupabase) {if (socket) supabaseClient?.removeChannel(socket);} else socket?.close(); });
-  window.addEventListener('pageshow', event => { if (event.persisted && !configError){ stopped = false; connectRealtime(); poll(); } });
 
-  document.getElementById("searchBtn").addEventListener("click", applyFilter);
-  document.getElementById("searchInput").addEventListener("input", applyFilter);
-  document.getElementById("searchInput").addEventListener("keydown", e => { if (e.key === "Enter") applyFilter(); });
-  document.getElementById("nationFilter").addEventListener("change", applyFilter);
-
-  document.getElementById("cityTableHeadRow").addEventListener("click", e => {
-    const th = e.target.closest("th.sortable");
-    if (!th) return;
-    const key = th.dataset.key;
-    if (sortState.key === key) {
-      sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
-    } else {
-      sortState.key = key;
-      sortState.dir = "asc";
-    }
-    updateSortIndicators();
-    applyFilter();
-  });
-
-  updateSortIndicators();
-  // 只更新倒數文字，不重建表格，避免捲動與選取被打斷。
-  setInterval(() => {
-    if (!stopped && !configError && sourceStatus && !failures) showSourceStatus();
-    const byId = new Map(allCities.map(c => [String(c.city_id), c]));
-    document.querySelectorAll('[data-countdown-city]').forEach(el => {
-      const city = byId.get(el.dataset.countdownCity);
-      if (city) el.textContent = countdown(city);
+async function loadCatalog(){
+ try{
+  const response=await fetch("./cities-map.json",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
+  const data=await response.json();if(!Array.isArray(data))throw new Error("座標格式錯誤");
+  catalog=data.filter(c=>c&&c.city_id!=null);rebuildCities();
+ }catch(error){$("summary").textContent="城市座標載入失敗："+error.message;}
+}
+    canvas.addEventListener("wheel",event=>{event.preventDefault();zoom(Math.exp(-event.deltaY*.001),event.clientX,event.clientY);},{passive:false});
+    canvas.addEventListener("pointerdown",event=>{canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});dragDistance=0;});
+    canvas.addEventListener("pointermove",event=>{
+        const previous=pointers.get(event.pointerId);if(!previous)return;
+        const next={x:event.clientX,y:event.clientY};
+        if(pointers.size===2){
+            const other=[...pointers.entries()].find(([id])=>id!==event.pointerId)[1];
+            const oldDistance=Math.hypot(previous.x-other.x,previous.y-other.y),newDistance=Math.hypot(next.x-other.x,next.y-other.y);
+            if(oldDistance>0)zoom(newDistance/oldDistance,(next.x+other.x)/2,(next.y+other.y)/2);
+            dragDistance+=10;
+        } else {const dx=next.x-previous.x,dy=next.y-previous.y;offsetX+=dx;offsetY+=dy;dragDistance+=Math.hypot(dx,dy);requestDraw();}
+        pointers.set(event.pointerId,next);
     });
-  }, 1000);
-  if (configError) {
-    setConnection(configError, true);
-    document.getElementById('loadingMsg').textContent = '等待雲端連線設定；請只填公開讀取金鑰，登入權杖留在採集主機。';
-    document.getElementById('refreshBtn').disabled = true;
-  } else {
-    connectRealtime();
-    poll();
-  }
+    canvas.addEventListener("pointerup",event=>{
+        if(dragDistance<6&&pointers.size===1){
+            let nearest=null,distance=25;
+            for(const city of visibleCities()){
+                const d=Math.hypot(offsetX+city.x_position*scale-event.clientX,offsetY+city.y_position*scale-event.clientY);
+                if(d<distance){nearest=city;distance=d;}
+            }
+            if(nearest)focusCity(nearest);
+        }
+        pointers.delete(event.pointerId);
+    });
+    canvas.addEventListener("pointercancel",event=>pointers.delete(event.pointerId));
+    $("zoomIn").onclick=()=>zoom(1.4);$("zoomOut").onclick=()=>zoom(1/1.4);$("fit").onclick=fit;
+    $("refresh").onclick=refresh;$("onlyBattle").onchange=requestDraw;
+    $("search").onsubmit=event=>{
+        event.preventDefault();const query=$("query").value.trim();if(!query)return;
+        const city=cities.find(c=>String(c.city_id)===query||c.name===query)||cities.find(c=>c.name&&c.name.includes(query));
+        if(city)focusCity(city);else $("status").textContent=`找不到城市「${query}」`;
+    };
+
+addEventListener("resize",resize);resize();fit();loadCatalog();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh();});
+addEventListener("pagehide",()=>{stopped=true;realtimeReady=false;clearTimeout(reconnect);if(useSupabase){if(socket)supabaseClient?.removeChannel(socket);}else socket?.close();});
+addEventListener("pageshow",event=>{if(event.persisted&&!configError){stopped=false;connectRealtime();poll();}});
+setInterval(()=>{if(!document.hidden&&!stopped){renderBattleList();updateDetail();requestDraw();if(sourceStatus&&!failures)showSourceStatus();}},1000);
+setInterval(()=>{if(!document.hidden&&!stopped&&cities.some(activeBattle))requestDraw();},250);
+if(configError){setConnection(configError,true);$("refresh").disabled=true;}else{connectRealtime();poll();}
 })();
 </script>
 </body>

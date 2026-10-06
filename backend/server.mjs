@@ -39,6 +39,15 @@ const server=http.createServer(async (req,res)=>{
     } catch {res.writeHead(404);res.end();}
     return;
   }
+  const publicFiles={'/battle-map.css':'text/css; charset=utf-8','/cities-map.json':'application/json; charset=utf-8'};
+  const tile=/^\/tiles\/[0-6]\/\d{1,2}\/\d{1,2}\.png$/.test(pathname);
+  if (publicFiles[pathname] || tile) {
+    try {
+      const data=await readFile(path.join(root,pathname.slice(1)));
+      res.writeHead(200,{'Content-Type':tile?'image/png':publicFiles[pathname],'Cache-Control':tile?'public, max-age=86400':'no-cache'});res.end(data);
+    } catch {res.writeHead(404);res.end();}
+    return;
+  }
   if (!['/','/city_query_site.html'].includes(pathname)) {res.writeHead(404);res.end();return;}
   try {
     const html=await readFile(path.join(root,'city_query_site.html'));
