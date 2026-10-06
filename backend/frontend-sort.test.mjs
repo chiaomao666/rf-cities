@@ -4,6 +4,15 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
 const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
+test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
+  const code=script.slice(script.indexOf('const NATION_COLORS='),script.indexOf('  function parseBattle('));
+  const context=vm.createContext({});vm.runInContext(code,context);
+  assert.equal(context.cityColor({control_nation_name:'紅軍',sovereign:'臺灣'}),'#ff2525');
+  assert.equal(context.cityColor({control_nation_name:'臺灣'}),'#008fa6');
+  assert.equal(context.cityColor({control_nation_name:'反賊聯盟'}),'#b443e8');
+  assert.equal(context.cityColor({control_nation_name:null}),'#808080');
+  assert.match(script,/ctx.fillStyle=cityColor\(city\)/);
+});
 class Element {
   constructor(){this.hidden=true;this.children=[];this.textContent='';this.value='';this.checked=false;this.classList={toggle(){}};}
   append(...children){this.children.push(...children);}
