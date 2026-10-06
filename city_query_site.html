@@ -149,6 +149,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         const maxX = Math.min(Math.ceil(CONFIG.width / span) - 1, Math.floor((width - offsetX) / scale / span));
         const maxY = Math.min(Math.ceil(CONFIG.height / span) - 1, Math.floor((height - offsetY) / scale / span));
         ctx.save();
+        ctx.filter = "grayscale(1)";
         ctx.beginPath();ctx.rect(offsetX, offsetY, CONFIG.width * scale, CONFIG.height * scale);ctx.clip();
         for (let x = minX; x <= maxX; x++) for (let y = minY; y <= maxY; y++) {
             const tile = tileImage(z, x, y);
