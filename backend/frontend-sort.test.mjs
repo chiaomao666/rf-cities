@@ -45,9 +45,11 @@ test('城市資料保留遊戲擷取的控制權、主權與座標',async()=>{
  assert.ok(catalog.every(c=>Number.isFinite(c.x_position)&&Number.isFinite(c.y_position)));
 });
 test('完整地圖沿用即時快照：開始、比分更新、清除戰況與城市搜尋',async()=>{
-  let current={cities:[{city_id:3,name:'基隆',nation_battle:JSON.stringify({id:9,_rf_monitor:{active:true,score:'0:0'}})}],status:{state:'live',connected:true}};
+  let now=Date.parse('2026-10-07T01:00:00Z');
+  class ClockDate extends Date {static now(){return now;}}
+  let current={cities:[{city_id:3,name:'基隆',nation_battle:JSON.stringify({id:9,close_roll_call_at:'2026-10-07T01:01:05Z',_rf_monitor:{active:true,score:'0:0'}})}],status:{state:'live',connected:true}};
   const elements=new Map(),intervals=[];let eventSource;
-  const context={URL,atob,AbortSignal,console,Date,queueMicrotask,innerWidth:1200,innerHeight:800,devicePixelRatio:1,
+  const context={URL,atob,AbortSignal,console,Date:ClockDate,queueMicrotask,innerWidth:1200,innerHeight:800,devicePixelRatio:1,
     location:{hostname:'localhost',protocol:'http:'},window:{RF_MONITOR_CONFIG:{}},
     document:{hidden:false,getElementById(id){if(!elements.has(id))elements.set(id,new Element());return elements.get(id);},createElement(){return new Element();},addEventListener(){}},
     addEventListener(){},requestAnimationFrame(){return 1;},setInterval(fn){intervals.push(fn);},setTimeout(){return 1;},clearTimeout(){},
@@ -55,6 +57,13 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
     fetch:async url=>({ok:true,json:async()=>url==='./cities-map.json'?[{city_id:3,name:'基隆',x_position:9263,y_position:5555},{city_id:1,name:'臺北',x_position:9105,y_position:5672}]:current})};
   vm.runInNewContext(script,context);await new Promise(resolve=>setImmediate(resolve));
   assert.match(elements.get('summary').textContent,/2 座城市 · 1 處即時戰況/);
+  const originalButton=elements.get('battleList').children[0];
+  assert.match(originalButton.children[0].textContent,/集結中（1分 5秒）/);
+  now+=1000;intervals[0]();
+  assert.equal(elements.get('battleList').children[0],originalButton);
+  assert.match(originalButton.children[0].textContent,/集結中（1分 4秒）/);
+  now+=64000;intervals[0]();
+  assert.match(elements.get('battleList').children[0].children[0].textContent,/交戰中 · 比分 0:0/);
   elements.get('battleList').children[0].onclick();
   assert.match(elements.get('detail').children[2].textContent,/比分：0:0/);
   current.cities[0].nation_battle=JSON.stringify({id:9,_rf_monitor:{active:true,score:'2:1'}});

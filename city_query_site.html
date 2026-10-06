@@ -249,14 +249,27 @@ function updateDetail(){
  if(!hasPosition(city))text.textContent+="\n尚未取得城市座標";
  detail.append(close,title,text);
 }
+function battleListText(city){
+ const state=battleState(city);
+ const label=state.label==="集結中"?`${state.label}（${countdown(city)}）`:state.label;
+ return `${label} · 比分 ${state.battle._rf_monitor?.score??"未取得"}`;
+}
 function renderBattleList(){
  const active=cities.filter(activeBattle),list=$("battleList");
  $("summary").textContent=`${cities.filter(hasPosition).length} 座城市 · ${active.length} 處${stale()?"上次":"即時"}戰況`;
  const signature=JSON.stringify(active.map(c=>[c.city_id,c.name,battleState(c).label,c.nation_battle,c.updated_at]));
- if(signature===listSignature)return;listSignature=signature;list.replaceChildren();
+ if(signature===listSignature){
+  // 倒數只更新文字，不每秒重建按鈕，保留焦點與捲動位置。
+  active.forEach((city,i)=>{
+   const small=list.children[i]?.children[0],text=battleListText(city);
+   if(small&&small.textContent!==text)small.textContent=text;
+  });
+  return;
+ }
+ listSignature=signature;list.replaceChildren();
  for(const city of active){
    const button=document.createElement("button");button.className="battle";button.textContent=`⚔ ${city.name||city.city_id}`;
-   const small=document.createElement("small");small.textContent=`${battleState(city).label} · 比分 ${parseBattle(city.nation_battle)?._rf_monitor?.score??"未取得"}`;
+   const small=document.createElement("small");small.textContent=battleListText(city);
    button.append(small);button.onclick=()=>focusCity(city);list.append(button);
  }
  if(!active.length)list.textContent=sourceStatus?.connected?"目前沒有收到據點戰標記。":"等待 Oracle 採集主機的戰況。";
