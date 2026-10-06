@@ -7,13 +7,17 @@ const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
 test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
   const code=script.slice(script.indexOf('const NATION_COLORS='),script.indexOf('  function parseBattle('));
   const context=vm.createContext({});vm.runInContext(code,context);
-  assert.equal(context.cityColor({control_nation_name:'紅軍',sovereign:'臺灣'}),'#ff2525');
-  assert.equal(context.cityColor({control_nation_name:'臺灣'}),'#008fa6');
-  assert.equal(context.cityColor({control_nation_name:'反賊聯盟'}),'#b443e8');
+  assert.equal(context.cityColor({control_nation_name:'紅軍',sovereign:'臺灣'}),'#ff3732');
+  assert.equal(context.cityColor({control_nation_name:'臺灣'}),'#08a2bc');
+  assert.equal(context.cityColor({control_nation_name:'反賊聯盟'}),'#ffffff');
+  assert.equal(context.cityColor({control_nation_name:'香港'}),'#bd55f5');
+  assert.equal(context.cityColor({control_nation_name:'藏國'}),'#49cf87');
+  assert.equal(context.cityColor({control_nation_name:'滿州'}),'#ffc400');
+  assert.equal(context.cityColor({control_nation_name:'滿洲'}),'#ffc400');
   assert.equal(context.cityColor({control_nation_name:null}),'#808080');
   context.parseBattle=v=>typeof v==='string'?JSON.parse(v):v;
   assert.equal(context.attackerColor({control_nation_name:'紅軍'}),'#ffffff');
-  assert.equal(context.attackerColor({control_nation_name:'紅軍',nation_battle:{_rf_monitor:{attacker_nation_name:'蒙古'}}}),'#0097ff');
+  assert.equal(context.attackerColor({control_nation_name:'紅軍',nation_battle:{_rf_monitor:{attacker_nation_name:'蒙古'}}}),'#008af7');
   assert.match(script,/ctx.fillStyle=cityColor\(city\)/);
 });
 class Element {

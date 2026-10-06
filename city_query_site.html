@@ -54,12 +54,13 @@ let scale=1,offsetX=0,offsetY=0,width=0,height=0,selected=null,frame=0,dragDista
 const CONFIG={tiles:"./tiles",width:11036,height:7505};
 const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d"),tiles=new Map(),pointers=new Map();
+// 依陣營圖示的主色調整明度；只參考配色，不使用圖示素材。
 // 控制陣營配色；不以主權國或城市所在地判定。
 const NATION_COLORS={
- "紅軍":"#ff2525","香港":"#ffbf00","蒙古":"#0097ff",
- "藏國":"#ffffff","哈薩克":"#00d9dd","維吾爾":"#729fff",
- "滿洲":"#40bd83","臺灣":"#008fa6","台灣":"#008fa6",
- "反賊聯盟":"#b443e8","無":"#808080"
+ "紅軍":"#ff3732","香港":"#bd55f5","蒙古":"#008af7",
+ "藏國":"#49cf87","哈薩克":"#00e2ca","維吾爾":"#9abaff",
+ "滿洲":"#ffc400","滿州":"#ffc400","臺灣":"#08a2bc","台灣":"#08a2bc",
+ "反賊聯盟":"#ffffff","無":"#808080"
 };
 function cityColor(city){return NATION_COLORS[city.control_nation_name]||"#808080";}
 function attackerColor(city){
