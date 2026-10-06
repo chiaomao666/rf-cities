@@ -175,7 +175,7 @@
       <tr id="cityTableHeadRow">
         <th class="sortable" data-key="city_id">城市 ID<span class="sort-arrow"></span></th>
         <th class="sortable" data-key="name">城市名稱<span class="sort-arrow"></span></th>
-        <th>活動 ID</th>
+        <th class="sortable" data-key="battle_id">活動 ID<span class="sort-arrow"></span></th>
         <th>報到倒數</th>
         <th>據點戰比分</th>
         <th class="sortable" data-key="updated_at">最後更新<span class="sort-arrow"></span></th>
@@ -266,6 +266,14 @@
     const dir = sortState.dir === "desc" ? -1 : 1;
     return cities.slice().sort((a, b) => {
       let av = a[key], bv = b[key];
+      if (key === 'battle_id') {
+        const numericId = city => {
+          const id = parseBattle(city.nation_battle)?.id;
+          if (id == null || String(id).trim() === '' || !Number.isSafeInteger(Number(id)) || Number(id) <= 0) return null;
+          return Number(id);
+        };
+        av = numericId(a); bv = numericId(b);
+      }
       const aEmpty = av === null || av === undefined || av === "";
       const bEmpty = bv === null || bv === undefined || bv === "";
       if (aEmpty && bEmpty) return 0;
