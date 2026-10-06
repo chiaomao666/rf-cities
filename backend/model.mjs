@@ -37,6 +37,10 @@ export class CityState {
           city.battle = same ? {...city.battle} : {};
           for (const key of ['id','close_roll_call_at','ended_at','finished_at','ended','finished'])
             if (own(battle,key) && (battle[key]===null || ['number','string','boolean'].includes(typeof battle[key]))) city.battle[key] = battle[key];
+          // 僅保留已確認的公開陣營圖示路徑，不儲存任意網址或完整戰況封包。
+          if (own(battle,'nation_icon')) city.battle.nation_icon =
+            typeof battle.nation_icon==='string' && /^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB)\.png$/.test(battle.nation_icon)
+              ? battle.nation_icon : null;
         }
         if (battle === null && !own(patch,'nation_battle_score')) city.nation_battle_score = null;
       }
@@ -65,7 +69,7 @@ export class CityState {
     return [...this.cities.values()].filter(city => this.active(city)).map(city => ({
       city_id:city.id, name:city.name || `城市 ${city.id}`, control_nation_name:city.nation || '',
       updated_at:city.observed_at,
-      nation_battle:JSON.stringify({id:city.battle?.id,close_roll_call_at:city.battle?.close_roll_call_at,
+      nation_battle:JSON.stringify({id:city.battle?.id,close_roll_call_at:city.battle?.close_roll_call_at,nation_icon:city.battle?.nation_icon,
         _rf_monitor:{active:true,score:city.nation_battle_score ?? null,observed_at:city.observed_at,source:'independent_backend'}})
     })).sort((a,b) => a.city_id-b.city_id);
   }

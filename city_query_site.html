@@ -63,9 +63,14 @@ const NATION_COLORS={
  "反賊聯盟":"#ffffff","無":"#808080"
 };
 function cityColor(city){return NATION_COLORS[city.control_nation_name]||"#808080";}
-function attackerColor(city){
+function attackerNation(city){
  const battle=parseBattle(city.nation_battle)||{};
- const name=battle._rf_monitor?.attacker_nation_name;
+ const code=typeof battle.nation_icon==="string"?battle.nation_icon.match(/^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB)\.png$/)?.[1]:null;
+ // 圖示編號不等於遊戲陣營 ID，依字母代碼判定。
+ return ({CM:"紅軍",HK:"香港",MG:"蒙古",TB:"藏國",KZ:"哈薩克",UG:"維吾爾",MC:"滿洲",TW:"臺灣",RB:"反賊聯盟"})[code]||battle._rf_monitor?.attacker_nation_name||null;
+}
+function attackerColor(city){
+ const name=attackerNation(city);
  // 攻擊方未知時使用中性白色，不能誤用控制方（防守方）的顏色。
  return NATION_COLORS[name]||"#ffffff";
 }
@@ -246,6 +251,7 @@ function updateDetail(){
  text.textContent+=`\n主權：${city.sovereign||"未知"}`;
  if(city.control_observed_at)text.textContent+=`\n控制資料時間：${new Date(city.control_observed_at).toLocaleString("zh-TW")}`;
  if(battle){text.textContent+=`\n活動 ID：${battle.battle.id??"未取得"}\n報到倒數：${countdown(city)}\n比分：${battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得"}\n更新：${city.updated_at?new Date(city.updated_at).toLocaleString("zh-TW"):"未知"}`;}
+ if(battle)text.textContent+=`\n攻擊方：${attackerNation(city)||"未取得"}`;
  if(!hasPosition(city))text.textContent+="\n尚未取得城市座標";
  detail.append(close,title,text);
 }

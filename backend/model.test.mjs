@@ -3,6 +3,17 @@ import assert from 'node:assert/strict';
 import {CityState} from './model.mjs';
 const seed=()=>{const s=new CityState();s.ingest([{id:1,name:'城市',sword:true,nation_battle:{id:101,close_roll_call_at:'2026-10-07T01:00:00Z'},nation_battle_score:'1:0'},{id:2,sword:true}]);return s;};
 const battle=s=>JSON.parse(s.rows().find(c=>c.city_id===1).nation_battle);
+test('保留攻擊方陣營圖示，增量省略時保留；結束與换場不沿用',()=>{
+ const s=seed();
+ s.ingest([{id:1,nation_battle:{id:101,nation_icon:'/images/nation/color_icon/minicoa02HK.png'}}]);
+ assert.equal(battle(s).nation_icon,'/images/nation/color_icon/minicoa02HK.png');
+ s.ingest([{id:1,nation_battle:{id:101}}]);
+ assert.equal(battle(s).nation_icon,'/images/nation/color_icon/minicoa02HK.png');
+ s.ingest([{id:1,sword:false}]);s.ingest([{id:1,sword:true,nation_battle:{id:102}}]);
+ assert.equal(battle(s).nation_icon,undefined);
+ s.ingest([{id:1,nation_battle:{id:102,nation_icon:'https://example.com/private?token=secret'}}]);
+ assert.equal(battle(s).nation_icon,null);
+});
 test('完整補查省略活動欄位仍保留持續交戰 ID，缺席城市移除',()=>{
   const s=seed();s.ingest([{id:1,sword:true}],{replace:true});
   assert.equal(battle(s).id,101);assert.equal(s.cities.has(2),false);

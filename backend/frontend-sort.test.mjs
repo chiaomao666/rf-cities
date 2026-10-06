@@ -18,6 +18,12 @@ test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
   context.parseBattle=v=>typeof v==='string'?JSON.parse(v):v;
   assert.equal(context.attackerColor({control_nation_name:'紅軍'}),'#ffffff');
   assert.equal(context.attackerColor({control_nation_name:'紅軍',nation_battle:{_rf_monitor:{attacker_nation_name:'蒙古'}}}),'#008af7');
+  for(const [code,name] of Object.entries({CM:'紅軍',HK:'香港',MG:'蒙古',TB:'藏國',KZ:'哈薩克',UG:'維吾爾',MC:'滿洲',TW:'臺灣',RB:'反賊聯盟'})){
+    const city={control_nation_name:'蒙古',nation_battle:JSON.stringify({nation_icon:`/images/nation/color_icon/minicoa02${code}.png`})};
+    assert.equal(context.attackerNation(city),name);
+    assert.equal(context.attackerColor(city),context.cityColor({control_nation_name:name}));
+  }
+  assert.equal(context.attackerNation({nation_battle:{nation_icon:'/unknown.png'}}),null);
   assert.match(script,/ctx.fillStyle=cityColor\(city\)/);
 });
 class Element {
