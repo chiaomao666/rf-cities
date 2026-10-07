@@ -3,6 +3,16 @@ import assert from 'node:assert/strict';
 import {CityState} from './model.mjs';
 const seed=()=>{const s=new CityState();s.ingest([{id:1,name:'城市',sword:true,nation_battle:{id:101,close_roll_call_at:'2026-10-07T01:00:00Z'},nation_battle_score:'1:0'},{id:2,sword:true}]);return s;};
 const battle=s=>JSON.parse(s.rows().find(c=>c.city_id===1).nation_battle);
+test('控制聯盟公開名稱和 ID 隨易主更新，省略保留、明確 null 清除',()=>{
+ const s=new CityState();const row=()=>s.rows({includeInactive:true})[0];
+ s.ingest([{id:1,control_union:{id:4923,name:'測試聯盟',private:'secret'},sword:false}]);
+ assert.equal(row().control_union_id,4923);assert.equal(row().control_union_name,'測試聯盟');
+ assert.ok(!JSON.stringify(row()).includes('secret'));
+ s.ingest([{id:1,name:'城市'}]);assert.equal(row().control_union_name,'測試聯盟');
+ s.ingest([{id:1,control_union:{id:6021}}]);assert.equal(row().control_union_name,null);
+ s.ingest([{id:1,control_union:{name:'新聯盟'}}]);assert.equal(row().control_union_name,'新聯盟');
+ s.ingest([{id:1,control_union:null}]);assert.equal(row().control_union_id,null);assert.equal(row().control_union_name,null);
+});
 test('全城市快照在戰後繼續發布新控制權，雙刀清除；不以攻擊方推定勝負',()=>{
  const s=new CityState();
  s.ingest([{id:484,name:'鐵米爾套',control_nation:{name:'哈薩克'},sword:true,nation_battle:{nation_icon:'/images/nation/color_icon/minicoa01CM.png'}}]);

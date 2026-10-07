@@ -27,6 +27,20 @@ export class CityState {
       if (typeof patch.sword==='boolean') city.sword=patch.sword;
       if (own(patch,'nation_battle_score') && (patch.nation_battle_score===null || ['number','string'].includes(typeof patch.nation_battle_score))) city.nation_battle_score=patch.nation_battle_score;
       if (typeof patch.control_nation?.name === 'string') city.nation = patch.control_nation.name;
+      if (own(patch,'control_union')) {
+        const union=patch.control_union;
+        if (!union || typeof union!=='object' || Array.isArray(union)) {
+          city.union_id=null;city.union_name=null;
+        } else {
+          if (own(union,'id')) {
+            const id=Number(union.id);
+            const next=Number.isSafeInteger(id)&&id>0?id:null;
+            if(next!==city.union_id)city.union_name=null;
+            city.union_id=next;
+          }
+          if (own(union,'name')) city.union_name=typeof union.name==='string'?union.name:null;
+        }
+      }
       if (own(patch, 'nation_battle')) {
         const battle = patch.nation_battle;
         if (!battle || typeof battle !== 'object' || Array.isArray(battle)) city.battle = null;
@@ -68,6 +82,7 @@ export class CityState {
   rows({includeInactive=false}={}) {
     return [...this.cities.values()].filter(city => includeInactive || this.active(city)).map(city => ({
       city_id:city.id, name:city.name || `城市 ${city.id}`, control_nation_name:city.nation || '',
+      control_union_id:city.union_id??null,control_union_name:city.union_name??null,
       updated_at:city.observed_at,
       // 全城市快照也保留已結束城市的控制權，但明確清除它的雙刀標記。
       nation_battle:this.active(city)?JSON.stringify({id:city.battle?.id,close_roll_call_at:city.battle?.close_roll_call_at,nation_icon:city.battle?.nation_icon,

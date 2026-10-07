@@ -139,6 +139,8 @@ function mergeCity(base,live){
  if(Number.isFinite(oldTime)&&(!Number.isFinite(liveTime)||liveTime<oldTime)){
   merged.control_nation_name=base.control_nation_name;
   merged.control_nation_id=base.control_nation_id;
+  merged.control_union_id=base.control_union_id;
+  merged.control_union_name=base.control_union_name;
  }else if(live.control_nation_name){
   merged.control_observed_at=live.updated_at;
   // 後端僅提供名稱時，不能沿用舊陣營的 ID。
@@ -152,7 +154,8 @@ function rebuildCities(){
  // 結束後保留最後收到的控制陣營；戰況仍由即時快照獨立清除。
  catalog=catalog.map(c=>{
   const merged=byId.get(String(c.city_id));
-  return {...c,control_nation_name:merged.control_nation_name,control_nation_id:merged.control_nation_id,control_observed_at:merged.control_observed_at};
+  return {...c,control_nation_name:merged.control_nation_name,control_nation_id:merged.control_nation_id,
+   control_union_id:merged.control_union_id,control_union_name:merged.control_union_name,control_observed_at:merged.control_observed_at};
  });
  cities=[...byId.values()];
  if(selected)selected=cities.find(c=>String(c.city_id)===String(selected.city_id))||null;
@@ -248,6 +251,7 @@ function updateDetail(){
  const title=document.createElement("h2");title.textContent=city.name||String(city.city_id);
  const text=document.createElement("p");
  text.textContent=`城市 #${city.city_id}\n${battle?"⚔ "+battle.label:"目前沒有據點戰標記"}\n控制陣營：${city.control_nation_name||"未知"}`;
+ text.textContent+=`\n控制聯盟：${city.control_union_name||"未取得"}\n聯盟 ID：${city.control_union_id??"未取得"}`;
  text.textContent+=`\n主權：${city.sovereign||"未知"}`;
  if(city.control_observed_at)text.textContent+=`\n控制資料時間：${new Date(city.control_observed_at).toLocaleString("zh-TW")}`;
  if(battle){text.textContent+=`\n活動 ID：${battle.battle.id??"未取得"}\n報到倒數：${countdown(city)}\n比分：${battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得"}\n更新：${city.updated_at?new Date(city.updated_at).toLocaleString("zh-TW"):"未知"}`;}

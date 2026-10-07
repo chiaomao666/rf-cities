@@ -35,7 +35,8 @@ export class SupabasePublisher {
     try {
       const current=this.getSnapshot();
       const cities=current.cities.map(c=>({city_id:c.city_id,name:c.name,
-        control_nation_name:c.control_nation_name,updated_at:c.updated_at,nation_battle:c.nation_battle}));
+        control_nation_name:c.control_nation_name,control_union_id:c.control_union_id,
+        control_union_name:c.control_union_name,updated_at:c.updated_at,nation_battle:c.nation_battle}));
       const status={};
       for (const field of ['state','connected','lastMessage','lastSnapshot','error','transportCode','knownCities']) status[field]=current.status[field] ?? null;
       const headers={'Content-Type':'application/json',apikey:this.key,Prefer:'resolution=merge-duplicates,return=minimal'};

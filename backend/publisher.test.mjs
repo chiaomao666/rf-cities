@@ -4,13 +4,15 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {SupabasePublisher} from './publisher.mjs';
 const url='https://example.supabase.co';
-const snapshot=()=>({cities:[{city_id:1,name:'測試城',nation_battle:'{}',token:'PRIVATE'}],status:{state:'live',connected:true,userToken:'PRIVATE',knownCities:1}});
+const snapshot=()=>({cities:[{city_id:1,name:'測試城',control_union_id:4923,control_union_name:'測試聯盟',nation_battle:'{}',token:'PRIVATE'}],status:{state:'live',connected:true,userToken:'PRIVATE',knownCities:1}});
 test('發布僅包含公開白名單；空清單完整替換',async()=>{
   const calls=[];let current=snapshot();
   const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:()=>current,Fetch:async(u,o)=>{calls.push({u,o});return {ok:true};}});
   try {
     await p.flush();assert.equal(calls[0].o.headers.Authorization,undefined);
     assert.ok(!calls[0].o.body.includes('PRIVATE'));
+    assert.equal(JSON.parse(calls[0].o.body).cities[0].control_union_name,'測試聯盟');
+    assert.equal(JSON.parse(calls[0].o.body).cities[0].control_union_id,4923);
     current={cities:[],status:{state:'live'}};await p.flush();
     assert.deepEqual(JSON.parse(calls[1].o.body).cities,[]);assert.ok(p.status.lastPublished);
   } finally {p.stop();}
