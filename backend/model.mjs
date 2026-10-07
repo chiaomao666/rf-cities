@@ -65,12 +65,13 @@ export class CityState {
     if (city.sword === true) return true;
     return Boolean(city.nation_battle_score || city.battle?.id != null || city.battle?.close_roll_call_at);
   }
-  rows() {
-    return [...this.cities.values()].filter(city => this.active(city)).map(city => ({
+  rows({includeInactive=false}={}) {
+    return [...this.cities.values()].filter(city => includeInactive || this.active(city)).map(city => ({
       city_id:city.id, name:city.name || `城市 ${city.id}`, control_nation_name:city.nation || '',
       updated_at:city.observed_at,
-      nation_battle:JSON.stringify({id:city.battle?.id,close_roll_call_at:city.battle?.close_roll_call_at,nation_icon:city.battle?.nation_icon,
-        _rf_monitor:{active:true,score:city.nation_battle_score ?? null,observed_at:city.observed_at,source:'independent_backend'}})
+      // 全城市快照也保留已結束城市的控制權，但明確清除它的雙刀標記。
+      nation_battle:this.active(city)?JSON.stringify({id:city.battle?.id,close_roll_call_at:city.battle?.close_roll_call_at,nation_icon:city.battle?.nation_icon,
+        _rf_monitor:{active:true,score:city.nation_battle_score ?? null,observed_at:city.observed_at,source:'independent_backend'}}):null
     })).sort((a,b) => a.city_id-b.city_id);
   }
 }

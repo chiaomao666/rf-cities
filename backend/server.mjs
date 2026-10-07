@@ -9,7 +9,7 @@ import {SupabasePublisher} from './publisher.mjs';
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const state=new CityState(), clients=new Set();
 let collector;
-function snapshot() { return {cities:state.rows(),status:{...collector.status,knownCities:state.cities.size,publication:{...publisher.status}}}; }
+function snapshot() { return {cities:state.rows({includeInactive:true}),status:{...collector.status,knownCities:state.cities.size,publication:{...publisher.status}}}; }
 const publisher=new SupabasePublisher({url:process.env.SUPABASE_URL,key:process.env.SUPABASE_WRITE_KEY,getSnapshot:snapshot});
 function broadcast() { publisher.request();for (const res of clients) res.write('event: change\ndata: {}\n\n'); }
 collector=new Collector({state,token:process.env.RF_USER_TOKEN,userId:process.env.RF_USER_ID,

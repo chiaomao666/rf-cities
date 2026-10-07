@@ -75,6 +75,11 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
   current.cities[0].nation_battle=JSON.stringify({id:9,_rf_monitor:{active:true,score:'2:1'}});
   await eventSource.change();
   assert.match(elements.get('detail').children[2].textContent,/比分：2:1/);
+  current={cities:[{city_id:3,name:'基隆',control_nation_name:'紅軍',updated_at:'2026-10-07T01:02:00Z',nation_battle:null}],status:{state:'live',connected:true}};
+  await eventSource.change();
+  assert.equal(elements.get('battleList').children.length,0);
+  assert.match(elements.get('detail').children[2].textContent,/控制陣營：紅軍/);
+  assert.match(elements.get('detail').children[2].textContent,/目前沒有據點戰標記/);
   current={cities:[],status:{state:'live',connected:true}};await eventSource.change();
   assert.equal(elements.get('battleList').children.length,0);
   assert.match(elements.get('summary').textContent,/2 座城市 · 0 處/);

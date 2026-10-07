@@ -3,6 +3,18 @@ import assert from 'node:assert/strict';
 import {CityState} from './model.mjs';
 const seed=()=>{const s=new CityState();s.ingest([{id:1,name:'城市',sword:true,nation_battle:{id:101,close_roll_call_at:'2026-10-07T01:00:00Z'},nation_battle_score:'1:0'},{id:2,sword:true}]);return s;};
 const battle=s=>JSON.parse(s.rows().find(c=>c.city_id===1).nation_battle);
+test('全城市快照在戰後繼續發布新控制權，雙刀清除；不以攻擊方推定勝負',()=>{
+ const s=new CityState();
+ s.ingest([{id:484,name:'鐵米爾套',control_nation:{name:'哈薩克'},sword:true,nation_battle:{nation_icon:'/images/nation/color_icon/minicoa01CM.png'}}]);
+ assert.equal(s.rows({includeInactive:true})[0].control_nation_name,'哈薩克');
+ s.ingest([{id:484,control_nation:{name:'紅軍'},sword:false,nation_battle:null}]);
+ assert.equal(s.rows().length,0);
+ assert.equal(s.rows({includeInactive:true})[0].control_nation_name,'紅軍');
+ assert.equal(s.rows({includeInactive:true})[0].nation_battle,null);
+ s.ingest([{id:491,name:'巴爾喀什',control_nation:{name:'哈薩克'},sword:true,nation_battle:{nation_icon:'/images/nation/color_icon/minicoa01CM.png'}}]);
+ s.ingest([{id:491,sword:false,nation_battle:null}]);
+ assert.equal(s.rows({includeInactive:true}).find(c=>c.city_id===491).control_nation_name,'哈薩克');
+});
 test('保留攻擊方陣營圖示，增量省略時保留；結束與换場不沿用',()=>{
  const s=seed();
  s.ingest([{id:1,nation_battle:{id:101,nation_icon:'/images/nation/color_icon/minicoa02HK.png'}}]);
