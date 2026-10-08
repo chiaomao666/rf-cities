@@ -1,2500 +1,3605 @@
 {
-  "source": "user-route-map-reference",
-  "inferred": true,
+  "source": "manually-reviewed-2025-1011-reference",
   "authoritative": false,
-  "note": "依使用者提供的三張地圖參考；連接關係與實虛線依路線截圖推估，非遊戲正式通行資料。",
+  "inferred": false,
+  "complete": false,
+  "referenceDate": "2025-10-11",
+  "note": "人工依圖中線條端點記錄；交叉不當成路口，不以城市距離或直線像素補線。原圖名稱透過固定城市 ID 對應，不受申請改名影響；尚未確認的對應不硬套。機場連線僅收錄可明確追蹤的部分。",
   "coordinateWidth": 11036,
   "coordinateHeight": 7505,
-  "referenceTransform": {
-    "scaleX": 0.0903987,
-    "scaleY": 0.09046849,
-    "offsetX": 62.5719,
-    "offsetY": 27.5235
-  },
   "routes": [
     {
-      "from": 1,
-      "to": 3,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 1,
-      "to": 4,
-      "confidence": 0.962,
-      "style": "dashed"
-    },
-    {
-      "from": 1,
-      "to": 15,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 3,
-      "to": 4,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 3,
-      "to": 15,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 3,
-      "to": 16,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 3,
-      "to": 307,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 4,
-      "to": 15,
-      "confidence": 0.962,
-      "style": "dashed"
-    },
-    {
-      "from": 4,
-      "to": 307,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 5,
-      "to": 6,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 5,
-      "to": 8,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 5,
-      "to": 308,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 6,
-      "to": 8,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 6,
-      "to": 16,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 8,
-      "to": 10,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 9,
-      "to": 107,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 9,
-      "to": 124,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 10,
-      "to": 11,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 11,
-      "to": 12,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 12,
-      "to": 13,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 13,
-      "to": 19,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 14,
-      "to": 108,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 14,
-      "to": 124,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 14,
-      "to": 298,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 14,
-      "to": 475,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 14,
-      "to": 476,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 15,
-      "to": 16,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 16,
-      "to": 17,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 17,
-      "to": 19,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 18,
-      "to": 63,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 20,
-      "to": 21,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 22,
-      "to": 23,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 22,
-      "to": 60,
-      "confidence": 0.958,
-      "style": "dashed"
-    },
-    {
-      "from": 22,
-      "to": 61,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 22,
-      "to": 304,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 25,
-      "to": 26,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 26,
-      "to": 27,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 26,
-      "to": 36,
-      "confidence": 0.951,
-      "style": "dashed"
-    },
-    {
-      "from": 27,
-      "to": 28,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 27,
-      "to": 36,
-      "confidence": 0.873,
-      "style": "dashed"
-    },
-    {
-      "from": 28,
-      "to": 30,
-      "confidence": 0.941,
-      "style": "dashed"
-    },
-    {
-      "from": 29,
-      "to": 306,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 30,
-      "to": 31,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 30,
-      "to": 35,
-      "confidence": 0.887,
-      "style": "dashed"
-    },
-    {
-      "from": 31,
-      "to": 32,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 31,
-      "to": 36,
-      "confidence": 0.922,
-      "style": "dashed"
-    },
-    {
-      "from": 31,
-      "to": 305,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 32,
-      "to": 33,
-      "confidence": 0.912,
-      "style": "dashed"
-    },
-    {
-      "from": 32,
-      "to": 36,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 32,
-      "to": 304,
-      "confidence": 0.904,
-      "style": "dashed"
-    },
-    {
-      "from": 32,
-      "to": 548,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 33,
-      "to": 571,
-      "confidence": 0.953,
-      "style": "dashed"
-    },
-    {
-      "from": 34,
-      "to": 124,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 34,
-      "to": 296,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 35,
-      "to": 36,
-      "confidence": 0.936,
-      "style": "dashed"
-    },
-    {
-      "from": 37,
-      "to": 38,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 37,
-      "to": 39,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 37,
-      "to": 40,
-      "confidence": 0.964,
-      "style": "solid"
-    },
-    {
-      "from": 37,
-      "to": 46,
-      "confidence": 0.885,
-      "style": "dashed"
-    },
-    {
-      "from": 37,
-      "to": 49,
-      "confidence": 0.907,
-      "style": "dashed"
-    },
-    {
-      "from": 38,
-      "to": 39,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 38,
-      "to": 52,
-      "confidence": 0.927,
-      "style": "dashed"
-    },
-    {
-      "from": 40,
-      "to": 41,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 40,
-      "to": 44,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 40,
-      "to": 45,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 40,
-      "to": 46,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 40,
-      "to": 52,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 41,
-      "to": 42,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 42,
-      "to": 43,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 43,
-      "to": 44,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 45,
-      "to": 46,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 45,
-      "to": 52,
-      "confidence": 0.983,
-      "style": "solid"
-    },
-    {
-      "from": 46,
-      "to": 48,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 46,
-      "to": 54,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 47,
-      "to": 48,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 47,
-      "to": 56,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 49,
-      "to": 50,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 49,
-      "to": 51,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 49,
-      "to": 59,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 50,
-      "to": 55,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 50,
-      "to": 57,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 50,
-      "to": 286,
-      "confidence": 0.881,
-      "style": "dashed"
-    },
-    {
-      "from": 51,
-      "to": 54,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 52,
-      "to": 54,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 53,
-      "to": 57,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 53,
-      "to": 61,
-      "confidence": 0.966,
-      "style": "dashed"
-    },
-    {
-      "from": 53,
-      "to": 62,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 54,
-      "to": 55,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 56,
-      "to": 57,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 56,
-      "to": 59,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 57,
-      "to": 60,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 57,
-      "to": 61,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 57,
-      "to": 286,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 58,
-      "to": 59,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 59,
-      "to": 277,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 60,
-      "to": 61,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 60,
-      "to": 286,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 60,
-      "to": 303,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 61,
-      "to": 303,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 61,
-      "to": 304,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 62,
-      "to": 276,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 63,
-      "to": 64,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 64,
-      "to": 65,
-      "confidence": 0.98,
-      "style": "dashed"
-    },
-    {
-      "from": 65,
-      "to": 66,
-      "confidence": 0.983,
-      "style": "solid"
-    },
-    {
-      "from": 68,
-      "to": 69,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 68,
-      "to": 75,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 68,
-      "to": 80,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 69,
-      "to": 83,
-      "confidence": 0.93,
-      "style": "solid"
-    },
-    {
-      "from": 69,
-      "to": 84,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 69,
-      "to": 90,
-      "confidence": 0.919,
-      "style": "dashed"
-    },
-    {
-      "from": 69,
-      "to": 92,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 70,
-      "to": 71,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 72,
-      "to": 73,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 73,
-      "to": 74,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 74,
-      "to": 75,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 74,
-      "to": 76,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 74,
-      "to": 78,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 75,
-      "to": 79,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 75,
-      "to": 80,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 76,
-      "to": 77,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 76,
-      "to": 97,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 77,
-      "to": 78,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 77,
-      "to": 83,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 78,
-      "to": 79,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 78,
-      "to": 83,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 79,
-      "to": 80,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 79,
-      "to": 82,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 79,
-      "to": 83,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 80,
-      "to": 84,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 81,
-      "to": 82,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 81,
-      "to": 86,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 81,
-      "to": 119,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 82,
-      "to": 83,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 83,
-      "to": 84,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 83,
-      "to": 87,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 84,
-      "to": 87,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 84,
-      "to": 89,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 85,
-      "to": 86,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 85,
-      "to": 119,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 85,
-      "to": 120,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 86,
-      "to": 87,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 86,
-      "to": 88,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 87,
-      "to": 89,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 88,
-      "to": 89,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 88,
-      "to": 95,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 89,
-      "to": 90,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 89,
-      "to": 92,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 89,
-      "to": 93,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 89,
-      "to": 292,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 90,
-      "to": 91,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 91,
-      "to": 92,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 93,
-      "to": 94,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 93,
-      "to": 96,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 94,
-      "to": 96,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 94,
-      "to": 121,
-      "confidence": 0.976,
-      "style": "solid"
-    },
-    {
-      "from": 95,
-      "to": 96,
-      "confidence": 0.884,
-      "style": "dashed"
-    },
-    {
-      "from": 95,
-      "to": 120,
-      "confidence": 0.976,
-      "style": "dashed"
-    },
-    {
-      "from": 95,
-      "to": 293,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 96,
-      "to": 121,
-      "confidence": 0.899,
-      "style": "dashed"
-    },
-    {
-      "from": 96,
-      "to": 292,
-      "confidence": 0.965,
-      "style": "dashed"
-    },
-    {
-      "from": 96,
-      "to": 293,
-      "confidence": 0.976,
-      "style": "dashed"
-    },
-    {
-      "from": 97,
-      "to": 98,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 97,
+      "from": 105,
+      "to": 103,
+      "fromName": "莫斯科",
+      "toName": "彼得羅巴甫爾",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 103,
+      "to": 102,
+      "fromName": "彼得羅巴甫爾",
+      "toName": "鄂木斯克",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 102,
+      "to": 101,
+      "fromName": "鄂木斯克",
+      "toName": "新西伯利亞",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 101,
+      "to": 100,
+      "fromName": "新西伯利亞",
+      "toName": "亞巴坎",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 100,
       "to": 99,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 97,
-      "to": 106,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 97,
-      "to": 119,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 98,
-      "to": 99,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 98,
-      "to": 111,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "亞巴坎",
+      "toName": "伊爾庫次克",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 99,
-      "to": 100,
-      "confidence": 1.0,
-      "style": "solid"
+      "to": 98,
+      "fromName": "伊爾庫次克",
+      "toName": "烏蘭烏德",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 100,
-      "to": 101,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 98,
+      "to": 97,
+      "fromName": "烏蘭烏德",
+      "toName": "赤塔",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 100,
-      "to": 114,
-      "confidence": 0.981,
-      "style": "dashed"
+      "from": 97,
+      "to": 76,
+      "fromName": "赤塔",
+      "toName": "海蘭泡",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 101,
-      "to": 102,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 76,
+      "to": 74,
+      "fromName": "海蘭泡",
+      "toName": "伯力",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 101,
-      "to": 104,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 102,
-      "to": 103,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 102,
-      "to": 482,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 102,
-      "to": 486,
-      "confidence": 0.919,
-      "style": "dashed"
-    },
-    {
-      "from": 103,
-      "to": 105,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 103,
-      "to": 485,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 104,
-      "to": 118,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 104,
-      "to": 482,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 104,
-      "to": 486,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 74,
+      "to": 75,
+      "fromName": "伯力",
+      "toName": "海參崴",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 105,
       "to": 479,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "莫斯科",
+      "toName": "阿克托別",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 106,
-      "to": 120,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 107,
-      "to": 108,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 107,
-      "to": 110,
-      "confidence": 0.992,
-      "style": "solid"
-    },
-    {
-      "from": 107,
-      "to": 122,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 108,
-      "to": 109,
-      "confidence": 0.991,
-      "style": "dashed"
-    },
-    {
-      "from": 108,
-      "to": 115,
-      "confidence": 0.901,
-      "style": "dashed"
-    },
-    {
-      "from": 110,
-      "to": 111,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 110,
-      "to": 112,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 110,
-      "to": 122,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 111,
-      "to": 112,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 112,
-      "to": 113,
-      "confidence": 0.922,
-      "style": "dashed"
-    },
-    {
-      "from": 115,
-      "to": 116,
-      "confidence": 0.907,
-      "style": "dashed"
-    },
-    {
-      "from": 115,
-      "to": 508,
-      "confidence": 0.87,
-      "style": "dashed"
-    },
-    {
-      "from": 116,
-      "to": 117,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 117,
-      "to": 118,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 117,
-      "to": 517,
-      "confidence": 0.9,
-      "style": "dashed"
-    },
-    {
-      "from": 118,
-      "to": 517,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 120,
-      "to": 122,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 120,
-      "to": 293,
-      "confidence": 0.966,
-      "style": "solid"
-    },
-    {
-      "from": 121,
-      "to": 122,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 121,
-      "to": 292,
-      "confidence": 0.961,
-      "style": "solid"
-    },
-    {
-      "from": 121,
-      "to": 293,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 122,
-      "to": 123,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 122,
-      "to": 295,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 123,
-      "to": 124,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 124,
-      "to": 475,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 277,
-      "to": 278,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 278,
-      "to": 279,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 278,
-      "to": 285,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 279,
-      "to": 280,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 279,
-      "to": 283,
-      "confidence": 0.983,
-      "style": "solid"
-    },
-    {
-      "from": 280,
-      "to": 281,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 280,
-      "to": 283,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 280,
-      "to": 285,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 280,
-      "to": 286,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 281,
-      "to": 283,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 282,
-      "to": 283,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 282,
-      "to": 284,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 282,
-      "to": 289,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 283,
-      "to": 289,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 283,
-      "to": 291,
-      "confidence": 0.94,
-      "style": "dashed"
-    },
-    {
-      "from": 284,
-      "to": 285,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 284,
-      "to": 286,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 284,
-      "to": 287,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 284,
-      "to": 288,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 284,
-      "to": 301,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 285,
-      "to": 286,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 286,
-      "to": 303,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 287,
-      "to": 288,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 287,
-      "to": 297,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 288,
-      "to": 289,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 288,
-      "to": 294,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 288,
-      "to": 297,
-      "confidence": 0.991,
-      "style": "solid"
-    },
-    {
-      "from": 289,
-      "to": 290,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 290,
-      "to": 291,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 290,
-      "to": 292,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 290,
-      "to": 294,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 292,
-      "to": 293,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 293,
-      "to": 294,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 294,
-      "to": 295,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 295,
-      "to": 297,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 295,
-      "to": 302,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 296,
-      "to": 297,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 296,
-      "to": 298,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 296,
-      "to": 301,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 297,
-      "to": 298,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 297,
-      "to": 299,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 297,
-      "to": 301,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 297,
-      "to": 302,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 298,
-      "to": 299,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 298,
-      "to": 475,
-      "confidence": 0.981,
-      "style": "dashed"
-    },
-    {
-      "from": 298,
-      "to": 476,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 299,
-      "to": 300,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 299,
-      "to": 564,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 299,
-      "to": 565,
-      "confidence": 0.878,
-      "style": "dashed"
-    },
-    {
-      "from": 300,
-      "to": 560,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 300,
-      "to": 561,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 300,
-      "to": 562,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 301,
-      "to": 302,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 301,
-      "to": 303,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 302,
-      "to": 304,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 302,
-      "to": 559,
-      "confidence": 0.919,
-      "style": "dashed"
-    },
-    {
-      "from": 302,
-      "to": 568,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 302,
-      "to": 575,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 303,
-      "to": 304,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 304,
-      "to": 305,
-      "confidence": 0.947,
-      "style": "dashed"
-    },
-    {
-      "from": 304,
-      "to": 570,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 304,
-      "to": 571,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 305,
-      "to": 306,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 307,
-      "to": 308,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 475,
-      "to": 508,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 477,
+      "from": 479,
       "to": 478,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "阿克托別",
+      "toName": "阿特勞",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 478,
-      "to": 479,
-      "confidence": 1.0,
-      "style": "solid"
+      "to": 477,
+      "fromName": "阿特勞",
+      "toName": "艾利斯塔",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 103,
+      "to": 485,
+      "fromName": "彼得羅巴甫爾",
+      "toName": "科克舍套",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 485,
+      "to": 483,
+      "fromName": "科克舍套",
+      "toName": "阿斯塔納",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 483,
+      "to": 484,
+      "fromName": "阿斯塔納",
+      "toName": "鐵米爾套",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 484,
+      "to": 480,
+      "fromName": "鐵米爾套",
+      "toName": "卡拉干達",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 480,
+      "to": 491,
+      "fromName": "卡拉干達",
+      "toName": "巴爾喀什",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 491,
+      "to": 488,
+      "fromName": "巴爾喀什",
+      "toName": "阿克鬥卡",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 488,
+      "to": 489,
+      "fromName": "阿克鬥卡",
+      "toName": "阿亞古茲",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 489,
+      "to": 486,
+      "fromName": "阿亞古茲",
+      "toName": "塞米伊",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 486,
+      "to": 104,
+      "fromName": "塞米伊",
+      "toName": "巴爾瑙爾",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 104,
+      "to": 101,
+      "fromName": "巴爾瑙爾",
+      "toName": "新西伯利亞",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 479,
       "to": 485,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "阿克托別",
+      "toName": "科克舍套",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 480,
-      "to": 484,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 480,
-      "to": 489,
-      "confidence": 0.988,
-      "style": "dashed"
-    },
-    {
-      "from": 480,
-      "to": 491,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 483,
+      "to": 481,
+      "fromName": "阿斯塔納",
+      "toName": "埃基巴斯圖茲",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 481,
       "to": 482,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "埃基巴斯圖茲",
+      "toName": "巴甫洛達爾",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 481,
-      "to": 483,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 482,
+      "to": 104,
+      "fromName": "巴甫洛達爾",
+      "toName": "巴爾瑙爾",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 482,
       "to": 486,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 483,
-      "to": 484,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 483,
-      "to": 485,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 484,
-      "to": 485,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 486,
-      "to": 489,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "巴甫洛達爾",
+      "toName": "塞米伊",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 486,
       "to": 492,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 487,
-      "to": 489,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 487,
-      "to": 492,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 487,
-      "to": 517,
-      "confidence": 0.907,
-      "style": "dashed"
-    },
-    {
-      "from": 488,
-      "to": 489,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "塞米伊",
+      "toName": "厄斯克門",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 488,
       "to": 490,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 488,
-      "to": 491,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 488,
-      "to": 518,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 489,
-      "to": 519,
-      "confidence": 1.0,
-      "style": "dashed"
+      "fromName": "阿克鬥卡",
+      "toName": "塔爾迪庫爾干",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 490,
       "to": 502,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "塔爾迪庫爾干",
+      "toName": "阿拉木圖",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 491,
+      "from": 502,
       "to": 494,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "阿拉木圖",
+      "toName": "楚城",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 493,
-      "to": 495,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 494,
+      "to": 503,
+      "fromName": "楚城",
+      "toName": "塔拉茲",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
-      "from": 493,
-      "to": 515,
-      "confidence": 1.0,
-      "style": "solid"
+      "from": 503,
+      "to": 500,
+      "fromName": "塔拉茲",
+      "toName": "希姆肯特",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 500,
+      "to": 497,
+      "fromName": "希姆肯特",
+      "toName": "塔什干",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 494,
       "to": 496,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 494,
-      "to": 502,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 494,
-      "to": 503,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 495,
-      "to": 502,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 495,
-      "to": 533,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 496,
-      "to": 529,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 496,
-      "to": 533,
-      "confidence": 0.925,
-      "style": "dashed"
-    },
-    {
-      "from": 497,
-      "to": 500,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 497,
-      "to": 501,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 498,
-      "to": 499,
-      "confidence": 0.923,
-      "style": "dashed"
-    },
-    {
-      "from": 498,
-      "to": 510,
-      "confidence": 0.929,
-      "style": "dashed"
-    },
-    {
-      "from": 499,
-      "to": 501,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 499,
-      "to": 505,
-      "confidence": 0.864,
-      "style": "dashed"
-    },
-    {
-      "from": 499,
-      "to": 512,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 500,
-      "to": 503,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 504,
-      "to": 513,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 505,
-      "to": 540,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 506,
-      "to": 512,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 507,
-      "to": 509,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 508,
-      "to": 511,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 508,
-      "to": 521,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 508,
-      "to": 522,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 508,
-      "to": 528,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 508,
-      "to": 530,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 509,
-      "to": 513,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 510,
-      "to": 524,
-      "confidence": 0.984,
-      "style": "dashed"
-    },
-    {
-      "from": 510,
-      "to": 544,
-      "confidence": 0.961,
-      "style": "dashed"
-    },
-    {
-      "from": 511,
-      "to": 560,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 511,
-      "to": 562,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 514,
-      "to": 518,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 514,
-      "to": 520,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 514,
-      "to": 526,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 515,
-      "to": 518,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 515,
-      "to": 525,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 515,
-      "to": 528,
-      "confidence": 0.983,
-      "style": "dashed"
-    },
-    {
-      "from": 516,
-      "to": 517,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 516,
-      "to": 521,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 517,
-      "to": 520,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 519,
-      "to": 520,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 521,
-      "to": 523,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 522,
-      "to": 523,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 522,
-      "to": 528,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 522,
-      "to": 531,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 522,
-      "to": 532,
-      "confidence": 0.884,
-      "style": "dashed"
-    },
-    {
-      "from": 523,
-      "to": 526,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 523,
-      "to": 528,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 524,
-      "to": 527,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 524,
-      "to": 529,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 525,
-      "to": 529,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 525,
-      "to": 532,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 525,
-      "to": 533,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 525,
-      "to": 534,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 527,
-      "to": 535,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 528,
-      "to": 531,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 530,
-      "to": 531,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 530,
-      "to": 534,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 530,
-      "to": 562,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 531,
-      "to": 532,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 534,
-      "to": 535,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 535,
-      "to": 549,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 536,
-      "to": 541,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 536,
-      "to": 542,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 536,
-      "to": 543,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 536,
-      "to": 553,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 537,
-      "to": 539,
-      "confidence": 0.858,
-      "style": "dashed"
-    },
-    {
-      "from": 537,
-      "to": 557,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 538,
-      "to": 545,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 539,
-      "to": 540,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 539,
-      "to": 541,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 540,
-      "to": 541,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 540,
-      "to": 544,
-      "confidence": 0.868,
-      "style": "dashed"
-    },
-    {
-      "from": 541,
-      "to": 543,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 541,
-      "to": 545,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 541,
-      "to": 557,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 542,
-      "to": 543,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 543,
-      "to": 545,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 544,
-      "to": 549,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 546,
-      "to": 549,
-      "confidence": 0.944,
-      "style": "dashed"
-    },
-    {
-      "from": 546,
-      "to": 551,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 546,
-      "to": 555,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 546,
-      "to": 562,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 547,
-      "to": 548,
-      "confidence": 0.985,
-      "style": "dashed"
-    },
-    {
-      "from": 547,
-      "to": 552,
-      "confidence": 0.978,
-      "style": "solid"
-    },
-    {
-      "from": 549,
-      "to": 550,
-      "confidence": 0.968,
-      "style": "dashed"
-    },
-    {
-      "from": 550,
-      "to": 551,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 550,
-      "to": 553,
-      "confidence": 0.978,
-      "style": "dashed"
-    },
-    {
-      "from": 550,
-      "to": 554,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 551,
-      "to": 552,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 552,
-      "to": 556,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 554,
-      "to": 556,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 555,
-      "to": 558,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 555,
-      "to": 569,
-      "confidence": 0.885,
-      "style": "dashed"
-    },
-    {
-      "from": 555,
-      "to": 571,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 558,
-      "to": 559,
-      "confidence": 0.92,
-      "style": "dashed"
-    },
-    {
-      "from": 558,
-      "to": 562,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 558,
-      "to": 568,
-      "confidence": 0.944,
-      "style": "dashed"
-    },
-    {
-      "from": 559,
-      "to": 562,
-      "confidence": 0.97,
-      "style": "dashed"
-    },
-    {
-      "from": 559,
-      "to": 563,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 559,
-      "to": 565,
-      "confidence": 0.953,
-      "style": "dashed"
-    },
-    {
-      "from": 559,
-      "to": 568,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 561,
-      "to": 563,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 561,
-      "to": 565,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 562,
-      "to": 563,
-      "confidence": 0.902,
-      "style": "dashed"
-    },
-    {
-      "from": 565,
-      "to": 568,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 566,
-      "to": 567,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 567,
-      "to": 573,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 568,
-      "to": 569,
-      "confidence": 0.98,
-      "style": "dashed"
-    },
-    {
-      "from": 569,
-      "to": 570,
-      "confidence": 0.966,
-      "style": "dashed"
-    },
-    {
-      "from": 569,
-      "to": 575,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 570,
-      "to": 571,
-      "confidence": 1.0,
-      "style": "dashed"
-    },
-    {
-      "from": 573,
-      "to": 574,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 574,
-      "to": 580,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 577,
-      "to": 579,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 579,
-      "to": 580,
-      "confidence": 1.0,
-      "style": "solid"
-    },
-    {
-      "from": 581,
-      "to": 582,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "楚城",
+      "toName": "比斯凱克",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 491,
+      "to": 494,
+      "fromName": "巴爾喀什",
+      "toName": "楚城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 582,
+      "to": 581,
+      "fromName": "慕尼黑",
+      "toName": "日內瓦",
+      "type": "railway",
+      "review": "reference-endpoints"
     },
     {
       "from": 581,
       "to": 583,
-      "confidence": 1.0,
-      "style": "solid"
+      "fromName": "日內瓦",
+      "toName": "巴黎",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 507,
+      "to": 509,
+      "fromName": "伊斯坦堡",
+      "toName": "伊德利卜",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 509,
+      "to": 513,
+      "fromName": "伊德利卜",
+      "toName": "阿勒坡",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 513,
+      "to": 504,
+      "fromName": "阿勒坡",
+      "toName": "杜拜",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 488,
+      "to": 518,
+      "fromName": "阿克鬥卡",
+      "toName": "博爾塔拉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 518,
+      "to": 514,
+      "fromName": "博爾塔拉",
+      "toName": "奎屯",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 514,
+      "to": 520,
+      "fromName": "奎屯",
+      "toName": "克拉瑪依",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 520,
+      "to": 517,
+      "fromName": "克拉瑪依",
+      "toName": "阿勒泰",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 517,
+      "to": 516,
+      "fromName": "阿勒泰",
+      "toName": "可可托海",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 516,
+      "to": 521,
+      "fromName": "可可托海",
+      "toName": "奇臺",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 521,
+      "to": 508,
+      "fromName": "奇臺",
+      "toName": "哈密",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 508,
+      "to": 522,
+      "fromName": "哈密",
+      "toName": "吐魯番",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 522,
+      "to": 523,
+      "fromName": "吐魯番",
+      "toName": "烏魯木齊",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 523,
+      "to": 526,
+      "fromName": "烏魯木齊",
+      "toName": "昌吉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 526,
+      "to": 514,
+      "fromName": "昌吉",
+      "toName": "奎屯",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 519,
+      "to": 520,
+      "fromName": "塔城",
+      "toName": "克拉瑪依",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 515,
+      "to": 518,
+      "fromName": "伊寧",
+      "toName": "博爾塔拉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 493,
+      "to": 515,
+      "fromName": "扎爾肯特",
+      "toName": "伊寧",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 515,
+      "to": 525,
+      "fromName": "伊寧",
+      "toName": "阿克蘇",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 525,
+      "to": 532,
+      "fromName": "阿克蘇",
+      "toName": "庫車",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 532,
+      "to": 531,
+      "fromName": "庫車",
+      "toName": "庫爾勒",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 531,
+      "to": 528,
+      "fromName": "庫爾勒",
+      "toName": "巴音郭楞",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 528,
+      "to": 522,
+      "fromName": "巴音郭楞",
+      "toName": "吐魯番",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 529,
+      "to": 525,
+      "fromName": "克孜勒蘇",
+      "toName": "阿克蘇",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 525,
+      "to": 522,
+      "fromName": "阿克蘇",
+      "toName": "吐魯番",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 524,
+      "to": 529,
+      "fromName": "喀什",
+      "toName": "克孜勒蘇",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 524,
+      "to": 527,
+      "fromName": "喀什",
+      "toName": "英吉沙",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 527,
+      "to": 535,
+      "fromName": "英吉沙",
+      "toName": "莎車",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 535,
+      "to": 534,
+      "fromName": "莎車",
+      "toName": "和田",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 534,
+      "to": 530,
+      "fromName": "和田",
+      "toName": "若羌",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 530,
+      "to": 531,
+      "fromName": "若羌",
+      "toName": "庫爾勒",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 508,
+      "to": 530,
+      "fromName": "哈密",
+      "toName": "若羌",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 530,
+      "to": 562,
+      "fromName": "若羌",
+      "toName": "格爾木",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 562,
+      "to": 511,
+      "fromName": "格爾木",
+      "toName": "敦煌",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 511,
+      "to": 508,
+      "fromName": "敦煌",
+      "toName": "哈密",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 511,
+      "to": 560,
+      "fromName": "敦煌",
+      "toName": "海北",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 560,
+      "to": 300,
+      "fromName": "海北",
+      "toName": "西寧",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 300,
+      "to": 299,
+      "fromName": "西寧",
+      "toName": "蘭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 299,
+      "to": 297,
+      "fromName": "蘭州",
+      "toName": "西安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 562,
+      "to": 300,
+      "fromName": "格爾木",
+      "toName": "西寧",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 495,
+      "to": 502,
+      "fromName": "春賈",
+      "toName": "阿拉木圖",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 98,
+      "to": 111,
+      "fromName": "烏蘭烏德",
+      "toName": "達爾汗",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 111,
+      "to": 112,
+      "fromName": "達爾汗",
+      "toName": "額爾登特",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 112,
+      "to": 110,
+      "fromName": "額爾登特",
+      "toName": "烏蘭巴托",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 110,
+      "to": 111,
+      "fromName": "烏蘭巴托",
+      "toName": "達爾汗",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 110,
+      "to": 107,
+      "fromName": "烏蘭巴托",
+      "toName": "賽音山達",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 107,
+      "to": 9,
+      "fromName": "賽音山達",
+      "toName": "百靈廟",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 9,
+      "to": 124,
+      "fromName": "百靈廟",
+      "toName": "包頭",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 124,
+      "to": 123,
+      "fromName": "包頭",
+      "toName": "呼和浩特",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 123,
+      "to": 122,
+      "fromName": "呼和浩特",
+      "toName": "烏蘭察布",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 122,
+      "to": 121,
+      "fromName": "烏蘭察布",
+      "toName": "張家口",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 121,
+      "to": 293,
+      "fromName": "張家口",
+      "toName": "北京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 293,
+      "to": 292,
+      "fromName": "北京",
+      "toName": "天津",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 292,
+      "to": 290,
+      "fromName": "天津",
+      "toName": "濟南",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 290,
+      "to": 289,
+      "fromName": "濟南",
+      "toName": "徐州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 289,
+      "to": 283,
+      "fromName": "徐州",
+      "toName": "南京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 283,
+      "to": 281,
+      "fromName": "南京",
+      "toName": "上海",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 281,
+      "to": 280,
+      "fromName": "上海",
+      "toName": "杭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 280,
+      "to": 285,
+      "fromName": "杭州",
+      "toName": "南昌",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 107,
+      "to": 108,
+      "fromName": "賽音山達",
+      "toName": "達蘭扎德嘎德",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 108,
+      "to": 14,
+      "fromName": "達蘭扎德嘎德",
+      "toName": "巴彥淖爾",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 14,
+      "to": 124,
+      "fromName": "巴彥淖爾",
+      "toName": "包頭",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 124,
+      "to": 34,
+      "fromName": "包頭",
+      "toName": "鄂爾多斯",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 34,
+      "to": 296,
+      "fromName": "鄂爾多斯",
+      "toName": "延安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 296,
+      "to": 297,
+      "fromName": "延安",
+      "toName": "西安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 107,
+      "to": 122,
+      "fromName": "賽音山達",
+      "toName": "烏蘭察布",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 122,
+      "to": 295,
+      "fromName": "烏蘭察布",
+      "toName": "太原",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 295,
+      "to": 297,
+      "fromName": "太原",
+      "toName": "西安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 14,
+      "to": 475,
+      "fromName": "巴彥淖爾",
+      "toName": "額濟納",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 475,
+      "to": 508,
+      "fromName": "額濟納",
+      "toName": "哈密",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 14,
+      "to": 476,
+      "fromName": "巴彥淖爾",
+      "toName": "烏海",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 476,
+      "to": 298,
+      "fromName": "烏海",
+      "toName": "銀川",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 298,
+      "to": 299,
+      "fromName": "銀川",
+      "toName": "蘭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 97,
+      "to": 106,
+      "fromName": "赤塔",
+      "toName": "喬巴山",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 97,
+      "to": 119,
+      "fromName": "赤塔",
+      "toName": "呼倫貝爾",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 119,
+      "to": 81,
+      "fromName": "呼倫貝爾",
+      "toName": "齊齊哈爾",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 81,
+      "to": 77,
+      "fromName": "齊齊哈爾",
+      "toName": "黑河",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 77,
+      "to": 76,
+      "fromName": "黑河",
+      "toName": "海蘭泡",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 119,
+      "to": 85,
+      "fromName": "呼倫貝爾",
+      "toName": "興安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 85,
+      "to": 86,
+      "fromName": "興安",
+      "toName": "白城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 86,
+      "to": 88,
+      "fromName": "白城",
+      "toName": "通遼",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 88,
+      "to": 95,
+      "fromName": "通遼",
+      "toName": "赤峰",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 95,
+      "to": 293,
+      "fromName": "赤峰",
+      "toName": "北京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 81,
+      "to": 86,
+      "fromName": "齊齊哈爾",
+      "toName": "白城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 81,
+      "to": 82,
+      "fromName": "齊齊哈爾",
+      "toName": "大慶",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 82,
+      "to": 83,
+      "fromName": "大慶",
+      "toName": "哈爾濱",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 83,
+      "to": 77,
+      "fromName": "哈爾濱",
+      "toName": "黑河",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 74,
+      "to": 73,
+      "fromName": "伯力",
+      "toName": "共青城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 73,
+      "to": 72,
+      "fromName": "共青城",
+      "toName": "南薩哈林斯克",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 74,
+      "to": 78,
+      "fromName": "伯力",
+      "toName": "佳木斯",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 78,
+      "to": 77,
+      "fromName": "佳木斯",
+      "toName": "黑河",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 78,
+      "to": 83,
+      "fromName": "佳木斯",
+      "toName": "哈爾濱",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 83,
+      "to": 79,
+      "fromName": "哈爾濱",
+      "toName": "牡丹江",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 79,
+      "to": 80,
+      "fromName": "牡丹江",
+      "toName": "延邊",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 80,
+      "to": 68,
+      "fromName": "延邊",
+      "toName": "清津",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 68,
+      "to": 69,
+      "fromName": "清津",
+      "toName": "平壤",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 69,
+      "to": 84,
+      "fromName": "平壤",
+      "toName": "吉林",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 84,
+      "to": 83,
+      "fromName": "吉林",
+      "toName": "哈爾濱",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 86,
+      "to": 87,
+      "fromName": "白城",
+      "toName": "長春",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 87,
+      "to": 84,
+      "fromName": "長春",
+      "toName": "吉林",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 84,
+      "to": 80,
+      "fromName": "吉林",
+      "toName": "延邊",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 83,
+      "to": 87,
+      "fromName": "哈爾濱",
+      "toName": "長春",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 87,
+      "to": 89,
+      "fromName": "長春",
+      "toName": "瀋陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 89,
+      "to": 92,
+      "fromName": "瀋陽",
+      "toName": "丹東",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 92,
+      "to": 69,
+      "fromName": "丹東",
+      "toName": "平壤",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 88,
+      "to": 89,
+      "fromName": "通遼",
+      "toName": "瀋陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 89,
+      "to": 84,
+      "fromName": "瀋陽",
+      "toName": "吉林",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 89,
+      "to": 90,
+      "fromName": "瀋陽",
+      "toName": "鞍山",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 90,
+      "to": 91,
+      "fromName": "鞍山",
+      "toName": "大連",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 91,
+      "to": 92,
+      "fromName": "大連",
+      "toName": "丹東",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 89,
+      "to": 292,
+      "fromName": "瀋陽",
+      "toName": "天津",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 89,
+      "to": 93,
+      "fromName": "瀋陽",
+      "toName": "阜新",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 93,
+      "to": 94,
+      "fromName": "阜新",
+      "toName": "朝陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 94,
+      "to": 96,
+      "fromName": "朝陽",
+      "toName": "承德",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 96,
+      "to": 293,
+      "fromName": "承德",
+      "toName": "北京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 89,
+      "to": 94,
+      "fromName": "瀋陽",
+      "toName": "朝陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 120,
+      "to": 85,
+      "fromName": "錫林郭勒",
+      "toName": "興安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 120,
+      "to": 122,
+      "fromName": "錫林郭勒",
+      "toName": "烏蘭察布",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 120,
+      "to": 293,
+      "fromName": "錫林郭勒",
+      "toName": "北京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 293,
+      "to": 294,
+      "fromName": "北京",
+      "toName": "石家莊",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 294,
+      "to": 295,
+      "fromName": "石家莊",
+      "toName": "太原",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 294,
+      "to": 290,
+      "fromName": "石家莊",
+      "toName": "濟南",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 290,
+      "to": 291,
+      "fromName": "濟南",
+      "toName": "青島",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 18,
+      "to": 63,
+      "fromName": "札幌",
+      "toName": "仙臺",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 63,
+      "to": 64,
+      "fromName": "仙臺",
+      "toName": "東京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 64,
+      "to": 65,
+      "fromName": "東京",
+      "toName": "大阪",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 65,
+      "to": 66,
+      "fromName": "大阪",
+      "toName": "福岡",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 70,
+      "to": 71,
+      "fromName": "首爾",
+      "toName": "釜山",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 297,
+      "to": 288,
+      "fromName": "西安",
+      "toName": "鄭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 288,
+      "to": 289,
+      "fromName": "鄭州",
+      "toName": "徐州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 289,
+      "to": 282,
+      "fromName": "徐州",
+      "toName": "合肥",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 282,
+      "to": 283,
+      "fromName": "合肥",
+      "toName": "南京",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 283,
+      "to": 280,
+      "fromName": "南京",
+      "toName": "杭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 280,
+      "to": 279,
+      "fromName": "杭州",
+      "toName": "溫州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 279,
+      "to": 278,
+      "fromName": "溫州",
+      "toName": "福州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 278,
+      "to": 277,
+      "fromName": "福州",
+      "toName": "廈門",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 277,
+      "to": 59,
+      "fromName": "廈門",
+      "toName": "潮州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 59,
+      "to": 56,
+      "fromName": "潮州",
+      "toName": "深圳",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 56,
+      "to": 47,
+      "fromName": "深圳",
+      "toName": "上粉沙打",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 47,
+      "to": 48,
+      "fromName": "上粉沙打",
+      "toName": "大埔",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 48,
+      "to": 46,
+      "fromName": "大埔",
+      "toName": "沙田",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 46,
+      "to": 40,
+      "fromName": "沙田",
+      "toName": "九龍城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 40,
+      "to": 44,
+      "fromName": "九龍城",
+      "toName": "觀塘",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 44,
+      "to": 43,
+      "fromName": "觀塘",
+      "toName": "黃大仙",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 43,
+      "to": 42,
+      "fromName": "黃大仙",
+      "toName": "深水埗",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 42,
+      "to": 41,
+      "fromName": "深水埗",
+      "toName": "油尖旺",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 297,
+      "to": 287,
+      "fromName": "西安",
+      "toName": "南陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 287,
+      "to": 284,
+      "fromName": "南陽",
+      "toName": "武漢",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 284,
+      "to": 288,
+      "fromName": "武漢",
+      "toName": "鄭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 288,
+      "to": 294,
+      "fromName": "鄭州",
+      "toName": "石家莊",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 297,
+      "to": 301,
+      "fromName": "西安",
+      "toName": "重慶",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 301,
+      "to": 284,
+      "fromName": "重慶",
+      "toName": "武漢",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 284,
+      "to": 282,
+      "fromName": "武漢",
+      "toName": "合肥",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 282,
+      "to": 288,
+      "fromName": "合肥",
+      "toName": "鄭州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 297,
+      "to": 302,
+      "fromName": "西安",
+      "toName": "成都",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 302,
+      "to": 301,
+      "fromName": "成都",
+      "toName": "重慶",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 301,
+      "to": 303,
+      "fromName": "重慶",
+      "toName": "貴陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 303,
+      "to": 286,
+      "fromName": "貴陽",
+      "toName": "長沙",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 286,
+      "to": 284,
+      "fromName": "長沙",
+      "toName": "武漢",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 302,
+      "to": 304,
+      "fromName": "成都",
+      "toName": "昆明",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 304,
+      "to": 303,
+      "fromName": "昆明",
+      "toName": "貴陽",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 303,
+      "to": 61,
+      "fromName": "貴陽",
+      "toName": "南寧",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 61,
+      "to": 60,
+      "fromName": "南寧",
+      "toName": "桂林",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 60,
+      "to": 286,
+      "fromName": "桂林",
+      "toName": "長沙",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 286,
+      "to": 57,
+      "fromName": "長沙",
+      "toName": "廣州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 57,
+      "to": 61,
+      "fromName": "廣州",
+      "toName": "南寧",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 302,
+      "to": 575,
+      "fromName": "成都",
+      "toName": "雅安",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 303,
+      "to": 60,
+      "fromName": "貴陽",
+      "toName": "桂林",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 60,
+      "to": 57,
+      "fromName": "桂林",
+      "toName": "廣州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 57,
+      "to": 56,
+      "fromName": "廣州",
+      "toName": "深圳",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 304,
+      "to": 61,
+      "fromName": "昆明",
+      "toName": "南寧",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 61,
+      "to": 22,
+      "fromName": "南寧",
+      "toName": "河內",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 22,
+      "to": 36,
+      "fromName": "河內",
+      "toName": "仰光",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 285,
+      "to": 286,
+      "fromName": "南昌",
+      "toName": "長沙",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 286,
+      "to": 278,
+      "fromName": "長沙",
+      "toName": "福州",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 57,
+      "to": 53,
+      "fromName": "廣州",
+      "toName": "湛茂",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 53,
+      "to": 62,
+      "fromName": "湛茂",
+      "toName": "海口",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 62,
+      "to": 276,
+      "fromName": "海口",
+      "toName": "三亞",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 57,
+      "to": 55,
+      "fromName": "廣州",
+      "toName": "澳門首家善意賭場",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 54,
+      "to": 52,
+      "fromName": "赤鱲角",
+      "toName": "葵青",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 52,
+      "to": 51,
+      "fromName": "葵青",
+      "toName": "荃灣",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 51,
+      "to": 49,
+      "fromName": "荃灣",
+      "toName": "元朗",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 49,
+      "to": 50,
+      "fromName": "元朗",
+      "toName": "屯門",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 37,
+      "to": 40,
+      "fromName": "維多利亞城",
+      "toName": "九龍城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 40,
+      "to": 38,
+      "fromName": "九龍城",
+      "toName": "柴灣",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 52,
+      "to": 40,
+      "fromName": "葵青",
+      "toName": "九龍城",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 54,
+      "to": 50,
+      "fromName": "赤鱲角",
+      "toName": "屯門",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 46,
+      "to": 45,
+      "fromName": "沙田",
+      "toName": "西貢",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 505,
+      "to": 540,
+      "fromName": "拉瓦爾品第",
+      "toName": "達蘭薩拉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 540,
+      "to": 539,
+      "fromName": "達蘭薩拉",
+      "toName": "德拉敦",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 539,
+      "to": 541,
+      "fromName": "德拉敦",
+      "toName": "德里",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 541,
+      "to": 557,
+      "fromName": "德里",
+      "toName": "加德滿都",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 540,
+      "to": 541,
+      "fromName": "達蘭薩拉",
+      "toName": "德里",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 541,
+      "to": 543,
+      "fromName": "德里",
+      "toName": "班達拉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 543,
+      "to": 542,
+      "fromName": "班達拉",
+      "toName": "昌德拉吉里",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 542,
+      "to": 536,
+      "fromName": "昌德拉吉里",
+      "toName": "邁恩巴德",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 536,
+      "to": 541,
+      "fromName": "邁恩巴德",
+      "toName": "德里",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 543,
+      "to": 536,
+      "fromName": "班達拉",
+      "toName": "邁恩巴德",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 536,
+      "to": 553,
+      "fromName": "邁恩巴德",
+      "toName": "拉旺格拉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 541,
+      "to": 545,
+      "fromName": "德里",
+      "toName": "穆恩德戈德",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 545,
+      "to": 538,
+      "fromName": "穆恩德戈德",
+      "toName": "拜拉庫比",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 543,
+      "to": 545,
+      "fromName": "班達拉",
+      "toName": "穆恩德戈德",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 546,
+      "to": 551,
+      "fromName": "那曲",
+      "toName": "拉薩",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 551,
+      "to": 550,
+      "fromName": "拉薩",
+      "toName": "日喀則",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 550,
+      "to": 549,
+      "fromName": "日喀則",
+      "toName": "阿里",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 551,
+      "to": 552,
+      "fromName": "拉薩",
+      "toName": "哲古",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 552,
+      "to": 547,
+      "fromName": "哲古",
+      "toName": "林芝",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 550,
+      "to": 552,
+      "fromName": "日喀則",
+      "toName": "哲古",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 546,
+      "to": 562,
+      "fromName": "那曲",
+      "toName": "格爾木",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 27,
+      "to": 26,
+      "fromName": "曼谷",
+      "toName": "吉隆坡",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 26,
+      "to": 25,
+      "fromName": "吉隆坡",
+      "toName": "新加坡",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 25,
+      "to": 24,
+      "fromName": "新加坡",
+      "toName": "雅加達",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 24,
+      "to": 23,
+      "fromName": "雅加達",
+      "toName": "胡志明市",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 28,
+      "to": 27,
+      "fromName": "美斯樂",
+      "toName": "曼谷",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 21,
+      "to": 20,
+      "fromName": "佬沃",
+      "toName": "馬尼拉",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 307,
+      "to": 308,
+      "fromName": "桃園",
+      "toName": "新竹",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 308,
+      "to": 5,
+      "fromName": "新竹",
+      "toName": "苗栗",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 5,
+      "to": 8,
+      "fromName": "苗栗",
+      "toName": "彰化",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 8,
+      "to": 10,
+      "fromName": "彰化",
+      "toName": "雲林",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 10,
+      "to": 11,
+      "fromName": "雲林",
+      "toName": "嘉義",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "fromName": "嘉義",
+      "toName": "臺南",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 12,
+      "to": 13,
+      "fromName": "臺南",
+      "toName": "高雄",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 13,
+      "to": 19,
+      "fromName": "高雄",
+      "toName": "屏東",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 19,
+      "to": 17,
+      "fromName": "屏東",
+      "toName": "臺東",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 17,
+      "to": 16,
+      "fromName": "臺東",
+      "toName": "花蓮",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 16,
+      "to": 15,
+      "fromName": "花蓮",
+      "toName": "宜蘭",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 15,
+      "to": 3,
+      "fromName": "宜蘭",
+      "toName": "基隆",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "fromName": "基隆",
+      "toName": "新北",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 4,
+      "to": 307,
+      "fromName": "新北",
+      "toName": "桃園",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 6,
+      "to": 8,
+      "fromName": "臺中",
+      "toName": "彰化",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 1,
+      "to": 4,
+      "fromName": "臺北",
+      "toName": "新北",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 1,
+      "to": 3,
+      "fromName": "臺北",
+      "toName": "基隆",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 566,
+      "to": 567,
+      "fromName": "華盛頓",
+      "toName": "紐約",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 567,
+      "to": 573,
+      "fromName": "紐約",
+      "toName": "多倫多",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 573,
+      "to": 574,
+      "fromName": "多倫多",
+      "toName": "卡加利",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 574,
+      "to": 580,
+      "fromName": "卡加利",
+      "toName": "溫哥華",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 580,
+      "to": 579,
+      "fromName": "溫哥華",
+      "toName": "舊金山",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 579,
+      "to": 577,
+      "fromName": "舊金山",
+      "toName": "洛杉磯",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 578,
+      "to": 576,
+      "fromName": "奧克蘭",
+      "toName": "雪梨",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 102,
+      "to": 482,
+      "fromName": "鄂木斯克",
+      "toName": "巴甫洛達爾",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 104,
+      "to": 118,
+      "fromName": "巴爾瑙爾",
+      "toName": "戈爾諾阿爾泰斯克",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 118,
+      "to": 117,
+      "fromName": "戈爾諾阿爾泰斯克",
+      "toName": "烏列蓋",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 117,
+      "to": 116,
+      "fromName": "烏列蓋",
+      "toName": "科布多",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 116,
+      "to": 114,
+      "fromName": "科布多",
+      "toName": "克孜勒",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 114,
+      "to": 100,
+      "fromName": "克孜勒",
+      "toName": "亞巴坎",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 118,
+      "to": 517,
+      "fromName": "戈爾諾阿爾泰斯克",
+      "toName": "阿勒泰",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 517,
+      "to": 117,
+      "fromName": "阿勒泰",
+      "toName": "烏列蓋",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 116,
+      "to": 516,
+      "fromName": "科布多",
+      "toName": "可可托海",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 480,
+      "to": 489,
+      "fromName": "卡拉干達",
+      "toName": "阿亞古茲",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 489,
+      "to": 487,
+      "fromName": "阿亞古茲",
+      "toName": "齋桑",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 487,
+      "to": 517,
+      "fromName": "齋桑",
+      "toName": "阿勒泰",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 489,
+      "to": 519,
+      "fromName": "阿亞古茲",
+      "toName": "塔城",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 116,
+      "to": 113,
+      "fromName": "科布多",
+      "toName": "木倫",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 113,
+      "to": 99,
+      "fromName": "木倫",
+      "toName": "伊爾庫次克",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 116,
+      "to": 115,
+      "fromName": "科布多",
+      "toName": "阿爾泰",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 115,
+      "to": 113,
+      "fromName": "阿爾泰",
+      "toName": "木倫",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 113,
+      "to": 112,
+      "fromName": "木倫",
+      "toName": "額爾登特",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 112,
+      "to": 109,
+      "fromName": "額爾登特",
+      "toName": "巴彥洪戈爾",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 109,
+      "to": 115,
+      "fromName": "巴彥洪戈爾",
+      "toName": "阿爾泰",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 115,
+      "to": 108,
+      "fromName": "阿爾泰",
+      "toName": "達蘭扎德嘎德",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 108,
+      "to": 109,
+      "fromName": "達蘭扎德嘎德",
+      "toName": "巴彥洪戈爾",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 109,
+      "to": 110,
+      "fromName": "巴彥洪戈爾",
+      "toName": "烏蘭巴托",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 110,
+      "to": 106,
+      "fromName": "烏蘭巴托",
+      "toName": "喬巴山",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 106,
+      "to": 119,
+      "fromName": "喬巴山",
+      "toName": "呼倫貝爾",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 110,
+      "to": 108,
+      "fromName": "烏蘭巴托",
+      "toName": "達蘭扎德嘎德",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 108,
+      "to": 475,
+      "fromName": "達蘭扎德嘎德",
+      "toName": "額濟納",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 475,
+      "to": 511,
+      "fromName": "額濟納",
+      "toName": "敦煌",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 106,
+      "to": 107,
+      "fromName": "喬巴山",
+      "toName": "賽音山達",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 106,
+      "to": 120,
+      "fromName": "喬巴山",
+      "toName": "錫林郭勒",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 120,
+      "to": 95,
+      "fromName": "錫林郭勒",
+      "toName": "赤峰",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 95,
+      "to": 94,
+      "fromName": "赤峰",
+      "toName": "朝陽",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 475,
+      "to": 298,
+      "fromName": "額濟納",
+      "toName": "銀川",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 298,
+      "to": 296,
+      "fromName": "銀川",
+      "toName": "延安",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 296,
+      "to": 295,
+      "fromName": "延安",
+      "toName": "太原",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 88,
+      "to": 87,
+      "fromName": "通遼",
+      "toName": "長春",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 96,
+      "to": 292,
+      "fromName": "承德",
+      "toName": "天津",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 91,
+      "to": 291,
+      "fromName": "大連",
+      "toName": "青島",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 291,
+      "to": 70,
+      "fromName": "青島",
+      "toName": "首爾",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 70,
+      "to": 91,
+      "fromName": "首爾",
+      "toName": "大連",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 293,
+      "to": 96,
+      "fromName": "北京",
+      "toName": "承德",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 525,
+      "to": 533,
+      "fromName": "阿克蘇",
+      "toName": "烏什",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 533,
+      "to": 496,
+      "fromName": "烏什",
+      "toName": "比斯凱克",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 533,
+      "to": 529,
+      "fromName": "烏什",
+      "toName": "克孜勒蘇",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 533,
+      "to": 495,
+      "fromName": "烏什",
+      "toName": "春賈",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 497,
+      "to": 501,
+      "fromName": "塔什干",
+      "toName": "杜尚貝",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 501,
+      "to": 498,
+      "fromName": "杜尚貝",
+      "toName": "費扎巴德",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 498,
+      "to": 524,
+      "fromName": "費扎巴德",
+      "toName": "喀什",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 524,
+      "to": 510,
+      "fromName": "喀什",
+      "toName": "吉爾吉特",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 497,
+      "to": 529,
+      "fromName": "塔什干",
+      "toName": "克孜勒蘇",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 501,
+      "to": 499,
+      "fromName": "杜尚貝",
+      "toName": "喀布爾",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 499,
+      "to": 498,
+      "fromName": "喀布爾",
+      "toName": "費扎巴德",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 498,
+      "to": 510,
+      "fromName": "費扎巴德",
+      "toName": "吉爾吉特",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 510,
+      "to": 544,
+      "fromName": "吉爾吉特",
+      "toName": "列城",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 544,
+      "to": 540,
+      "fromName": "列城",
+      "toName": "達蘭薩拉",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 540,
+      "to": 549,
+      "fromName": "達蘭薩拉",
+      "toName": "阿里",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 549,
+      "to": 535,
+      "fromName": "阿里",
+      "toName": "莎車",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 499,
+      "to": 512,
+      "fromName": "喀布爾",
+      "toName": "霍斯特",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 512,
+      "to": 506,
+      "fromName": "霍斯特",
+      "toName": "米蘭沙阿",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 506,
+      "to": 505,
+      "fromName": "米蘭沙阿",
+      "toName": "拉瓦爾品第",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 505,
+      "to": 512,
+      "fromName": "拉瓦爾品第",
+      "toName": "霍斯特",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 499,
+      "to": 505,
+      "fromName": "喀布爾",
+      "toName": "拉瓦爾品第",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 505,
+      "to": 510,
+      "fromName": "拉瓦爾品第",
+      "toName": "吉爾吉特",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 544,
+      "to": 549,
+      "fromName": "列城",
+      "toName": "阿里",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 549,
+      "to": 539,
+      "fromName": "阿里",
+      "toName": "德拉敦",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 539,
+      "to": 537,
+      "fromName": "德拉敦",
+      "toName": "博卡拉",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 537,
+      "to": 557,
+      "fromName": "博卡拉",
+      "toName": "加德滿都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 557,
+      "to": 536,
+      "fromName": "加德滿都",
+      "toName": "邁恩巴德",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 549,
+      "to": 546,
+      "fromName": "阿里",
+      "toName": "那曲",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 546,
+      "to": 555,
+      "fromName": "那曲",
+      "toName": "昌都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 555,
+      "to": 547,
+      "fromName": "昌都",
+      "toName": "林芝",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 547,
+      "to": 548,
+      "fromName": "林芝",
+      "toName": "緹祖",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 548,
+      "to": 556,
+      "fromName": "緹祖",
+      "toName": "達旺",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 556,
+      "to": 554,
+      "fromName": "達旺",
+      "toName": "辛布",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 554,
+      "to": 553,
+      "fromName": "辛布",
+      "toName": "拉旺格拉",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 553,
+      "to": 550,
+      "fromName": "拉旺格拉",
+      "toName": "日喀則",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 550,
+      "to": 557,
+      "fromName": "日喀則",
+      "toName": "加德滿都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 557,
+      "to": 553,
+      "fromName": "加德滿都",
+      "toName": "拉旺格拉",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 553,
+      "to": 552,
+      "fromName": "拉旺格拉",
+      "toName": "哲古",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 562,
+      "to": 563,
+      "fromName": "格爾木",
+      "toName": "海南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 563,
+      "to": 300,
+      "fromName": "海南",
+      "toName": "西寧",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 300,
+      "to": 561,
+      "fromName": "西寧",
+      "toName": "黃南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 561,
+      "to": 565,
+      "fromName": "黃南",
+      "toName": "甘南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 565,
+      "to": 564,
+      "fromName": "甘南",
+      "toName": "天祝",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 564,
+      "to": 560,
+      "fromName": "天祝",
+      "toName": "海北",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 562,
+      "to": 558,
+      "fromName": "格爾木",
+      "toName": "玉樹",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 558,
+      "to": 559,
+      "fromName": "玉樹",
+      "toName": "果洛",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 559,
+      "to": 563,
+      "fromName": "果洛",
+      "toName": "海南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 563,
+      "to": 561,
+      "fromName": "海南",
+      "toName": "黃南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 561,
+      "to": 559,
+      "fromName": "黃南",
+      "toName": "果洛",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 559,
+      "to": 565,
+      "fromName": "果洛",
+      "toName": "甘南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 558,
+      "to": 568,
+      "fromName": "玉樹",
+      "toName": "阿壩",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 568,
+      "to": 559,
+      "fromName": "阿壩",
+      "toName": "果洛",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 568,
+      "to": 565,
+      "fromName": "阿壩",
+      "toName": "甘南",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 549,
+      "to": 550,
+      "fromName": "阿里",
+      "toName": "日喀則",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 549,
+      "to": 555,
+      "fromName": "阿里",
+      "toName": "昌都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 555,
+      "to": 571,
+      "fromName": "昌都",
+      "toName": "迪慶",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 571,
+      "to": 304,
+      "fromName": "迪慶",
+      "toName": "昆明",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 304,
+      "to": 570,
+      "fromName": "昆明",
+      "toName": "木里",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 570,
+      "to": 569,
+      "fromName": "木里",
+      "toName": "甘孜",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 569,
+      "to": 555,
+      "fromName": "甘孜",
+      "toName": "昌都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 558,
+      "to": 555,
+      "fromName": "玉樹",
+      "toName": "昌都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 548,
+      "to": 32,
+      "fromName": "緹祖",
+      "toName": "密支那",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 32,
+      "to": 33,
+      "fromName": "密支那",
+      "toName": "達杭丹",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 33,
+      "to": 548,
+      "fromName": "達杭丹",
+      "toName": "緹祖",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 569,
+      "to": 571,
+      "fromName": "甘孜",
+      "toName": "迪慶",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 571,
+      "to": 570,
+      "fromName": "迪慶",
+      "toName": "木里",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 570,
+      "to": 575,
+      "fromName": "木里",
+      "toName": "雅安",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 568,
+      "to": 569,
+      "fromName": "阿壩",
+      "toName": "甘孜",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 568,
+      "to": 302,
+      "fromName": "阿壩",
+      "toName": "成都",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 305,
+      "to": 304,
+      "fromName": "德宏",
+      "toName": "昆明",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 304,
+      "to": 306,
+      "fromName": "昆明",
+      "toName": "西雙版納",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 306,
+      "to": 305,
+      "fromName": "西雙版納",
+      "toName": "德宏",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 305,
+      "to": 31,
+      "fromName": "德宏",
+      "toName": "老街",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 31,
+      "to": 30,
+      "fromName": "老街",
+      "toName": "邦康",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 30,
+      "to": 306,
+      "fromName": "邦康",
+      "toName": "西雙版納",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 306,
+      "to": 29,
+      "fromName": "西雙版納",
+      "toName": "孟賽",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 29,
+      "to": 22,
+      "fromName": "孟賽",
+      "toName": "河內",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 32,
+      "to": 31,
+      "fromName": "密支那",
+      "toName": "老街",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 31,
+      "to": 28,
+      "fromName": "老街",
+      "toName": "美斯樂",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 28,
+      "to": 29,
+      "fromName": "美斯樂",
+      "toName": "孟賽",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 36,
+      "to": 32,
+      "fromName": "仰光",
+      "toName": "密支那",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 36,
+      "to": 31,
+      "fromName": "仰光",
+      "toName": "老街",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 36,
+      "to": 35,
+      "fromName": "仰光",
+      "toName": "賀猛",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 35,
+      "to": 28,
+      "fromName": "賀猛",
+      "toName": "美斯樂",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 28,
+      "to": 30,
+      "fromName": "美斯樂",
+      "toName": "邦康",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 30,
+      "to": 36,
+      "fromName": "邦康",
+      "toName": "仰光",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 36,
+      "to": 27,
+      "fromName": "仰光",
+      "toName": "曼谷",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 571,
+      "to": 33,
+      "fromName": "迪慶",
+      "toName": "達杭丹",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 72,
+      "to": 18,
+      "fromName": "南薩哈林斯克",
+      "toName": "札幌",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 71,
+      "to": 66,
+      "fromName": "釜山",
+      "toName": "福岡",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 66,
+      "to": 67,
+      "fromName": "福岡",
+      "toName": "沖繩",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 67,
+      "to": 3,
+      "fromName": "沖繩",
+      "toName": "基隆",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 3,
+      "to": 2,
+      "fromName": "基隆",
+      "toName": "馬祖",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 2,
+      "to": 278,
+      "fromName": "馬祖",
+      "toName": "福州",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 277,
+      "to": 472,
+      "fromName": "廈門",
+      "toName": "金門",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 472,
+      "to": 2,
+      "fromName": "金門",
+      "toName": "馬祖",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 2,
+      "to": 473,
+      "fromName": "馬祖",
+      "toName": "澎湖",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 473,
+      "to": 472,
+      "fromName": "澎湖",
+      "toName": "金門",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 473,
+      "to": 19,
+      "fromName": "澎湖",
+      "toName": "屏東",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 19,
+      "to": 13,
+      "fromName": "屏東",
+      "toName": "高雄",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 474,
+      "to": 19,
+      "fromName": "東沙",
+      "toName": "屏東",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 307,
+      "to": 15,
+      "fromName": "桃園",
+      "toName": "宜蘭",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "fromName": "臺中",
+      "toName": "南投",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 7,
+      "to": 16,
+      "fromName": "南投",
+      "toName": "花蓮",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 12,
+      "to": 17,
+      "fromName": "臺南",
+      "toName": "臺東",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 57,
+      "to": 58,
+      "fromName": "廣州",
+      "toName": "梅州",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 58,
+      "to": 277,
+      "fromName": "梅州",
+      "toName": "廈門",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 58,
+      "to": 59,
+      "fromName": "梅州",
+      "toName": "潮州",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 280,
+      "to": 279,
+      "fromName": "杭州",
+      "toName": "溫州",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 291,
+      "to": 283,
+      "fromName": "青島",
+      "toName": "南京",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 290,
+      "to": 288,
+      "fromName": "濟南",
+      "toName": "鄭州",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 44,
+      "to": 474,
+      "fromName": "觀塘",
+      "toName": "東沙",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 4,
+      "to": 3,
+      "fromName": "新北",
+      "toName": "基隆",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 49,
+      "to": 56,
+      "fromName": "元朗",
+      "toName": "深圳",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 49,
+      "to": 48,
+      "fromName": "元朗",
+      "toName": "大埔",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 50,
+      "to": 51,
+      "fromName": "屯門",
+      "toName": "荃灣",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 55,
+      "to": 37,
+      "fromName": "澳門",
+      "toName": "維多利亞城",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 37,
+      "to": 39,
+      "fromName": "維多利亞城",
+      "toName": "赤柱",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 54,
+      "to": 55,
+      "fromName": "赤鱲角",
+      "toName": "澳門首家善意賭場",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 566,
+      "to": 572,
+      "fromName": "華盛頓",
+      "toName": "倫敦",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 577,
+      "to": 578,
+      "fromName": "洛杉磯",
+      "toName": "奧克蘭",
+      "type": "dirt",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 105,
+      "to": 507,
+      "fromName": "莫斯科",
+      "toName": "伊斯坦堡",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 582,
+      "to": 507,
+      "fromName": "慕尼黑",
+      "toName": "伊斯坦堡",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 582,
+      "to": 566,
+      "fromName": "慕尼黑",
+      "toName": "華盛頓",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 110,
+      "to": 567,
+      "fromName": "烏蘭巴托",
+      "toName": "紐約",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 110,
+      "to": 65,
+      "fromName": "烏蘭巴托",
+      "toName": "大阪",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 502,
+      "to": 70,
+      "fromName": "阿拉木圖",
+      "toName": "首爾",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 504,
+      "to": 576,
+      "fromName": "杜拜",
+      "toName": "雪梨",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 28,
+      "to": 7,
+      "fromName": "美斯樂",
+      "toName": "南投",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 54,
+      "to": 572,
+      "fromName": "赤鱲角",
+      "toName": "倫敦",
+      "type": "airport",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 24,
+      "to": 577,
+      "fromName": "雅加達",
+      "toName": "洛杉磯",
+      "type": "airport",
+      "review": "reference-endpoints"
     }
-  ]
+  ],
+  "unresolved": []
 }

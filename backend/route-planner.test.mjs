@@ -42,13 +42,22 @@ test('路線繪圖沿用地圖座標變換，不被即時快照清除',()=>{
  p.draw(ctx,{scale:2,offsetX:100,offsetY:200});
  assert.deepEqual(moves,[[140,260],[180,300]]);assert.equal(p.points.length,2);
 });
-test('推估路線標明非正式資料、端點有效且沒有重複，背景使用原提供圖',async()=>{
+test('路線人工核對鐵路、土路、機場，依固定 ID 且不誇稱完整或即時',async()=>{
  const data=JSON.parse(await readFile(new URL('../inferred-routes.json',import.meta.url),'utf8'));
  const cities=JSON.parse(await readFile(new URL('../cities-map.json',import.meta.url),'utf8'));const ids=new Set(cities.map(c=>c.city_id));
- assert.equal(data.authoritative,false);assert.equal(data.inferred,true);assert.ok(data.routes.length>0);
- assert.equal(data.source,'user-route-map-reference');
- const keys=new Set();for(const r of data.routes){assert.ok(ids.has(r.from)&&ids.has(r.to));assert.notEqual(r.from,r.to);assert.ok(r.confidence>=.85&&r.confidence<=1);assert.ok(['solid','dashed'].includes(r.style));const key=[r.from,r.to].sort((a,b)=>a-b).join(',');assert.ok(!keys.has(key));keys.add(key);}
+ assert.equal(data.authoritative,false);assert.equal(data.inferred,false);assert.equal(data.complete,false);assert.equal(data.referenceDate,'2025-10-11');assert.ok(data.routes.length>0);
+ assert.equal(data.source,'manually-reviewed-2025-1011-reference');
+ const keys=new Set();for(const r of data.routes){assert.ok(ids.has(r.from)&&ids.has(r.to));assert.notEqual(r.from,r.to);assert.ok(['railway','dirt','airport'].includes(r.type));assert.equal(r.review,'reference-endpoints');const key=r.type+':'+[r.from,r.to].sort((a,b)=>a-b).join(',');assert.ok(!keys.has(key));keys.add(key);}
  const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
  assert.match(html,/background:"\.\/portal-map\.png"/);assert.doesNotMatch(html,/tileImage\(/);
- assert.match(html,/ctx\.setLineDash\(style===/);
+ assert.match(html,/ctx\.setLineDash\(layer.type==="airport"/);
+ assert.match(html,/id="showAirRoutes" type="checkbox">/);
+ const referenceIds=JSON.parse(await readFile(new URL('../reference-city-ids.json',import.meta.url),'utf8'));
+ assert.equal(referenceIds['長沙'],286);assert.equal(referenceIds['東京'],64);assert.equal(referenceIds['廈門'],277);assert.equal(referenceIds['西貢'],45);
+ const has=(a,b,type)=>data.routes.some(r=>r.type===type&&[r.from,r.to].includes(a)&&[r.from,r.to].includes(b));
+ assert.equal(has(72,18,'railway'),false);assert.equal(has(72,18,'dirt'),true);
+ assert.equal(has(572,566,'railway'),false);assert.equal(has(572,566,'dirt'),true);
+ assert.equal(has(18,63,'railway'),true);assert.equal(has(63,64,'railway'),true);
+ assert.equal(has(577,578,'dirt'),true);assert.equal(has(578,576,'railway'),true);
+ assert.equal(has(110,567,'airport'),true);assert.equal(has(110,567,'railway'),false);
 });
