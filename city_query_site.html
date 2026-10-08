@@ -301,7 +301,7 @@ function battleListText(city){
 function renderBattleList(){
  const active=cities.filter(activeBattle),list=$("battleList");
  $("summary").textContent=`${cities.filter(hasPosition).length} 座城市 · ${active.length} 處${stale()?"上次":"即時"}戰況`;
- const signature=JSON.stringify(active.map(c=>[c.city_id,c.name,battleState(c).label,c.nation_battle,c.updated_at]));
+ const signature=JSON.stringify(active.map(c=>[c.city_id,c.name,battleState(c).label,c.nation_battle,c.updated_at,attackerNation(c)]));
  if(signature===listSignature){
   // 倒數只更新文字，不每秒重建按鈕，保留焦點與捲動位置。
   active.forEach((city,i)=>{
@@ -313,6 +313,9 @@ function renderBattleList(){
  listSignature=signature;list.replaceChildren();
  for(const city of active){
    const button=document.createElement("button");button.className="battle";button.textContent=`⚔ ${city.name||city.city_id}`;
+   const attacker=attackerNation(city);
+   button.style.setProperty("--attacker-color",NATION_COLORS[attacker]||"#808080");
+   button.title=`攻擊方：${attacker||"未取得"}`;
    const small=document.createElement("small");small.textContent=battleListText(city);
    button.append(small);button.onclick=()=>focusCity(city);list.append(button);
  }

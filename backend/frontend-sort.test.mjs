@@ -51,7 +51,7 @@ test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
   assert.match(script,/ctx.fillStyle=cityColor\(city\)/);
 });
 class Element {
-  constructor(){this.hidden=true;this.children=[];this.textContent='';this.value='';this.checked=false;this.classList={toggle(){}};}
+  constructor(){this.hidden=true;this.children=[];this.textContent='';this.value='';this.checked=false;this.classList={toggle(){}};this.style={setProperty(key,value){this[key]=value;}};}
   append(...children){this.children.push(...children);}
   replaceChildren(){this.children=[];this.textContent='';}
   addEventListener(){}
@@ -88,6 +88,7 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
   vm.runInNewContext(script,context);await new Promise(resolve=>setImmediate(resolve));
   assert.match(elements.get('summary').textContent,/2 座城市 · 1 處即時戰況/);
   const originalButton=elements.get('battleList').children[0];
+  assert.equal(originalButton.style['--attacker-color'],'#808080');
   assert.match(originalButton.children[0].textContent,/集結中（1分 5秒）/);
   now+=1000;intervals[0]();
   assert.equal(elements.get('battleList').children[0],originalButton);
@@ -96,8 +97,14 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
   assert.match(elements.get('battleList').children[0].children[0].textContent,/交戰中 · 比分 0:0/);
   elements.get('battleList').children[0].onclick();
   assert.match(elements.get('detail').children[2].textContent,/比分：0:0/);
-  current.cities[0].nation_battle=JSON.stringify({id:9,_rf_monitor:{active:true,score:'2:1'}});
+  current.cities[0].control_nation_name='蒙古';
+  current.cities[0].nation_battle=JSON.stringify({id:9,nation_icon:'/images/nation/color_icon/minicoa02HK.png',_rf_monitor:{active:true,score:'2:1'}});
   await eventSource.change();
+  assert.equal(elements.get('battleList').children[0].style['--attacker-color'],'#bd55f5');
+  assert.equal(elements.get('battleList').children[0].title,'攻擊方：香港');
+  current.cities[0].nation_battle=JSON.stringify({id:9,nation_icon:'/images/nation/color_icon/minicoa04TB.png',_rf_monitor:{active:true,score:'2:1'}});
+  await eventSource.change();
+  assert.equal(elements.get('battleList').children[0].style['--attacker-color'],'#49cf87');
   assert.match(elements.get('detail').children[2].textContent,/比分：2:1/);
   current={cities:[{city_id:3,name:'基隆',control_nation_name:'紅軍',control_union_id:4923,control_union_name:'新聯盟',updated_at:'2026-10-07T01:02:00Z',nation_battle:null}],status:{state:'live',connected:true}};
   await eventSource.change();
