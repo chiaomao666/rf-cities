@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>逆統戰 · 即時據點戰地圖</title>
-<link rel="stylesheet" href="./battle-map.css">
+<link rel="stylesheet" href="./battle-map.css?v=route-editor-1">
 </head>
 <body>
 <canvas id="map" aria-label="逆統戰城市與據點戰地圖"></canvas>
@@ -18,7 +18,7 @@
 <dialog id="siteMenu" class="site-menu" aria-labelledby="menuTitle">
 <div class="menu-shell">
 <div class="menu-heading"><h2 id="menuTitle">選單</h2><button id="menuClose" type="button" aria-label="關閉選單">✕</button></div>
-<nav id="menuLinks" class="menu-links" aria-label="網站功能"><button id="openSettings" type="button"><span aria-hidden="true">⚙</span> 設定 <span aria-hidden="true">›</span></button><button id="openRoutePlanner" type="button"><span aria-hidden="true">⌁</span> 路線規劃 <span aria-hidden="true">›</span></button></nav>
+<nav id="menuLinks" class="menu-links" aria-label="網站功能"><button id="openSettings" type="button"><span aria-hidden="true">⚙</span> 設定 <span aria-hidden="true">›</span></button><button id="openRoutePlanner" type="button"><span aria-hidden="true">⌁</span> 路線規劃 <span aria-hidden="true">›</span></button><button id="openRouteEditor" type="button">✎ 路線編輯器 <span aria-hidden="true">›</span></button></nav>
 <section id="menuSettings" class="menu-settings" hidden aria-label="地圖設定">
 <button id="settingsBack" type="button">← 返回選單</button>
 <h3>地圖顯示</h3>
@@ -43,8 +43,20 @@
 </section>
 <nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
 <footer class="panel status"><span id="status" role="status">連線中…</span><span>⚔ 據點戰 · Oracle 持續採集</span></footer>
+<section class="panel route-editor" id="routeEditor" hidden aria-labelledby="editorTitle">
+<div class="plan-heading"><h2 id="editorTitle">路線編輯器</h2><button id="editorClose" type="button" aria-label="關閉路線編輯器">✕</button></div>
+<p id="editorInfo" role="status"></p>
+<div class="plan-actions"><button id="editorselect" type="button">選線／調整</button><button id="editoradd" type="button">新增線</button><button id="editorpan" type="button">移動地圖</button></div>
+<label>路線種類 <select id="editorType"><option value="railway">白色鐵路</option><option value="dirt">橘色土路</option><option value="airport">機場遷移</option></select></label>
+<div class="plan-actions"><button id="editorFinish" type="button">完成新增</button><button id="editorSmooth" type="button">改成曲線</button><button id="editorDelete" type="button">刪除所選</button><button id="editorUndo" type="button">復原</button></div>
+<p>選線後拖曳綠色端點／折點；曲線的黃色點用來調整彎度。新增線依序點位置，再按完成；可接著改成曲線。滾輪或右下角按鈕可縮放。</p>
+<div class="plan-actions"><button id="editorExport" type="button">匯出備份</button><button id="editorReset" type="button">還原網站路線</button></div>
+<label class="editor-import">匯入路線檔案<input id="editorImport" type="file" accept=".json,application/json"></label>
+<p id="editorStatus" role="status"></p><p>草稿只存在這台裝置。匯出後可交給我發布到網站，或在另一台裝置匯入。請定期匯出備份。</p>
+</section>
 <script src="./monitor-config.js"></script>
 <script src="./route-planner.js"></script>
+<script src="./route-editor.js?v=1"></script>
 <script>
 (function(){
 "use strict";
@@ -81,7 +93,7 @@ const CONFIG={background:"./portal-map.png",width:11036,height:7505};
 const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d"),pointers=new Map();
 let backgroundImage=null,backgroundReady=false,inferredRoutes=[];
-let routePlanner=null;
+let routePlanner=null,routeEditor=null;
 function setupMenu(){
  const menu=$("siteMenu"),toggle=$("menuToggle");
  function syncFilter(){ $("settingsOnlyBattle").checked=$("onlyBattle").checked; }
@@ -103,7 +115,8 @@ function setupMenu(){
  $("onlyBattle").addEventListener("change",syncFilter);
  $("showRoutes").onchange=requestDraw;
  for(const id of ["showRailways","showDirtRoads","showAirRoutes"])$(id).onchange=requestDraw;
- $("openRoutePlanner").onclick=()=>{menu.close();routePlanner?.open();};
+ $("openRoutePlanner").onclick=()=>{menu.close();routeEditor?.close();routePlanner?.open();};
+ $("openRouteEditor").onclick=()=>{menu.close();routePlanner?.close();$("detail").hidden=true;$("onlyBattle").checked=false;$("showRoutes").checked=true;$("showRailways").checked=true;$("showDirtRoads").checked=true;routeEditor?.open();};
 }
 // 依陣營圖示的主色調整明度；只參考配色，不使用圖示素材。
 // 控制陣營配色；不以主權國或城市所在地判定。
@@ -230,6 +243,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
             const data=await response.json();
             if(!Array.isArray(data.paths)||data.authoritative!==false||data.coordinateWidth!==CONFIG.width||data.coordinateHeight!==CONFIG.height)throw new Error("格式錯誤");
             inferredRoutes=data.paths.filter(r=>["railway","dirt","airport"].includes(r.type)&&Array.isArray(r.points)&&r.points.length>=2&&r.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)));
+            routeEditor?.load({...data,paths:inferredRoutes});
             $("routeInfo").textContent="白色鐵路、橘色土路；不含灰色邊界。臺灣已依原圖與遊戲畫面獨立重描，固定城市 ID 接合，修復斷線、錯位與圖示殘線。其他區域仍須逐區核對；參考圖並非即時通行資料。";requestDraw();
         }catch{$("routeInfo").textContent="參考路線載入失敗；仍可手動規劃。";}
     }
@@ -245,10 +259,10 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         for(const layer of layers){
             if(!$(layer.id).checked)continue;
             ctx.setLineDash([]);
-            for(const route of inferredRoutes){
+            for(const route of (routeEditor?.data?routeEditor.paths:inferredRoutes)){
                 if(route.type!==layer.type)continue;
                 ctx.beginPath();
-                const reviewedCurves=route.review==="taiwan-2026-10-09"&&Array.isArray(route.curves)&&route.curves.length>0&&route.curves.every(c=>Array.isArray(c)&&c.length===6&&c.every(Number.isFinite));
+                const reviewedCurves=Array.isArray(route.curves)&&route.curves.length>0&&route.curves.every(c=>Array.isArray(c)&&c.length===6&&c.every(Number.isFinite));
                 if(reviewedCurves){
                     ctx.moveTo(offsetX+route.points[0][0]*scale,offsetY+route.points[0][1]*scale);
                     for(const c of route.curves)ctx.bezierCurveTo(offsetX+c[0]*scale,offsetY+c[1]*scale,offsetX+c[2]*scale,offsetY+c[3]*scale,offsetX+c[4]*scale,offsetY+c[5]*scale);
@@ -297,6 +311,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
             }
         }
         routePlanner?.draw(ctx,{scale,offsetX,offsetY});
+        routeEditor?.draw(ctx,{scale,offsetX,offsetY});
     }
     function zoom(factor,x=width/2,y=height/2) {
         const next = Math.max(.035,Math.min(2,scale*factor)), ratio=next/scale;
@@ -314,7 +329,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
 function focusCity(city){
  selected=city;
  if(hasPosition(city)){scale=Math.max(scale,.4);offsetX=width/2-Number(city.x_position)*scale;offsetY=height/2-Number(city.y_position)*scale;}
- $("detail").hidden=false;detailSignature="";updateDetail();requestDraw();
+ $("detail").hidden=!!routeEditor?.active;detailSignature="";updateDetail();requestDraw();
 }
 function updateDetail(){
  const detail=$("detail");if(detail.hidden||!selected)return;
@@ -416,8 +431,9 @@ async function loadCatalog(){
  }catch(error){$("summary").textContent="城市座標載入失敗："+error.message;}
 }
     canvas.addEventListener("wheel",event=>{event.preventDefault();zoom(Math.exp(-event.deltaY*.001),event.clientX,event.clientY);},{passive:false});
-    canvas.addEventListener("pointerdown",event=>{canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});dragDistance=0;});
+    canvas.addEventListener("pointerdown",event=>{canvas.setPointerCapture(event.pointerId);if(routeEditor?.down(event,{scale,offsetX,offsetY}))return;pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});dragDistance=0;});
     canvas.addEventListener("pointermove",event=>{
+        if(routeEditor?.move(event,{scale,offsetX,offsetY}))return;
         const previous=pointers.get(event.pointerId);if(!previous)return;
         const next={x:event.clientX,y:event.clientY};
         if(pointers.size===2){
@@ -429,6 +445,7 @@ async function loadCatalog(){
         pointers.set(event.pointerId,next);
     });
     canvas.addEventListener("pointerup",event=>{
+        if(routeEditor?.up(event))return;
         if(dragDistance<6&&pointers.size===1){
             let nearest=null,distance=routePlanner?.active?14:25;
             for(const city of (routePlanner?.active?cities.filter(hasPosition):visibleCities())){
@@ -438,11 +455,11 @@ async function loadCatalog(){
             if(routePlanner?.active){
                 const x=(event.clientX-offsetX)/scale,y=(event.clientY-offsetY)/scale;
                 routePlanner.addPoint(nearest?{x:Number(nearest.x_position),y:Number(nearest.y_position),city_id:nearest.city_id,name:nearest.name||String(nearest.city_id)}:{x,y,name:"自訂位置",city_id:null});
-            }else if(nearest)focusCity(nearest);
+            }else if(nearest&&!routeEditor?.active)focusCity(nearest);
         }
         pointers.delete(event.pointerId);
     });
-    canvas.addEventListener("pointercancel",event=>pointers.delete(event.pointerId));
+    canvas.addEventListener("pointercancel",event=>{routeEditor?.up(event,true);pointers.delete(event.pointerId);});
     $("zoomIn").onclick=()=>zoom(1.4);$("zoomOut").onclick=()=>zoom(1/1.4);$("fit").onclick=fit;
     $("refresh").onclick=refresh;$("onlyBattle").onchange=requestDraw;
     $("search").onsubmit=event=>{
@@ -452,6 +469,7 @@ async function loadCatalog(){
     };
 
 setupMenu();
+if(window.RFRouteEditor)routeEditor=new window.RFRouteEditor({width:CONFIG.width,height:CONFIG.height,getCities:()=>cities.filter(hasPosition),isVisible:type=>$("showRoutes").checked&&$(type==="railway"?"showRailways":type==="dirt"?"showDirtRoads":"showAirRoutes").checked,onChange:()=>{canvas.classList.toggle("editing",routeEditor?.active);requestDraw();}});
 if(window.RFRoutePlanner)routePlanner=new window.RFRoutePlanner({width:CONFIG.width,height:CONFIG.height,onChange:()=>{canvas.classList.toggle("planning",routePlanner?.active);requestDraw();}});
 loadBackground();loadRoutes();
 addEventListener("resize",resize);resize();fit();loadCatalog();
