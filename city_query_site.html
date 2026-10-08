@@ -9,11 +9,25 @@
 <body>
 <canvas id="map" aria-label="逆統戰城市與據點戰地圖"></canvas>
 <header class="panel toolbar">
+<button id="menuToggle" class="menu-toggle" type="button" aria-label="開啟選單" aria-controls="siteMenu" aria-expanded="false"><span aria-hidden="true">☰</span></button>
 <div><small>REVERSED FRONT · LIVE MAP</small><h1>逆統戰據點戰地圖</h1></div>
 <form id="search"><input id="query" aria-label="搜尋城市" placeholder="搜尋城市名稱或 ID" autocomplete="off"><button>搜尋</button></form>
 <label><input id="onlyBattle" type="checkbox">只顯示戰況</label>
 <button id="refresh" type="button">更新</button>
 </header>
+<dialog id="siteMenu" class="site-menu" aria-labelledby="menuTitle">
+<div class="menu-shell">
+<div class="menu-heading"><h2 id="menuTitle">選單</h2><button id="menuClose" type="button" aria-label="關閉選單">✕</button></div>
+<nav id="menuLinks" class="menu-links" aria-label="網站功能"><button id="openSettings" type="button"><span aria-hidden="true">⚙</span> 設定 <span aria-hidden="true">›</span></button></nav>
+<section id="menuSettings" class="menu-settings" hidden aria-label="地圖設定">
+<button id="settingsBack" type="button">← 返回選單</button>
+<h3>地圖顯示</h3>
+<label><input id="settingsOnlyBattle" type="checkbox">只顯示戰況</label>
+<p>此設定只影響地圖顯示，不會停止即時資料更新。</p>
+</section>
+<p class="menu-note">逆統戰 · 即時據點戰地圖</p>
+</div>
+</dialog>
 <aside class="panel battles"><h2>⚔ 據點戰</h2><p id="summary">正在讀取城市資料…</p><div id="battleList"></div></aside>
 <section class="panel detail" id="detail" hidden></section>
 <nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
@@ -54,6 +68,26 @@ let scale=1,offsetX=0,offsetY=0,width=0,height=0,selected=null,frame=0,dragDista
 const CONFIG={tiles:"./tiles",width:11036,height:7505};
 const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d"),tiles=new Map(),pointers=new Map();
+function setupMenu(){
+ const menu=$("siteMenu"),toggle=$("menuToggle");
+ function syncFilter(){ $("settingsOnlyBattle").checked=$("onlyBattle").checked; }
+ function showSettings(open){
+  $("menuLinks").hidden=open;$("menuSettings").hidden=!open;
+  $("menuTitle").textContent=open?"設定":"選單";
+  if(open)syncFilter();
+ }
+ toggle.onclick=()=>{
+  showSettings(false);menu.showModal();toggle.setAttribute("aria-expanded","true");
+  $("openSettings").focus();
+ };
+ $("menuClose").onclick=()=>menu.close();
+ menu.addEventListener("click",event=>{if(event.target===menu)menu.close();});
+ menu.addEventListener("close",()=>{toggle.setAttribute("aria-expanded","false");toggle.focus();});
+ $("openSettings").onclick=()=>{showSettings(true);$("settingsBack").focus();};
+ $("settingsBack").onclick=()=>{showSettings(false);$("openSettings").focus();};
+ $("settingsOnlyBattle").onchange=()=>{ $("onlyBattle").checked=$("settingsOnlyBattle").checked;requestDraw(); };
+ $("onlyBattle").addEventListener("change",syncFilter);
+}
 // 依陣營圖示的主色調整明度；只參考配色，不使用圖示素材。
 // 控制陣營配色；不以主權國或城市所在地判定。
 const NATION_COLORS={
@@ -371,6 +405,7 @@ async function loadCatalog(){
         if(city)focusCity(city);else $("status").textContent=`找不到城市「${query}」`;
     };
 
+setupMenu();
 addEventListener("resize",resize);resize();fit();loadCatalog();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh();});
 addEventListener("pagehide",()=>{stopped=true;realtimeReady=false;clearTimeout(reconnect);if(useSupabase){if(socket)supabaseClient?.removeChannel(socket);}else socket?.close();});

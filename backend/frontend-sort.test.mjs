@@ -4,6 +4,30 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
 const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
+test('選單可開關、返回，設定同步顯示篩選且不停止更新',()=>{
+ const elements=new Map();let draws=0;
+ const $=id=>{
+  if(!elements.has(id))elements.set(id,{hidden:false,checked:false,events:{},attrs:{},
+   addEventListener(type,fn){this.events[type]=fn;},setAttribute(key,value){this.attrs[key]=value;},
+   focus(){this.focused=true;},showModal(){this.open=true;},close(){this.open=false;this.events.close();}});
+  return elements.get(id);
+ };
+ const code=script.slice(script.indexOf('function setupMenu('),script.indexOf('// 依陣營圖示'));
+ const context=vm.createContext({$,requestDraw(){draws++;}});vm.runInContext(code,context);context.setupMenu();
+ $('menuToggle').onclick();
+ assert.equal($('siteMenu').open,true);assert.equal($('menuToggle').attrs['aria-expanded'],'true');
+ assert.equal($('menuSettings').hidden,true);
+ $('onlyBattle').checked=true;$('openSettings').onclick();
+ assert.equal($('menuSettings').hidden,false);assert.equal($('settingsOnlyBattle').checked,true);
+ $('settingsOnlyBattle').checked=false;$('settingsOnlyBattle').onchange();
+ assert.equal($('onlyBattle').checked,false);assert.equal(draws,1);
+ $('settingsBack').onclick();assert.equal($('menuLinks').hidden,false);
+ $('siteMenu').events.click({target:$('openSettings')});assert.equal($('siteMenu').open,true);
+ $('siteMenu').events.click({target:$('siteMenu')});assert.equal($('siteMenu').open,false);
+ assert.equal($('menuToggle').attrs['aria-expanded'],'false');assert.equal($('menuToggle').focused,true);
+ assert.doesNotMatch(code,/stopped\s*=|clearTimeout|socket\.close|fetch\(/);
+ assert.match(html,/<dialog id="siteMenu"/);
+});
 test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
   const code=script.slice(script.indexOf('const NATION_COLORS='),script.indexOf('  function parseBattle('));
   const context=vm.createContext({});vm.runInContext(code,context);
