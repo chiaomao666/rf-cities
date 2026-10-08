@@ -4,16 +4,16 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
 const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
-test('土路畫成白色虛線，鐵路與機場保持實線，不改路線座標',()=>{
+test('鐵路白色實線、土路白色虛線、機場黃色虛線，不沿用舊色或更改座標',()=>{
  const routes=['railway','dirt','airport'].map(type=>({type,points:[[0,0],[20,20]],...(type==='airport'?{color:'#ff4949'}:{})}));
  const original=JSON.stringify(routes),strokes=[];let dash=[];
  const ctx={save(){},restore(){},setLineDash(value){dash=[...value];},beginPath(){},moveTo(){},lineTo(){},stroke(){strokes.push({dash:[...dash],color:this.strokeStyle});}};
  const code=script.slice(script.indexOf('    function drawInferredRoutes('),script.indexOf('    function draw()'));
  const context=vm.createContext({ctx,inferredRoutes:routes,routeEditor:null,scale:1,offsetX:0,offsetY:0,$:()=>({checked:true})});
  vm.runInContext(code,context);context.drawInferredRoutes();
- assert.deepEqual(strokes.map(s=>s.dash),[[],[7,5],[]]);
- assert.equal(strokes[1].color,'rgba(255,255,255,.85)');assert.equal(strokes[2].color,'#ff4949');
- assert.equal(JSON.stringify(routes),original);assert.match(html,/白色虛線：土路/);assert.doesNotMatch(html,/橘色土路|橘色是土路/);
+ assert.deepEqual(strokes.map(s=>s.dash),[[],[7,5],[7,5]]);
+ assert.equal(strokes[1].color,'rgba(255,255,255,.85)');assert.equal(strokes[2].color,'#ffdf6d');
+ assert.equal(JSON.stringify(routes),original);assert.match(html,/白色虛線：土路/);assert.match(html,/黃色虛線：聯盟遷移／機場/);assert.doesNotMatch(html,/橘色土路|橘色是土路|彩色曲線顯示/);
 });
 test('據點戰側邊欄可收起再展開，隱藏內容仍保留且不停止更新',()=>{
  const nodes=new Map();const $=id=>{if(!nodes.has(id))nodes.set(id,{hidden:false,attrs:{},classList:{toggle(name,value){this[name]=value;}},setAttribute(name,value){this.attrs[name]=value;}});return nodes.get(id);};

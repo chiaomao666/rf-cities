@@ -26,7 +26,7 @@
 <label><input id="showRoutes" type="checkbox" checked>顯示參考路線</label>
 <label><input id="showRailways" type="checkbox" checked>白色實線：鐵路</label>
 <label><input id="showDirtRoads" type="checkbox" checked>白色虛線：土路</label>
-<label><input id="showAirRoutes" type="checkbox">彩色：聯盟遷移／機場</label>
+<label><input id="showAirRoutes" type="checkbox">黃色虛線：聯盟遷移／機場</label>
 <p id="routeInfo">正在讀取參考路線…</p>
 <p>此設定只影響地圖顯示，不會停止即時資料更新。</p>
 </section>
@@ -39,7 +39,7 @@
 <div class="plan-heading"><h2 id="planTitle">路線規劃</h2><button id="planClose" type="button" aria-label="關閉路線規劃">✕</button></div>
 <p id="planInfo" role="status"></p><div class="plan-actions"><button id="planToggle" type="button">暫停畫線</button><button id="planUndo" type="button">復原</button><button id="planClear" type="button">清除</button></div>
 <ol id="planPoints" aria-label="規劃的途經點"></ol>
-<p>黃色線是你的規劃；白色實線是鐵路、白色虛線是土路，機場遷移另以彩色曲線顯示。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
+<p>黃色實線是你的規劃、黃色虛線是機場遷移；白色實線是鐵路、白色虛線是土路。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
 </section>
 <nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
 <footer class="panel status"><span id="status" role="status">連線中…</span><span>⚔ 據點戰 · Oracle 持續採集</span></footer>
@@ -47,7 +47,7 @@
 <div class="plan-heading"><h2 id="editorTitle">路線編輯器</h2><button id="editorClose" type="button" aria-label="關閉路線編輯器">✕</button></div>
 <p id="editorInfo" role="status"></p>
 <div class="plan-actions"><button id="editorselect" type="button">選線／調整</button><button id="editormulti" type="button">多選</button><button id="editorDeselect" type="button">取消選取</button><button id="editoradd" type="button">新增線</button><button id="editorpan" type="button">移動地圖</button></div>
-<label>路線種類（多選可批次更改） <select id="editorType"><option value="" disabled hidden>多種路線，請選擇</option><option value="railway" selected>白色實線鐵路</option><option value="dirt">白色虛線土路</option><option value="airport">機場遷移</option></select></label>
+<label>路線種類（多選可批次更改） <select id="editorType"><option value="" disabled hidden>多種路線，請選擇</option><option value="railway" selected>白色實線鐵路</option><option value="dirt">白色虛線土路</option><option value="airport">黃色虛線機場遷移</option></select></label>
 <div class="plan-actions"><button id="editorFinish" type="button">完成新增</button><button id="editorSmooth" type="button">改成曲線</button><button id="editorDelete" type="button">刪除所選</button><button id="editorUndo" type="button">復原</button><button id="editorRedo" type="button" title="恢復剛才復原的操作">重做</button></div>
 <p>選線後拖曳綠色端點／折點；曲線的黃色點用來調整彎度。新增線依序點位置，按完成後可直接畫下一條獨立線，不會自動接續。要調整已畫的線，切回「選線／調整」。滾輪或右下角按鈕可縮放。</p>
 <div class="plan-actions"><button id="editorExport" type="button">匯出備份</button><button id="editorReset" type="button">還原網站路線</button></div>
@@ -264,11 +264,11 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         const layers=[
             {type:"railway",id:"showRailways",color:"rgba(255,255,255,.76)",width:1.45},
             {type:"dirt",id:"showDirtRoads",color:"rgba(255,255,255,.85)",width:1.45},
-            {type:"airport",id:"showAirRoutes",color:"rgba(221,141,255,.85)",width:1.7}
+            {type:"airport",id:"showAirRoutes",color:"#ffdf6d",width:1.7}
         ];
         for(const layer of layers){
             if(!$(layer.id).checked)continue;
-            ctx.setLineDash(layer.type==="dirt"?[7,5]:[]);
+            ctx.setLineDash(layer.type==="railway"?[]:[7,5]);
             for(const route of (routeEditor?.data?routeEditor.paths:inferredRoutes)){
                 if(route.type!==layer.type)continue;
                 ctx.beginPath();
@@ -281,8 +281,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
                     if(index===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
                 });
                 // The vertices are traced curve geometry, not endpoint chords.
-                const airColor=["#ff4949","#f4df25","#21cbef","#ef6df5"].includes(route.color)?route.color:layer.color;
-                ctx.strokeStyle=layer.type==="airport"?airColor:layer.color;
+                ctx.strokeStyle=layer.color;
                 ctx.lineWidth=layer.width;ctx.stroke();
             }
         }
