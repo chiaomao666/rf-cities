@@ -2130,8 +2130,16 @@
     },
     {
       "from": 3,
-      "to": 4,
+      "to": 1,
       "fromName": "基隆",
+      "toName": "臺北",
+      "type": "railway",
+      "review": "reference-endpoints"
+    },
+    {
+      "from": 1,
+      "to": 4,
+      "fromName": "臺北",
       "toName": "新北",
       "type": "railway",
       "review": "reference-endpoints"
@@ -2149,22 +2157,6 @@
       "to": 8,
       "fromName": "臺中",
       "toName": "彰化",
-      "type": "railway",
-      "review": "reference-endpoints"
-    },
-    {
-      "from": 1,
-      "to": 4,
-      "fromName": "臺北",
-      "toName": "新北",
-      "type": "railway",
-      "review": "reference-endpoints"
-    },
-    {
-      "from": 1,
-      "to": 3,
-      "fromName": "臺北",
-      "toName": "基隆",
       "type": "railway",
       "review": "reference-endpoints"
     },
@@ -3338,17 +3330,17 @@
     },
     {
       "from": 473,
-      "to": 19,
+      "to": 13,
       "fromName": "澎湖",
-      "toName": "屏東",
+      "toName": "高雄",
       "type": "dirt",
       "review": "reference-endpoints"
     },
     {
-      "from": 19,
-      "to": 13,
-      "fromName": "屏東",
-      "toName": "高雄",
+      "from": 21,
+      "to": 19,
+      "fromName": "佬沃",
+      "toName": "屏東",
       "type": "dirt",
       "review": "reference-endpoints"
     },

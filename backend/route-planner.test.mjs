@@ -22,6 +22,27 @@ test('路線只在規劃模式新增，座標驗證、防止重複點及本機�
  p.close();assert.equal(p.active,false);assert.equal(p.points.length,2);
  assert.ok(f.getChanged()>0);
 });
+test('臺灣逐段重描：完整環線、臺中支線、土路與連外端點精確且無重複',async()=>{
+ const data=JSON.parse(await readFile(new URL('../reference-route-geometry.json',import.meta.url),'utf8'));
+ const cities=JSON.parse(await readFile(new URL('../cities-map.json',import.meta.url),'utf8'));
+ const coords=new Map(cities.map(c=>[c.city_id,[c.x_position,c.y_position]]));
+ const paths=data.paths.filter(p=>p.region==='taiwan-reviewed');
+ assert.equal(paths.length,26);assert.equal(paths.filter(p=>p.type==='railway').length,16);
+ const keys=new Set();for(const p of paths){
+  const key=p.type+':'+[p.from,p.to].sort((a,b)=>a-b).join(',');assert.ok(!keys.has(key));keys.add(key);
+  assert.equal(p.review,'taiwan-2026-10-09');assert.deepEqual(p.points[0],coords.get(p.from));assert.deepEqual(p.points.at(-1),coords.get(p.to));
+  assert.ok(p.curves.length>0);assert.deepEqual(p.curves.at(-1).slice(-2),coords.get(p.to));
+  for(const c of p.curves){assert.equal(c.length,6);assert.ok(c.every(Number.isFinite));}
+ }
+ const has=(a,b,type)=>keys.has(type+':'+[a,b].sort((x,y)=>x-y).join(','));
+ const ring=[307,4,1,3,15,16,17,19,13,12,11,10,8,5,308,307];
+ for(let i=1;i<ring.length;i++)assert.ok(has(ring[i-1],ring[i],'railway'));
+ assert.ok(has(8,6,'railway'));assert.equal(has(5,6,'railway'),false);
+ assert.ok(has(4,3,'dirt'));assert.equal(has(4,3,'railway'),false);
+ assert.ok(has(307,15,'dirt'));assert.ok(has(6,7,'dirt'));assert.ok(has(7,16,'dirt'));assert.ok(has(12,17,'dirt'));
+ assert.ok(has(473,13,'dirt'));assert.equal(has(473,19,'dirt'),false);assert.ok(has(21,19,'dirt'));assert.ok(has(474,19,'dirt'));
+ const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');assert.match(html,/ctx\.bezierCurveTo/);
+});
 test('清除可復原，重新載入保存路線後也可逐點復原',()=>{
  const f=fixture('[{"x":20,"y":30,"name":"起點"}]'),p=f.planner;
  assert.equal(p.points.length,1);p.undo();assert.equal(p.points.length,0);

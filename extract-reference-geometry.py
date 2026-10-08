@@ -146,6 +146,8 @@ def emit(kind,mask,src,tree,warp,color=None):
         mapped=simplify(warp(points),2.5)
         if not np.isfinite(mapped).all():continue
         row={'type':kind,'points':np.round(mapped,2).tolist()}
+        if kind!='airport':row['referenceBounds']=[float(points[:,0].min()),float(points[:,1].min()),float(points[:,0].max()),float(points[:,1].max())]
+        if kind!='airport':row['referenceRegions']=['taiwan'] if any(1415<=x<=1580 and 840<=y<=1120 for x,y in points) else []
         if color:row['color']=color
         vectors.append(row)
         source_vectors.append({'type':kind,'points':np.round(simplify(points),2).tolist(),'color':color})
@@ -169,6 +171,8 @@ result={'source':'traced-original-2025-1011-strokes','authoritative':False,'comp
         'referenceDate':'2025-10-11','coordinateWidth':11036,'coordinateHeight':7505,
         'registration':'city-ID-piecewise-affine','paths':vectors,
         'note':'依原圖線條描取並對齊城市；尚須逐區視覺核對。不是遊戲正式可通行資料。'}
+from build_taiwan_routes import apply_taiwan_routes
+result=apply_taiwan_routes(result)
 (ROOT/'reference-route-geometry.json').write_text(json.dumps(result,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
 (ROOT/'route-geometry-inspection.json').write_text(json.dumps(source_vectors,separators=(',',':')),encoding='utf-8')
 print(json.dumps({kind:sum(v['type']==kind for v in vectors) for kind in ['railway','dirt','airport']}))
