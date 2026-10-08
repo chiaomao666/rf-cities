@@ -9,11 +9,37 @@ test('鐵路白色實線、土路白色虛線、機場黃色虛線，不沿用�
  const original=JSON.stringify(routes),strokes=[];let dash=[];
  const ctx={save(){},restore(){},setLineDash(value){dash=[...value];},beginPath(){},moveTo(){},lineTo(){},stroke(){strokes.push({dash:[...dash],color:this.strokeStyle});}};
  const code=script.slice(script.indexOf('    function drawInferredRoutes('),script.indexOf('    function draw()'));
- const context=vm.createContext({ctx,inferredRoutes:routes,routeEditor:null,scale:1,offsetX:0,offsetY:0,$:()=>({checked:true})});
+ const context=vm.createContext({ctx,inferredRoutes:routes,routeEditor:null,hoveredCity:null,scale:1,offsetX:0,offsetY:0,$:()=>({checked:true})});
  vm.runInContext(code,context);context.drawInferredRoutes();
  assert.deepEqual(strokes.map(s=>s.dash),[[],[7,5],[7,5]]);
  assert.equal(strokes[1].color,'rgba(255,255,255,.85)');assert.equal(strokes[2].color,'#ffdf6d');
- assert.equal(JSON.stringify(routes),original);assert.match(html,/白色虛線：土路/);assert.match(html,/黃色虛線：聯盟遷移／機場/);assert.doesNotMatch(html,/橘色土路|橘色是土路|彩色曲線顯示/);
+ assert.equal(JSON.stringify(routes),original);assert.match(html,/白色虛線：土路/);assert.match(html,/一直顯示所有機場路線（黃色虛線）/);assert.doesNotMatch(html,/橘色土路|橘色是土路|彩色曲線顯示/);
+});
+
+test('游標只顯示城市端點相連的機場線，移開、拖曳與編輯時隱藏，總覽可開啟',()=>{
+ const cities=[{city_id:1,name:'已改名城市',x_position:0,y_position:0},{city_id:2,x_position:100,y_position:0},{city_id:3,x_position:200,y_position:0}];
+ const routes=[{type:'airport',points:[[0,0],[100,0]]},{type:'airport',points:[[100,0],[200,0]]},{type:'airport',points:[[-100,0],[0,0],[300,0]]}];
+ let draws=0,strokes=0;const checked={showRoutes:true,showAirRoutes:false,showRailways:false,showDirtRoads:false};
+ const context=vm.createContext({cities,ctx:{save(){},restore(){},setLineDash(){},beginPath(){},moveTo(){},lineTo(){},stroke(){strokes++;}},
+  inferredRoutes:routes,routeEditor:null,scale:1,offsetX:0,offsetY:0,pointers:new Map(),visibleCities:()=>cities,hasPosition:c=>Number.isFinite(c.x_position)&&Number.isFinite(c.y_position),
+  requestDraw(){draws++;},$:id=>({checked:checked[id]})});
+ vm.runInContext(script.slice(script.indexOf('let hoveredCity=null;'),script.indexOf('function setupBattleSidebar(')),context);
+ vm.runInContext(script.slice(script.indexOf('    function drawInferredRoutes('),script.indexOf('    function draw()')),context);
+ const drawCount=()=>{strokes=0;context.drawInferredRoutes();return strokes;};
+ assert.equal(drawCount(),0);
+ context.updateCityHover({clientX:0,clientY:0,pointerType:'mouse'});assert.equal(drawCount(),1);
+ assert.equal(context.airportRouteConnected(routes[0],'1'),true);assert.equal(context.airportRouteConnected(routes[2],1),false);
+ assert.equal(context.airportRouteConnected({points:[[500,500],[600,600]],curves:[[500,500,300,300,200,0]]},3),true);
+ context.updateCityHover({clientX:100,clientY:0});assert.equal(drawCount(),2);
+ const previousDraws=draws;context.updateCityHover({clientX:101,clientY:0});assert.equal(draws,previousDraws);
+ context.updateCityHover({clientX:100,clientY:80});assert.equal(drawCount(),0);
+ context.updateCityHover({clientX:200,clientY:0});assert.equal(drawCount(),1);
+ context.clearCityHover();assert.equal(drawCount(),0);
+ context.pointers.set(1,{});context.updateCityHover({clientX:100,clientY:0});assert.equal(drawCount(),0);context.pointers.clear();
+ context.updateCityHover({clientX:100,clientY:0,pointerType:'touch'});assert.equal(drawCount(),0);
+ context.routeEditor={active:true};context.updateCityHover({clientX:100,clientY:0});assert.equal(drawCount(),0);
+ checked.showAirRoutes=true;assert.equal(drawCount(),3);checked.showRoutes=false;assert.equal(drawCount(),0);
+ assert.match(script,/canvas.addEventListener\("pointerleave",clearCityHover\)/);
 });
 test('據點戰側邊欄可收起再展開，隱藏內容仍保留且不停止更新',()=>{
  const nodes=new Map();const $=id=>{if(!nodes.has(id))nodes.set(id,{hidden:false,attrs:{},classList:{toggle(name,value){this[name]=value;}},setAttribute(name,value){this.attrs[name]=value;}});return nodes.get(id);};

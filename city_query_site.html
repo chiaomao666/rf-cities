@@ -26,7 +26,8 @@
 <label><input id="showRoutes" type="checkbox" checked>顯示參考路線</label>
 <label><input id="showRailways" type="checkbox" checked>白色實線：鐵路</label>
 <label><input id="showDirtRoads" type="checkbox" checked>白色虛線：土路</label>
-<label><input id="showAirRoutes" type="checkbox">黃色虛線：聯盟遷移／機場</label>
+<label><input id="showAirRoutes" type="checkbox">一直顯示所有機場路線（黃色虛線）</label>
+<p>未勾選時，游標移到城市即可顯示與該城市相連的機場路線，移開後隱藏。</p>
 <p id="routeInfo">正在讀取參考路線…</p>
 <p>此設定只影響地圖顯示，不會停止即時資料更新。</p>
 </section>
@@ -94,6 +95,32 @@ const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d"),pointers=new Map();
 let backgroundImage=null,backgroundReady=false,inferredRoutes=[];
 let routePlanner=null,routeEditor=null;
+let hoveredCity=null;
+function clearCityHover(){if(hoveredCity!==null){hoveredCity=null;requestDraw();}}
+function updateCityHover(event){
+ if(pointers.size||routeEditor?.active||event.pointerType==="touch"){clearCityHover();return;}
+ let nearest=null,distance=18;
+ for(const city of visibleCities()){
+  const d=Math.hypot(offsetX+Number(city.x_position)*scale-event.clientX,offsetY+Number(city.y_position)*scale-event.clientY);
+  if(d<distance){nearest=city;distance=d;}
+ }
+ const id=nearest?.city_id??null;
+ if(hoveredCity!==id){hoveredCity=id;requestDraw();}
+}
+function airportRouteConnected(route,cityId){
+ if(cityId==null)return false;
+ // Only endpoints connect a city. Crossing or passing near a city is not a connection.
+ // A small, zoom-independent tolerance accommodates traced endpoint rounding.
+ const end=route.curves?.length?route.curves[route.curves.length-1].slice(4):route.points[route.points.length-1];
+ return [route.points[0],end].some(point=>{
+  let nearest=null,distance=40;
+  for(const city of cities.filter(hasPosition)){
+   const d=Math.hypot(Number(city.x_position)-point[0],Number(city.y_position)-point[1]);
+   if(d<distance){nearest=city.city_id;distance=d;}
+  }
+  return nearest!=null&&String(nearest)===String(cityId);
+ });
+}
 function setupBattleSidebar(){
  const sidebar=$("battleSidebar"),content=$("battleSidebarContent"),toggle=$("battleSidebarToggle");
  toggle.onclick=()=>{
@@ -267,10 +294,11 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
             {type:"airport",id:"showAirRoutes",color:"#ffdf6d",width:1.7}
         ];
         for(const layer of layers){
-            if(!$(layer.id).checked)continue;
+            if(!$(layer.id).checked&&(layer.type!=="airport"||hoveredCity==null||routeEditor?.active))continue;
             ctx.setLineDash(layer.type==="railway"?[]:[7,5]);
             for(const route of (routeEditor?.data?routeEditor.paths:inferredRoutes)){
                 if(route.type!==layer.type)continue;
+                if(layer.type==="airport"&&!$(layer.id).checked&&!airportRouteConnected(route,hoveredCity))continue;
                 ctx.beginPath();
                 const reviewedCurves=Array.isArray(route.curves)&&route.curves.length>0&&route.curves.every(c=>Array.isArray(c)&&c.length===6&&c.every(Number.isFinite));
                 if(reviewedCurves){
@@ -323,10 +351,12 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         routeEditor?.draw(ctx,{scale,offsetX,offsetY});
     }
     function zoom(factor,x=width/2,y=height/2) {
+        clearCityHover();
         const next = Math.max(.035,Math.min(2,scale*factor)), ratio=next/scale;
         offsetX=x-(x-offsetX)*ratio;offsetY=y-(y-offsetY)*ratio;scale=next;requestDraw();
     }
     function fit() {
+        clearCityHover();
         scale=Math.max(.035,Math.min(width/CONFIG.width,height/CONFIG.height)*.94);
         offsetX=(width-CONFIG.width*scale)/2;offsetY=(height-CONFIG.height*scale)/2;requestDraw();
     }
@@ -440,10 +470,11 @@ async function loadCatalog(){
  }catch(error){$("summary").textContent="城市座標載入失敗："+error.message;}
 }
     canvas.addEventListener("wheel",event=>{event.preventDefault();zoom(Math.exp(-event.deltaY*.001),event.clientX,event.clientY);},{passive:false});
-    canvas.addEventListener("pointerdown",event=>{canvas.setPointerCapture(event.pointerId);if(routeEditor?.down(event,{scale,offsetX,offsetY}))return;pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});dragDistance=0;});
+    canvas.addEventListener("pointerleave",clearCityHover);
+    canvas.addEventListener("pointerdown",event=>{clearCityHover();canvas.setPointerCapture(event.pointerId);if(routeEditor?.down(event,{scale,offsetX,offsetY}))return;pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});dragDistance=0;});
     canvas.addEventListener("pointermove",event=>{
         if(routeEditor?.move(event,{scale,offsetX,offsetY}))return;
-        const previous=pointers.get(event.pointerId);if(!previous)return;
+        const previous=pointers.get(event.pointerId);if(!previous){updateCityHover(event);return;}
         const next={x:event.clientX,y:event.clientY};
         if(pointers.size===2){
             const other=[...pointers.entries()].find(([id])=>id!==event.pointerId)[1];
@@ -467,6 +498,7 @@ async function loadCatalog(){
             }else if(nearest&&!routeEditor?.active)focusCity(nearest);
         }
         pointers.delete(event.pointerId);
+        updateCityHover(event);
     });
     canvas.addEventListener("pointercancel",event=>{routeEditor?.up(event,true);pointers.delete(event.pointerId);});
     $("zoomIn").onclick=()=>zoom(1.4);$("zoomOut").onclick=()=>zoom(1/1.4);$("fit").onclick=fit;
