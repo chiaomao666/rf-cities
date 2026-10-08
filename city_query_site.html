@@ -24,8 +24,8 @@
 <h3>地圖顯示</h3>
 <label><input id="settingsOnlyBattle" type="checkbox">只顯示戰況</label>
 <label><input id="showRoutes" type="checkbox" checked>顯示參考路線</label>
-<label><input id="showRailways" type="checkbox" checked>白色：鐵路</label>
-<label><input id="showDirtRoads" type="checkbox" checked>橘色：土路</label>
+<label><input id="showRailways" type="checkbox" checked>白色實線：鐵路</label>
+<label><input id="showDirtRoads" type="checkbox" checked>白色虛線：土路</label>
 <label><input id="showAirRoutes" type="checkbox">彩色：聯盟遷移／機場</label>
 <p id="routeInfo">正在讀取參考路線…</p>
 <p>此設定只影響地圖顯示，不會停止即時資料更新。</p>
@@ -39,7 +39,7 @@
 <div class="plan-heading"><h2 id="planTitle">路線規劃</h2><button id="planClose" type="button" aria-label="關閉路線規劃">✕</button></div>
 <p id="planInfo" role="status"></p><div class="plan-actions"><button id="planToggle" type="button">暫停畫線</button><button id="planUndo" type="button">復原</button><button id="planClear" type="button">清除</button></div>
 <ol id="planPoints" aria-label="規劃的途經點"></ol>
-<p>黃色線是你的規劃；白色是鐵路、橘色是土路，機場遷移另以彩色曲線顯示。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
+<p>黃色線是你的規劃；白色實線是鐵路、白色虛線是土路，機場遷移另以彩色曲線顯示。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
 </section>
 <nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
 <footer class="panel status"><span id="status" role="status">連線中…</span><span>⚔ 據點戰 · Oracle 持續採集</span></footer>
@@ -47,7 +47,7 @@
 <div class="plan-heading"><h2 id="editorTitle">路線編輯器</h2><button id="editorClose" type="button" aria-label="關閉路線編輯器">✕</button></div>
 <p id="editorInfo" role="status"></p>
 <div class="plan-actions"><button id="editorselect" type="button">選線／調整</button><button id="editoradd" type="button">新增線</button><button id="editorpan" type="button">移動地圖</button></div>
-<label>路線種類 <select id="editorType"><option value="railway">白色鐵路</option><option value="dirt">橘色土路</option><option value="airport">機場遷移</option></select></label>
+<label>路線種類 <select id="editorType"><option value="railway">白色實線鐵路</option><option value="dirt">白色虛線土路</option><option value="airport">機場遷移</option></select></label>
 <div class="plan-actions"><button id="editorFinish" type="button">完成新增</button><button id="editorSmooth" type="button">改成曲線</button><button id="editorDelete" type="button">刪除所選</button><button id="editorUndo" type="button">復原</button><button id="editorRedo" type="button" title="恢復剛才復原的操作">重做</button></div>
 <p>選線後拖曳綠色端點／折點；曲線的黃色點用來調整彎度。新增線依序點位置，再按完成；可接著改成曲線。滾輪或右下角按鈕可縮放。</p>
 <div class="plan-actions"><button id="editorExport" type="button">匯出備份</button><button id="editorReset" type="button">還原網站路線</button></div>
@@ -56,7 +56,7 @@
 </section>
 <script src="./monitor-config.js"></script>
 <script src="./route-planner.js"></script>
-<script src="./route-editor.js?v=2"></script>
+<script src="./route-editor.js?v=3"></script>
 <script>
 (function(){
 "use strict";
@@ -254,7 +254,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
             if(!Array.isArray(data.paths)||data.authoritative!==false||data.coordinateWidth!==CONFIG.width||data.coordinateHeight!==CONFIG.height)throw new Error("格式錯誤");
             inferredRoutes=data.paths.filter(r=>["railway","dirt","airport"].includes(r.type)&&Array.isArray(r.points)&&r.points.length>=2&&r.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)));
             routeEditor?.load({...data,paths:inferredRoutes});
-            $("routeInfo").textContent="白色鐵路、橘色土路；不含灰色邊界。臺灣已依原圖與遊戲畫面獨立重描，固定城市 ID 接合，修復斷線、錯位與圖示殘線。其他區域仍須逐區核對；參考圖並非即時通行資料。";requestDraw();
+            $("routeInfo").textContent="白色實線鐵路、白色虛線土路；不含灰色邊界。臺灣已依原圖與遊戲畫面獨立重描，固定城市 ID 接合，修復斷線、錯位與圖示殘線。其他區域仍須逐區核對；參考圖並非即時通行資料。";requestDraw();
         }catch{$("routeInfo").textContent="參考路線載入失敗；仍可手動規劃。";}
     }
     function drawInferredRoutes(){
@@ -263,12 +263,12 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         ctx.lineCap="round";ctx.lineJoin="round";
         const layers=[
             {type:"railway",id:"showRailways",color:"rgba(255,255,255,.76)",width:1.45},
-            {type:"dirt",id:"showDirtRoads",color:"rgba(241,139,49,.85)",width:1.45},
+            {type:"dirt",id:"showDirtRoads",color:"rgba(255,255,255,.85)",width:1.45},
             {type:"airport",id:"showAirRoutes",color:"rgba(221,141,255,.85)",width:1.7}
         ];
         for(const layer of layers){
             if(!$(layer.id).checked)continue;
-            ctx.setLineDash([]);
+            ctx.setLineDash(layer.type==="dirt"?[7,5]:[]);
             for(const route of (routeEditor?.data?routeEditor.paths:inferredRoutes)){
                 if(route.type!==layer.type)continue;
                 ctx.beginPath();

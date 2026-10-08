@@ -86,7 +86,7 @@ class RouteEditor{
   this.el("editorDelete").disabled=!route;this.el("editorSmooth").disabled=!route||!!route.curves?.length;this.el("editorFinish").disabled=this.pending.length<2;this.el("editorUndo").disabled=!this.history.length;this.el("editorRedo").disabled=!this.future.length;
   this.el("editorReset").disabled=!this.base;this.el("editorExport").disabled=!this.data;
   if(route&&this.mode!=="add")this.el("editorType").value=route.type;
-  this.el("editorInfo").textContent=!this.data?"路線尚未載入。":this.mode==="add"?`已放 ${this.pending.length} 個點；點城市可吸附，完成後按「完成新增」。`:this.mode==="pan"?"拖曳地圖、雙指縮放；調整完切回「選線／調整」。":route?`已選路線 #${this.selected+1}（${route.curves?.length?"曲線":"折線"}）。拖曳圓點調整；端點靠近城市會吸附。`:"點白色／橘色／已開啟的機場線來選取。";
+  this.el("editorInfo").textContent=!this.data?"路線尚未載入。":this.mode==="add"?`已放 ${this.pending.length} 個點；點城市可吸附，完成後按「完成新增」。`:this.mode==="pan"?"拖曳地圖、雙指縮放；調整完切回「選線／調整」。":route?`已選路線 #${this.selected+1}（${route.curves?.length?"曲線":"折線"}）。拖曳圓點調整；端點靠近城市會吸附。`:"點白色實線鐵路／白色虛線土路／已開啟的機場線來選取。";
   this.el("editorStatus").textContent=this.message||"修改只影響本機草稿，不上傳、不停止即時更新。";
  }
  draw(ctx,view){if(!this.active)return;const screen=p=>[view.offsetX+p[0]*view.scale,view.offsetY+p[1]*view.scale];ctx.save();const r=this.paths[this.selected];
