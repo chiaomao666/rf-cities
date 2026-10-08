@@ -26,7 +26,7 @@
 <label><input id="showRoutes" type="checkbox" checked>顯示參考路線</label>
 <label><input id="showRailways" type="checkbox" checked>白色：鐵路</label>
 <label><input id="showDirtRoads" type="checkbox" checked>橘色：土路</label>
-<label><input id="showAirRoutes" type="checkbox">紫色虛線：聯盟遷移／機場</label>
+<label><input id="showAirRoutes" type="checkbox">彩色：聯盟遷移／機場</label>
 <p id="routeInfo">正在讀取參考路線…</p>
 <p>此設定只影響地圖顯示，不會停止即時資料更新。</p>
 </section>
@@ -39,7 +39,7 @@
 <div class="plan-heading"><h2 id="planTitle">路線規劃</h2><button id="planClose" type="button" aria-label="關閉路線規劃">✕</button></div>
 <p id="planInfo" role="status"></p><div class="plan-actions"><button id="planToggle" type="button">暫停畫線</button><button id="planUndo" type="button">復原</button><button id="planClear" type="button">清除</button></div>
 <ol id="planPoints" aria-label="規劃的途經點"></ol>
-<p>黃色線是你的規劃；白色是鐵路、橘色是土路，紫色虛線為機場遷移參考。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
+<p>黃色線是你的規劃；白色是鐵路、橘色是土路，機場遷移另以彩色曲線顯示。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
 </section>
 <nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
 <footer class="panel status"><span id="status" role="status">連線中…</span><span>⚔ 據點戰 · Oracle 持續採集</span></footer>
@@ -226,21 +226,17 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
     }
     async function loadRoutes(){
         try{
-            const response=await fetch("./inferred-routes.json",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
+            const response=await fetch("./reference-route-geometry.json",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
             const data=await response.json();
-            if(!Array.isArray(data.routes)||data.authoritative!==false)throw new Error("格式錯誤");
-            inferredRoutes=data.routes.filter(r=>Number.isSafeInteger(r.from)&&Number.isSafeInteger(r.to)&&r.from!==r.to&&["railway","dirt","airport"].includes(r.type));
-            const count=type=>inferredRoutes.filter(r=>r.type===type).length;
-            $("routeInfo").textContent=`已核對鐵路 ${count("railway")}、土路 ${count("dirt")}、機場 ${count("airport")} 段。依 2025-10-11 圖逐段記錄，仍未完整；機場僅部分，須核對遊戲現況。路線依城市 ID，不受改名影響。`;requestDraw();
+            if(!Array.isArray(data.paths)||data.authoritative!==false||data.coordinateWidth!==CONFIG.width||data.coordinateHeight!==CONFIG.height)throw new Error("格式錯誤");
+            inferredRoutes=data.paths.filter(r=>["railway","dirt","airport"].includes(r.type)&&Array.isArray(r.points)&&r.points.length>=2&&r.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)));
+            $("routeInfo").textContent="依 2025-10-11 原圖描取曲線，白色鐵路、橘色土路；不含灰色邊界。以固定城市 ID 對齊，不受改名影響。圖示遮住的短線與密集區仍須核對，並非遊戲即時通行資料。";requestDraw();
         }catch{$("routeInfo").textContent="參考路線載入失敗；仍可手動規劃。";}
     }
     function drawInferredRoutes(){
         if(!$("showRoutes").checked||!inferredRoutes.length)return;
-        const byId=new Map(cities.filter(hasPosition).map(c=>[c.city_id,c]));
-        const pairKey=r=>[r.from,r.to].sort((a,b)=>a-b).join(":");
-        const railPairs=new Set(inferredRoutes.filter(r=>r.type==="railway").map(pairKey));
-        const dirtPairs=new Set(inferredRoutes.filter(r=>r.type==="dirt").map(pairKey));
         ctx.save();
+        ctx.lineCap="round";ctx.lineJoin="round";
         const layers=[
             {type:"railway",id:"showRailways",color:"rgba(255,255,255,.76)",width:1.45},
             {type:"dirt",id:"showDirtRoads",color:"rgba(241,139,49,.85)",width:1.45},
@@ -248,22 +244,19 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         ];
         for(const layer of layers){
             if(!$(layer.id).checked)continue;
-            ctx.beginPath();ctx.setLineDash(layer.type==="airport"?[6,4]:[]);
+            ctx.setLineDash([]);
             for(const route of inferredRoutes){
                 if(route.type!==layer.type)continue;
-                const a=byId.get(route.from),b=byId.get(route.to);if(!a||!b)continue;
-                const ax=offsetX+a.x_position*scale,ay=offsetY+a.y_position*scale,bx=offsetX+b.x_position*scale,by=offsetY+b.y_position*scale;
-                ctx.moveTo(ax,ay);
-                if(layer.type==="airport"){
-                    // Arc shape is presentation only; endpoint IDs carry the connection.
-                    ctx.quadraticCurveTo((ax+bx)/2-(by-ay)*.24,(ay+by)/2+(bx-ax)*.24,bx,by);
-                }else if(railPairs.has(pairKey(route))&&dirtPairs.has(pairKey(route))){
-                    // Two transport types for one pair remain independently visible.
-                    const bend=(route.from<route.to?1:-1)*(layer.type==="dirt"?.09:-.09);
-                    ctx.quadraticCurveTo((ax+bx)/2-(by-ay)*bend,(ay+by)/2+(bx-ax)*bend,bx,by);
-                }else ctx.lineTo(bx,by);
+                ctx.beginPath();
+                route.points.forEach(([x,y],index)=>{
+                    const px=offsetX+x*scale,py=offsetY+y*scale;
+                    if(index===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+                });
+                // The vertices are traced curve geometry, not endpoint chords.
+                const airColor=["#ff4949","#f4df25","#21cbef","#ef6df5"].includes(route.color)?route.color:layer.color;
+                ctx.strokeStyle=layer.type==="airport"?airColor:layer.color;
+                ctx.lineWidth=layer.width;ctx.stroke();
             }
-            ctx.strokeStyle=layer.color;ctx.lineWidth=layer.width;ctx.stroke();
         }
         ctx.restore();
     }

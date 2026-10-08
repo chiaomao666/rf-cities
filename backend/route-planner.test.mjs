@@ -50,7 +50,8 @@ test('路線人工核對鐵路、土路、機場，依固定 ID 且不誇稱完�
  const keys=new Set();for(const r of data.routes){assert.ok(ids.has(r.from)&&ids.has(r.to));assert.notEqual(r.from,r.to);assert.ok(['railway','dirt','airport'].includes(r.type));assert.equal(r.review,'reference-endpoints');const key=r.type+':'+[r.from,r.to].sort((a,b)=>a-b).join(',');assert.ok(!keys.has(key));keys.add(key);}
  const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
  assert.match(html,/background:"\.\/portal-map\.png"/);assert.doesNotMatch(html,/tileImage\(/);
- assert.match(html,/ctx\.setLineDash\(layer.type==="airport"/);
+ assert.match(html,/reference-route-geometry\.json/);
+ assert.doesNotMatch(html,/quadraticCurveTo/);
  assert.match(html,/id="showAirRoutes" type="checkbox">/);
  const referenceIds=JSON.parse(await readFile(new URL('../reference-city-ids.json',import.meta.url),'utf8'));
  assert.equal(referenceIds['長沙'],286);assert.equal(referenceIds['東京'],64);assert.equal(referenceIds['廈門'],277);assert.equal(referenceIds['西貢'],45);
@@ -60,4 +61,16 @@ test('路線人工核對鐵路、土路、機場，依固定 ID 且不誇稱完�
  assert.equal(has(18,63,'railway'),true);assert.equal(has(63,64,'railway'),true);
  assert.equal(has(577,578,'dirt'),true);assert.equal(has(578,576,'railway'),true);
  assert.equal(has(110,567,'airport'),true);assert.equal(has(110,567,'railway'),false);
+});
+test('原圖曲線是多頂點幾何，不回退直線連城市；僅允許鐵路土路與機場',async()=>{
+ const data=JSON.parse(await readFile(new URL('../reference-route-geometry.json',import.meta.url),'utf8'));
+ assert.equal(data.source,'traced-original-2025-1011-strokes');assert.equal(data.authoritative,false);
+ assert.equal(data.coordinateWidth,11036);assert.equal(data.coordinateHeight,7505);
+ assert.equal(data.registration,'city-ID-piecewise-affine');
+ assert.ok(data.paths.filter(p=>p.points.length>10).length>100);
+ for(const p of data.paths){assert.ok(['railway','dirt','airport'].includes(p.type));assert.ok(p.points.length>=2);for(const [x,y]of p.points){assert.ok(Number.isFinite(x)&&Number.isFinite(y));if(p.type==='airport')assert.ok(x>=-500&&x<=11536&&y>=-500&&y<=8005);else assert.ok(x>=0&&x<=11036&&y>=0&&y<=7505);}}
+ const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
+ assert.match(html,/route\.points\.forEach/);assert.doesNotMatch(html,/railPairs|dirtPairs|const bend=/);
+ const anchors=JSON.parse(await readFile(new URL('../reference-route-anchors.json',import.meta.url),'utf8'));
+ assert.ok(Object.keys(anchors.points).length>=260);assert.ok(anchors.points['286']);assert.ok(anchors.points['64']);
 });

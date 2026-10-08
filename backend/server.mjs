@@ -39,7 +39,7 @@ const server=http.createServer(async (req,res)=>{
     } catch {res.writeHead(404);res.end();}
     return;
   }
-  const publicFiles={'/battle-map.css':'text/css; charset=utf-8','/cities-map.json':'application/json; charset=utf-8','/portal-map.png':'image/png','/inferred-routes.json':'application/json; charset=utf-8','/route-planner.js':'text/javascript; charset=utf-8'};
+  const publicFiles={'/battle-map.css':'text/css; charset=utf-8','/cities-map.json':'application/json; charset=utf-8','/portal-map.png':'image/png','/inferred-routes.json':'application/json; charset=utf-8','/reference-route-geometry.json':'application/json; charset=utf-8','/route-planner.js':'text/javascript; charset=utf-8'};
   const tile=/^\/tiles\/[0-6]\/\d{1,2}\/\d{1,2}\.png$/.test(pathname);
   if (publicFiles[pathname] || tile) {
     try {
