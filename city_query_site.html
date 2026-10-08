@@ -226,18 +226,24 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
             const data=await response.json();
             if(!Array.isArray(data.routes)||data.authoritative!==false)throw new Error("格式錯誤");
             inferredRoutes=data.routes.filter(r=>Number.isSafeInteger(r.from)&&Number.isSafeInteger(r.to)&&r.from!==r.to);
-            $("routeInfo").textContent=`${inferredRoutes.length} 條推估連線，可能遺漏或誤判；非遊戲正式路線。`;requestDraw();
+            $("routeInfo").textContent=`${inferredRoutes.length} 條推估連線；實線／虛線參考提供的地圖，不保證可通行。`;requestDraw();
         }catch{$("routeInfo").textContent="推估路線載入失敗；仍可手動規劃。";}
     }
     function drawInferredRoutes(){
         if(!$("showRoutes").checked||!inferredRoutes.length)return;
         const byId=new Map(cities.filter(hasPosition).map(c=>[c.city_id,c]));
-        ctx.save();ctx.beginPath();
-        for(const route of inferredRoutes){
-            const a=byId.get(route.from),b=byId.get(route.to);if(!a||!b)continue;
-            ctx.moveTo(offsetX+a.x_position*scale,offsetY+a.y_position*scale);ctx.lineTo(offsetX+b.x_position*scale,offsetY+b.y_position*scale);
+        ctx.save();
+        for(const style of ["solid","dashed"]){
+            ctx.beginPath();ctx.setLineDash(style==="dashed"?[4,4]:[]);
+            for(const route of inferredRoutes){
+                if((route.style==="dashed"?"dashed":"solid")!==style)continue;
+                const a=byId.get(route.from),b=byId.get(route.to);if(!a||!b)continue;
+                ctx.moveTo(offsetX+a.x_position*scale,offsetY+a.y_position*scale);ctx.lineTo(offsetX+b.x_position*scale,offsetY+b.y_position*scale);
+            }
+            ctx.strokeStyle=style==="dashed"?"rgba(199,220,230,.50)":"rgba(235,242,239,.64)";
+            ctx.lineWidth=style==="dashed"?1:1.35;ctx.stroke();
         }
-        ctx.strokeStyle="rgba(224,234,231,.45)";ctx.lineWidth=1;ctx.stroke();ctx.restore();
+        ctx.restore();
     }
     function draw() {
         frame = 0;

@@ -1,1305 +1,2500 @@
 {
-  "source": "old-map-raster",
+  "source": "user-route-map-reference",
   "inferred": true,
   "authoritative": false,
-  "note": "依舊背景圖道路像素推估，可能遺漏彎曲路線或包含誤判；不是遊戲通行資料。",
+  "note": "依使用者提供的三張地圖參考；連接關係與實虛線依路線截圖推估，非遊戲正式通行資料。",
   "coordinateWidth": 11036,
   "coordinateHeight": 7505,
+  "referenceTransform": {
+    "scaleX": 0.0903987,
+    "scaleY": 0.09046849,
+    "offsetX": 62.5719,
+    "offsetY": 27.5235
+  },
   "routes": [
     {
       "from": 1,
       "to": 3,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 1,
       "to": 4,
-      "confidence": 1.0
+      "confidence": 0.962,
+      "style": "dashed"
     },
     {
       "from": 1,
       "to": 15,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 3,
       "to": 4,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 3,
       "to": 15,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 3,
+      "to": 16,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 3,
+      "to": 307,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 4,
+      "to": 15,
+      "confidence": 0.962,
+      "style": "dashed"
     },
     {
       "from": 4,
       "to": 307,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 5,
       "to": 6,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 5,
       "to": 8,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 5,
       "to": 308,
-      "confidence": 1.0
-    },
-    {
-      "from": 6,
-      "to": 7,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 6,
       "to": 8,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 6,
+      "to": 16,
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 8,
       "to": 10,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 9,
+      "to": 107,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 9,
       "to": 124,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 10,
       "to": 11,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 11,
       "to": 12,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 12,
       "to": 13,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 13,
       "to": 19,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 14,
+      "to": 108,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 14,
       "to": 124,
-      "confidence": 0.943
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 14,
       "to": 298,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 14,
+      "to": 475,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 14,
       "to": 476,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 15,
+      "to": 16,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 16,
+      "to": 17,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 17,
+      "to": 19,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 18,
+      "to": 63,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 20,
+      "to": 21,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 22,
+      "to": 23,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 22,
+      "to": 60,
+      "confidence": 0.958,
+      "style": "dashed"
+    },
+    {
+      "from": 22,
+      "to": 61,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 22,
+      "to": 304,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 25,
       "to": 26,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 26,
       "to": 27,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
-      "from": 28,
-      "to": 29,
-      "confidence": 1.0
+      "from": 26,
+      "to": 36,
+      "confidence": 0.951,
+      "style": "dashed"
+    },
+    {
+      "from": 27,
+      "to": 28,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 27,
+      "to": 36,
+      "confidence": 0.873,
+      "style": "dashed"
     },
     {
       "from": 28,
       "to": 30,
-      "confidence": 1.0
-    },
-    {
-      "from": 28,
-      "to": 31,
-      "confidence": 0.944
-    },
-    {
-      "from": 28,
-      "to": 35,
-      "confidence": 1.0
+      "confidence": 0.941,
+      "style": "dashed"
     },
     {
       "from": 29,
       "to": 306,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 30,
       "to": 31,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 30,
       "to": 35,
-      "confidence": 1.0
+      "confidence": 0.887,
+      "style": "dashed"
+    },
+    {
+      "from": 31,
+      "to": 32,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 31,
+      "to": 36,
+      "confidence": 0.922,
+      "style": "dashed"
     },
     {
       "from": 31,
       "to": 305,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 32,
       "to": 33,
-      "confidence": 1.0
+      "confidence": 0.912,
+      "style": "dashed"
+    },
+    {
+      "from": 32,
+      "to": 36,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 32,
+      "to": 304,
+      "confidence": 0.904,
+      "style": "dashed"
+    },
+    {
+      "from": 32,
+      "to": 548,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 33,
+      "to": 571,
+      "confidence": 0.953,
+      "style": "dashed"
     },
     {
       "from": 34,
       "to": 124,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 34,
       "to": 296,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 35,
+      "to": 36,
+      "confidence": 0.936,
+      "style": "dashed"
+    },
+    {
+      "from": 37,
+      "to": 38,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 37,
       "to": 39,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 37,
       "to": 40,
-      "confidence": 1.0
+      "confidence": 0.964,
+      "style": "solid"
+    },
+    {
+      "from": 37,
+      "to": 46,
+      "confidence": 0.885,
+      "style": "dashed"
+    },
+    {
+      "from": 37,
+      "to": 49,
+      "confidence": 0.907,
+      "style": "dashed"
     },
     {
       "from": 38,
       "to": 39,
-      "confidence": 0.966
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 38,
+      "to": 52,
+      "confidence": 0.927,
+      "style": "dashed"
+    },
+    {
+      "from": 40,
+      "to": 41,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 40,
+      "to": 44,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 40,
       "to": 45,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 40,
       "to": 46,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 40,
       "to": 52,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 41,
       "to": 42,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 42,
       "to": 43,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 43,
       "to": 44,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 45,
       "to": 46,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 45,
+      "to": 52,
+      "confidence": 0.983,
+      "style": "solid"
     },
     {
       "from": 46,
       "to": 48,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 46,
+      "to": 54,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 47,
       "to": 48,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 47,
       "to": 56,
-      "confidence": 1.0
-    },
-    {
-      "from": 48,
-      "to": 49,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 49,
       "to": 50,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 49,
       "to": 51,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 49,
-      "to": 56,
-      "confidence": 1.0
-    },
-    {
-      "from": 49,
-      "to": 277,
-      "confidence": 0.93
+      "to": 59,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 50,
-      "to": 51,
-      "confidence": 1.0
+      "to": 55,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 50,
+      "to": 57,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 50,
+      "to": 286,
+      "confidence": 0.881,
+      "style": "dashed"
+    },
+    {
+      "from": 51,
+      "to": 54,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 52,
       "to": 54,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 53,
       "to": 57,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 53,
+      "to": 61,
+      "confidence": 0.966,
+      "style": "dashed"
     },
     {
       "from": 53,
       "to": 62,
-      "confidence": 0.943
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 54,
+      "to": 55,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 56,
+      "to": 57,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 56,
       "to": 59,
-      "confidence": 1.0
-    },
-    {
-      "from": 57,
-      "to": 58,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 57,
       "to": 60,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 57,
       "to": 61,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 57,
+      "to": 286,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 58,
       "to": 59,
-      "confidence": 1.0
-    },
-    {
-      "from": 58,
-      "to": 277,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 59,
       "to": 277,
-      "confidence": 1.0
-    },
-    {
-      "from": 59,
-      "to": 278,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 60,
       "to": 61,
-      "confidence": 1.0
-    },
-    {
-      "from": 60,
-      "to": 284,
-      "confidence": 0.979
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 60,
       "to": 286,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 60,
       "to": 303,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 61,
+      "to": 303,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 61,
+      "to": 304,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 62,
+      "to": 276,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 63,
       "to": 64,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 64,
+      "to": 65,
+      "confidence": 0.98,
+      "style": "dashed"
+    },
+    {
+      "from": 65,
+      "to": 66,
+      "confidence": 0.983,
+      "style": "solid"
+    },
+    {
+      "from": 68,
+      "to": 69,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 68,
       "to": 75,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 68,
+      "to": 80,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 69,
+      "to": 83,
+      "confidence": 0.93,
+      "style": "solid"
+    },
+    {
+      "from": 69,
+      "to": 84,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 69,
+      "to": 90,
+      "confidence": 0.919,
+      "style": "dashed"
+    },
+    {
+      "from": 69,
+      "to": 92,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 70,
       "to": 71,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 72,
+      "to": 73,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 73,
       "to": 74,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 74,
+      "to": 75,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 74,
+      "to": 76,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 74,
+      "to": 78,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 75,
+      "to": 79,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 75,
+      "to": 80,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 76,
       "to": 77,
-      "confidence": 0.912
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 76,
+      "to": 97,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 77,
       "to": 78,
-      "confidence": 0.995
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 77,
       "to": 83,
-      "confidence": 0.927
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 78,
       "to": 79,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 78,
+      "to": 83,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 79,
       "to": 80,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 79,
+      "to": 82,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 79,
       "to": 83,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 80,
+      "to": 84,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 81,
       "to": 82,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 81,
       "to": 86,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 81,
+      "to": 119,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 82,
       "to": 83,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 83,
+      "to": 84,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 83,
       "to": 87,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 84,
       "to": 87,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 84,
+      "to": 89,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 85,
       "to": 86,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 85,
+      "to": 119,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 85,
+      "to": 120,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 86,
       "to": 87,
-      "confidence": 0.876
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 86,
       "to": 88,
-      "confidence": 1.0
-    },
-    {
-      "from": 87,
-      "to": 88,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 87,
       "to": 89,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 88,
       "to": 89,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 88,
       "to": 95,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 89,
       "to": 90,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 89,
       "to": 92,
-      "confidence": 0.967
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 89,
       "to": 93,
-      "confidence": 0.982
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 89,
+      "to": 292,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 90,
       "to": 91,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 91,
+      "to": 92,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 93,
       "to": 94,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
-      "from": 94,
-      "to": 95,
-      "confidence": 1.0
+      "from": 93,
+      "to": 96,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 94,
       "to": 96,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 94,
+      "to": 121,
+      "confidence": 0.976,
+      "style": "solid"
     },
     {
       "from": 95,
       "to": 96,
-      "confidence": 1.0
+      "confidence": 0.884,
+      "style": "dashed"
+    },
+    {
+      "from": 95,
+      "to": 120,
+      "confidence": 0.976,
+      "style": "dashed"
+    },
+    {
+      "from": 95,
+      "to": 293,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 96,
+      "to": 121,
+      "confidence": 0.899,
+      "style": "dashed"
     },
     {
       "from": 96,
       "to": 292,
-      "confidence": 1.0
+      "confidence": 0.965,
+      "style": "dashed"
     },
     {
       "from": 96,
       "to": 293,
-      "confidence": 1.0
+      "confidence": 0.976,
+      "style": "dashed"
+    },
+    {
+      "from": 97,
+      "to": 98,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 97,
+      "to": 99,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 97,
+      "to": 106,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 97,
+      "to": 119,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 98,
+      "to": 99,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 98,
+      "to": 111,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 99,
+      "to": 100,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 100,
       "to": 101,
-      "confidence": 0.978
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 100,
       "to": 114,
-      "confidence": 1.0
+      "confidence": 0.981,
+      "style": "dashed"
     },
     {
       "from": 101,
       "to": 102,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 101,
       "to": 104,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 102,
       "to": 103,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 102,
+      "to": 482,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 102,
+      "to": 486,
+      "confidence": 0.919,
+      "style": "dashed"
     },
     {
       "from": 103,
       "to": 105,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 103,
       "to": 485,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 104,
       "to": 118,
-      "confidence": 0.99
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 104,
       "to": 482,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 104,
       "to": 486,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 105,
+      "to": 479,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 106,
+      "to": 120,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 107,
+      "to": 108,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 107,
+      "to": 110,
+      "confidence": 0.992,
+      "style": "solid"
+    },
+    {
+      "from": 107,
+      "to": 122,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 108,
-      "to": 110,
-      "confidence": 1.0
+      "to": 109,
+      "confidence": 0.991,
+      "style": "dashed"
     },
     {
-      "from": 109,
+      "from": 108,
       "to": 115,
-      "confidence": 1.0
+      "confidence": 0.901,
+      "style": "dashed"
+    },
+    {
+      "from": 110,
+      "to": 111,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 110,
+      "to": 112,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 110,
+      "to": 122,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 111,
       "to": 112,
-      "confidence": 0.939
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 112,
       "to": 113,
-      "confidence": 1.0
+      "confidence": 0.922,
+      "style": "dashed"
+    },
+    {
+      "from": 115,
+      "to": 116,
+      "confidence": 0.907,
+      "style": "dashed"
+    },
+    {
+      "from": 115,
+      "to": 508,
+      "confidence": 0.87,
+      "style": "dashed"
     },
     {
       "from": 116,
       "to": 117,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 117,
       "to": 118,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 117,
+      "to": 517,
+      "confidence": 0.9,
+      "style": "dashed"
     },
     {
       "from": 118,
       "to": 517,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 120,
       "to": 122,
-      "confidence": 0.927
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 120,
+      "to": 293,
+      "confidence": 0.966,
+      "style": "solid"
     },
     {
       "from": 121,
       "to": 122,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 121,
+      "to": 292,
+      "confidence": 0.961,
+      "style": "solid"
     },
     {
       "from": 121,
       "to": 293,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 122,
       "to": 123,
-      "confidence": 1.0
-    },
-    {
-      "from": 122,
-      "to": 293,
-      "confidence": 0.954
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 122,
       "to": 295,
-      "confidence": 0.992
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 123,
       "to": 124,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
-      "from": 276,
-      "to": 277,
-      "confidence": 0.792
+      "from": 124,
+      "to": 475,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 277,
       "to": 278,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 278,
       "to": 279,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 278,
+      "to": 285,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 279,
+      "to": 280,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 279,
+      "to": 283,
+      "confidence": 0.983,
+      "style": "solid"
     },
     {
       "from": 280,
       "to": 281,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 280,
       "to": 283,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 280,
+      "to": 285,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 280,
+      "to": 286,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 281,
       "to": 283,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 282,
       "to": 283,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 282,
+      "to": 284,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 282,
       "to": 289,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 283,
       "to": 289,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 283,
+      "to": 291,
+      "confidence": 0.94,
+      "style": "dashed"
     },
     {
       "from": 284,
       "to": 285,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 284,
       "to": 286,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 284,
       "to": 287,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 284,
       "to": 288,
-      "confidence": 0.93
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 284,
+      "to": 301,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 285,
       "to": 286,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 286,
       "to": 303,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 287,
       "to": 288,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 287,
+      "to": 297,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 288,
       "to": 289,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 288,
       "to": 294,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 288,
+      "to": 297,
+      "confidence": 0.991,
+      "style": "solid"
+    },
+    {
+      "from": 289,
+      "to": 290,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 290,
       "to": 291,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 290,
+      "to": 292,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 290,
+      "to": 294,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 292,
       "to": 293,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 293,
       "to": 294,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 294,
+      "to": 295,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 295,
-      "to": 296,
-      "confidence": 1.0
+      "to": 297,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 295,
+      "to": 302,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 296,
       "to": 297,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 296,
+      "to": 298,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 296,
+      "to": 301,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 297,
       "to": 298,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 297,
+      "to": 299,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 297,
+      "to": 301,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 297,
+      "to": 302,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 298,
+      "to": 299,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 298,
+      "to": 475,
+      "confidence": 0.981,
+      "style": "dashed"
+    },
+    {
+      "from": 298,
+      "to": 476,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 299,
       "to": 300,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 299,
       "to": 564,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 299,
       "to": 565,
-      "confidence": 1.0
+      "confidence": 0.878,
+      "style": "dashed"
     },
     {
       "from": 300,
       "to": 560,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 300,
       "to": 561,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 300,
-      "to": 563,
-      "confidence": 0.929
-    },
-    {
-      "from": 300,
-      "to": 564,
-      "confidence": 0.958
+      "to": 562,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 301,
       "to": 302,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 301,
       "to": 303,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 302,
+      "to": 304,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 302,
+      "to": 559,
+      "confidence": 0.919,
+      "style": "dashed"
     },
     {
       "from": 302,
       "to": 568,
-      "confidence": 1.0
-    },
-    {
-      "from": 302,
-      "to": 570,
-      "confidence": 0.969
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 302,
       "to": 575,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 303,
       "to": 304,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 304,
       "to": 305,
-      "confidence": 0.977
+      "confidence": 0.947,
+      "style": "dashed"
     },
     {
       "from": 304,
       "to": 570,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 304,
+      "to": 571,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 305,
+      "to": 306,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 307,
       "to": 308,
-      "confidence": 0.974
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 475,
+      "to": 508,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 477,
       "to": 478,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 478,
       "to": 479,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 479,
       "to": 485,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 480,
       "to": 484,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 480,
+      "to": 489,
+      "confidence": 0.988,
+      "style": "dashed"
+    },
+    {
+      "from": 480,
+      "to": 491,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 481,
       "to": 482,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 481,
       "to": 483,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 482,
+      "to": 486,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 483,
       "to": 484,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 483,
       "to": 485,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 484,
+      "to": 485,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 486,
+      "to": 489,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 486,
+      "to": 492,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 487,
       "to": 489,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 487,
       "to": 492,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 487,
       "to": 517,
-      "confidence": 1.0
+      "confidence": 0.907,
+      "style": "dashed"
     },
     {
       "from": 488,
       "to": 489,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 488,
       "to": 490,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 488,
       "to": 491,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 488,
       "to": 518,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 489,
       "to": 519,
-      "confidence": 0.922
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 490,
+      "to": 502,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 491,
+      "to": 494,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 493,
       "to": 495,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 493,
+      "to": 515,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 494,
       "to": 496,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 494,
       "to": 502,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 494,
+      "to": 503,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 495,
       "to": 502,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 495,
       "to": 533,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 496,
       "to": 529,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 496,
+      "to": 533,
+      "confidence": 0.925,
+      "style": "dashed"
+    },
+    {
+      "from": 497,
+      "to": 500,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 497,
       "to": 501,
-      "confidence": 1.0
-    },
-    {
-      "from": 497,
-      "to": 524,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 498,
+      "to": 499,
+      "confidence": 0.923,
+      "style": "dashed"
+    },
+    {
+      "from": 498,
+      "to": 510,
+      "confidence": 0.929,
+      "style": "dashed"
+    },
+    {
+      "from": 499,
       "to": 501,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 499,
       "to": 505,
-      "confidence": 1.0
+      "confidence": 0.864,
+      "style": "dashed"
     },
     {
       "from": 499,
       "to": 512,
-      "confidence": 0.957
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 500,
+      "to": 503,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 504,
+      "to": 513,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 505,
-      "to": 506,
-      "confidence": 1.0
-    },
-    {
-      "from": 505,
-      "to": 510,
-      "confidence": 1.0
-    },
-    {
-      "from": 505,
-      "to": 512,
-      "confidence": 1.0
+      "to": 540,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 506,
       "to": 512,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 507,
+      "to": 509,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 508,
       "to": 511,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 508,
+      "to": 521,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 508,
+      "to": 522,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 508,
+      "to": 528,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 508,
       "to": 530,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 509,
+      "to": 513,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 510,
+      "to": 524,
+      "confidence": 0.984,
+      "style": "dashed"
+    },
+    {
+      "from": 510,
+      "to": 544,
+      "confidence": 0.961,
+      "style": "dashed"
+    },
+    {
+      "from": 511,
+      "to": 560,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 511,
       "to": 562,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 514,
       "to": 518,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 514,
+      "to": 520,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 514,
       "to": 526,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 515,
       "to": 518,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 515,
+      "to": 525,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 515,
+      "to": 528,
+      "confidence": 0.983,
+      "style": "dashed"
     },
     {
       "from": 516,
       "to": 517,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 516,
+      "to": 521,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 517,
+      "to": 520,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 519,
       "to": 520,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 521,
       "to": 523,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 522,
       "to": 523,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 522,
       "to": 528,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 522,
       "to": 531,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 522,
+      "to": 532,
+      "confidence": 0.884,
+      "style": "dashed"
     },
     {
       "from": 523,
       "to": 526,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 523,
       "to": 528,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 524,
+      "to": 527,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 524,
+      "to": 529,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 525,
       "to": 529,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 525,
       "to": 532,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 525,
       "to": 533,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 525,
+      "to": 534,
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 527,
       "to": 535,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 528,
       "to": 531,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
-      "from": 529,
-      "to": 533,
-      "confidence": 1.0
+      "from": 530,
+      "to": 531,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 530,
+      "to": 534,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 530,
       "to": 562,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 531,
+      "to": 532,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 534,
       "to": 535,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 535,
+      "to": 549,
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 536,
       "to": 541,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 536,
       "to": 542,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 536,
       "to": 543,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 536,
-      "to": 557,
-      "confidence": 1.0
+      "to": 553,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 537,
+      "to": 539,
+      "confidence": 0.858,
+      "style": "dashed"
     },
     {
       "from": 537,
       "to": 557,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 538,
       "to": 545,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 539,
       "to": 540,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 539,
       "to": 541,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 540,
       "to": 541,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 540,
-      "to": 549,
-      "confidence": 0.933
+      "to": 544,
+      "confidence": 0.868,
+      "style": "dashed"
     },
     {
       "from": 541,
       "to": 543,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 541,
+      "to": 545,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 541,
+      "to": 557,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 542,
       "to": 543,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 543,
+      "to": 545,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 544,
+      "to": 549,
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 546,
       "to": 549,
-      "confidence": 1.0
+      "confidence": 0.944,
+      "style": "dashed"
     },
     {
       "from": 546,
       "to": 551,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 546,
+      "to": 555,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 546,
+      "to": 562,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 547,
+      "to": 548,
+      "confidence": 0.985,
+      "style": "dashed"
     },
     {
       "from": 547,
       "to": 552,
-      "confidence": 1.0
+      "confidence": 0.978,
+      "style": "solid"
     },
     {
-      "from": 547,
-      "to": 555,
-      "confidence": 1.0
+      "from": 549,
+      "to": 550,
+      "confidence": 0.968,
+      "style": "dashed"
+    },
+    {
+      "from": 550,
+      "to": 551,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 550,
+      "to": 553,
+      "confidence": 0.978,
+      "style": "dashed"
+    },
+    {
+      "from": 550,
+      "to": 554,
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 551,
       "to": 552,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 552,
       "to": 556,
-      "confidence": 1.0
-    },
-    {
-      "from": 553,
-      "to": 557,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 554,
       "to": 556,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 555,
       "to": 558,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 555,
       "to": 569,
-      "confidence": 1.0
+      "confidence": 0.885,
+      "style": "dashed"
+    },
+    {
+      "from": 555,
+      "to": 571,
+      "confidence": 1.0,
+      "style": "dashed"
+    },
+    {
+      "from": 558,
+      "to": 559,
+      "confidence": 0.92,
+      "style": "dashed"
     },
     {
       "from": 558,
       "to": 562,
-      "confidence": 0.936
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 558,
       "to": 568,
-      "confidence": 1.0
-    },
-    {
-      "from": 559,
-      "to": 561,
-      "confidence": 1.0
+      "confidence": 0.944,
+      "style": "dashed"
     },
     {
       "from": 559,
       "to": 562,
-      "confidence": 1.0
+      "confidence": 0.97,
+      "style": "dashed"
+    },
+    {
+      "from": 559,
+      "to": 563,
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 559,
       "to": 565,
-      "confidence": 0.933
+      "confidence": 0.953,
+      "style": "dashed"
     },
     {
       "from": 559,
       "to": 568,
-      "confidence": 0.908
-    },
-    {
-      "from": 560,
-      "to": 564,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 561,
       "to": 563,
-      "confidence": 0.982
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 561,
       "to": 565,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 562,
       "to": 563,
-      "confidence": 0.959
-    },
-    {
-      "from": 563,
-      "to": 564,
-      "confidence": 0.962
+      "confidence": 0.902,
+      "style": "dashed"
     },
     {
       "from": 565,
       "to": 568,
-      "confidence": 0.981
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 566,
       "to": 567,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 567,
       "to": 573,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 568,
+      "to": 569,
+      "confidence": 0.98,
+      "style": "dashed"
     },
     {
       "from": 569,
       "to": 570,
-      "confidence": 1.0
+      "confidence": 0.966,
+      "style": "dashed"
     },
     {
       "from": 569,
       "to": 575,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 570,
-      "to": 575,
-      "confidence": 1.0
+      "to": 571,
+      "confidence": 1.0,
+      "style": "dashed"
     },
     {
       "from": 573,
       "to": 574,
-      "confidence": 0.977
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 574,
       "to": 580,
-      "confidence": 0.875
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 577,
       "to": 579,
-      "confidence": 0.968
+      "confidence": 1.0,
+      "style": "solid"
     },
     {
       "from": 579,
       "to": 580,
-      "confidence": 1.0
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 581,
+      "to": 582,
+      "confidence": 1.0,
+      "style": "solid"
+    },
+    {
+      "from": 581,
+      "to": 583,
+      "confidence": 1.0,
+      "style": "solid"
     }
   ]
 }

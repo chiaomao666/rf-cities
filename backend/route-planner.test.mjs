@@ -46,7 +46,9 @@ test('推估路線標明非正式資料、端點有效且沒有重複，背景�
  const data=JSON.parse(await readFile(new URL('../inferred-routes.json',import.meta.url),'utf8'));
  const cities=JSON.parse(await readFile(new URL('../cities-map.json',import.meta.url),'utf8'));const ids=new Set(cities.map(c=>c.city_id));
  assert.equal(data.authoritative,false);assert.equal(data.inferred,true);assert.ok(data.routes.length>0);
- const keys=new Set();for(const r of data.routes){assert.ok(ids.has(r.from)&&ids.has(r.to));assert.notEqual(r.from,r.to);assert.ok(r.confidence>=.77&&r.confidence<=1);const key=[r.from,r.to].sort((a,b)=>a-b).join(',');assert.ok(!keys.has(key));keys.add(key);}
+ assert.equal(data.source,'user-route-map-reference');
+ const keys=new Set();for(const r of data.routes){assert.ok(ids.has(r.from)&&ids.has(r.to));assert.notEqual(r.from,r.to);assert.ok(r.confidence>=.85&&r.confidence<=1);assert.ok(['solid','dashed'].includes(r.style));const key=[r.from,r.to].sort((a,b)=>a-b).join(',');assert.ok(!keys.has(key));keys.add(key);}
  const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
  assert.match(html,/background:"\.\/portal-map\.png"/);assert.doesNotMatch(html,/tileImage\(/);
+ assert.match(html,/ctx\.setLineDash\(style===/);
 });
