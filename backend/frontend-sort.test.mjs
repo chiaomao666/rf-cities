@@ -4,6 +4,18 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');
 const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
+test('據點戰側邊欄可收起再展開，隱藏內容仍保留且不停止更新',()=>{
+ const nodes=new Map();const $=id=>{if(!nodes.has(id))nodes.set(id,{hidden:false,attrs:{},classList:{toggle(name,value){this[name]=value;}},setAttribute(name,value){this.attrs[name]=value;}});return nodes.get(id);};
+ const code=script.slice(script.indexOf('function setupBattleSidebar('),script.indexOf('function setupMenu('));
+ const context=vm.createContext({$});vm.runInContext(code,context);context.setupBattleSidebar();
+ $('battleList').textContent='即時戰況';$('battleSidebarToggle').onclick();
+ assert.equal($('battleSidebarContent').hidden,true);assert.equal($('battleSidebar').classList.collapsed,true);
+ assert.equal($('battleSidebarToggle').attrs['aria-expanded'],'false');assert.equal($('battleSidebarToggle').attrs['aria-label'],'展開據點戰側邊欄');
+ $('battleList').textContent='收起期間收到新戰況';$('battleSidebarToggle').onclick();
+ assert.equal($('battleSidebarContent').hidden,false);assert.equal($('battleSidebar').classList.collapsed,false);
+ assert.equal($('battleSidebarToggle').attrs['aria-expanded'],'true');assert.equal($('battleList').textContent,'收起期間收到新戰況');
+ assert.doesNotMatch(code,/stopped\s*=|clearInterval|clearTimeout|socket\.close|fetch\(/);
+});
 test('選單可開關、返回，設定同步顯示篩選且不停止更新',()=>{
  const elements=new Map();let draws=0;
  const $=id=>{

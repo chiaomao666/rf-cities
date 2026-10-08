@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>逆統戰 · 即時據點戰地圖</title>
-<link rel="stylesheet" href="./battle-map.css?v=route-editor-1">
+<link rel="stylesheet" href="./battle-map.css?v=battle-sidebar-1">
 </head>
 <body>
 <canvas id="map" aria-label="逆統戰城市與據點戰地圖"></canvas>
@@ -33,7 +33,7 @@
 <p class="menu-note">逆統戰 · 即時據點戰地圖</p>
 </div>
 </dialog>
-<aside class="panel battles"><h2>⚔ 據點戰</h2><p id="summary">正在讀取城市資料…</p><div id="battleList"></div></aside>
+<aside class="panel battles" id="battleSidebar" aria-label="據點戰側邊欄"><div class="battle-sidebar-heading"><h2>⚔ 據點戰</h2><button id="battleSidebarToggle" type="button" aria-controls="battleSidebarContent" aria-expanded="true" aria-label="收起據點戰側邊欄">收起 ‹</button></div><div id="battleSidebarContent" class="battle-sidebar-content"><p id="summary">正在讀取城市資料…</p><div id="battleList"></div></div></aside>
 <section class="panel detail" id="detail" hidden></section>
 <section class="panel route-plan" id="routePlan" hidden aria-labelledby="planTitle">
 <div class="plan-heading"><h2 id="planTitle">路線規劃</h2><button id="planClose" type="button" aria-label="關閉路線規劃">✕</button></div>
@@ -94,6 +94,16 @@ const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d"),pointers=new Map();
 let backgroundImage=null,backgroundReady=false,inferredRoutes=[];
 let routePlanner=null,routeEditor=null;
+function setupBattleSidebar(){
+ const sidebar=$("battleSidebar"),content=$("battleSidebarContent"),toggle=$("battleSidebarToggle");
+ toggle.onclick=()=>{
+  const collapsed=!content.hidden;
+  content.hidden=collapsed;sidebar.classList.toggle("collapsed",collapsed);
+  toggle.textContent=collapsed?"展開 ›":"收起 ‹";
+  toggle.setAttribute("aria-expanded",String(!collapsed));
+  toggle.setAttribute("aria-label",collapsed?"展開據點戰側邊欄":"收起據點戰側邊欄");
+ };
+}
 function setupMenu(){
  const menu=$("siteMenu"),toggle=$("menuToggle");
  function syncFilter(){ $("settingsOnlyBattle").checked=$("onlyBattle").checked; }
@@ -469,6 +479,7 @@ async function loadCatalog(){
     };
 
 setupMenu();
+setupBattleSidebar();
 if(window.RFRouteEditor)routeEditor=new window.RFRouteEditor({width:CONFIG.width,height:CONFIG.height,getCities:()=>cities.filter(hasPosition),isVisible:type=>$("showRoutes").checked&&$(type==="railway"?"showRailways":type==="dirt"?"showDirtRoads":"showAirRoutes").checked,onChange:()=>{canvas.classList.toggle("editing",routeEditor?.active);requestDraw();}});
 if(window.RFRoutePlanner)routePlanner=new window.RFRoutePlanner({width:CONFIG.width,height:CONFIG.height,onChange:()=>{canvas.classList.toggle("planning",routePlanner?.active);requestDraw();}});
 loadBackground();loadRoutes();
