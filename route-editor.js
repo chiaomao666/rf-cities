@@ -26,7 +26,7 @@ class RouteEditor{
   try{this.storage=storage||root.localStorage;}catch{}
   this.el=id=>doc.getElementById(id);
   this.el("editorClose").onclick=()=>this.close();
-  for(const mode of ["select","multi","add","pan"])this.el("editor"+mode).onclick=()=>{if(this.pending.length)this.remember();if(mode==="multi"&&this.selected>=0)this.multiple.add(this.selected);if(mode==="select"||mode==="add")this.multiple.clear();this.mode=mode;this.pending=[];this.render();this.onChange();};
+  for(const mode of ["select","multi","add","pan"])this.el("editor"+mode).onclick=()=>{if(this.pending.length)this.remember();if(mode==="multi"&&this.selected>=0)this.multiple.add(this.selected);if(mode==="select"||mode==="add")this.multiple.clear();if(mode==="add")this.selected=-1;this.mode=mode;this.pending=[];this.render();this.onChange();};
   this.el("editorDeselect").onclick=()=>{this.multiple.clear();this.selected=-1;this.render();this.onChange();};
   this.el("editorUndo").onclick=()=>this.undo();
   this.el("editorRedo").onclick=()=>this.redo();
@@ -81,7 +81,7 @@ class RouteEditor{
   r.review="manual-editor-v1";delete r.referenceBounds;delete r.referenceRegions;this.drag.moved=true;this.onChange();return true;
  }
  up(event,cancel=false){if(!this.consumed.delete(event.pointerId))return false;if(this.drag?.id===event.pointerId){if(cancel&&this.drag.moved){this.restore(this.history.pop());this.future=this.drag.future;this.render();this.onChange();}else if(this.drag.moved)this.save();this.drag=null;}return true;}
- finish(){if(this.pending.length<2)return;this.remember();const first=this.pending[0],last=this.pending.at(-1);this.paths.push({type:this.el("editorType").value,from:first.id,to:last.id,review:"manual-editor-v1",points:this.pending.map(h=>h.p)});this.selected=this.paths.length-1;this.multiple.clear();this.pending=[];this.mode="select";this.save();}
+ finish(){if(this.pending.length<2)return;this.remember();const first=this.pending[0],last=this.pending.at(-1);this.paths.push({type:this.el("editorType").value,from:first.id,to:last.id,review:"manual-editor-v1",points:this.pending.map(h=>h.p)});this.selected=-1;this.multiple.clear();this.pending=[];this.mode="add";this.save();}
  smooth(){const r=this.paths[this.selected];if(this.selectionIds.length!==1||!r||r.curves?.length||!root.confirm("將所選折線改成一段曲線？原本中間的線形會被取代，可按復原。"))return;this.remember();const a=r.points[0],b=r.points.at(-1);r.curves=[[a[0]+(b[0]-a[0])/3,a[1]+(b[1]-a[1])/3,a[0]+(b[0]-a[0])*2/3,a[1]+(b[1]-a[1])*2/3,...b]];r.points=sample(r);r.review="manual-editor-v1";this.save();}
  export(){const data=this.oldDraft?.data||this.data;if(!data){this.message="路線尚未載入，無法匯出。";this.render();return;}const url=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"})),a=this.doc.createElement("a");a.href=url;a.download="reference-route-geometry-edited.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);this.message=this.oldDraft?"已匯出未套用的舊草稿。":"已匯出完整路線。這不會發布；可把檔案交給我更新網站。";this.render();}
  async import(file){if(!file)return;try{if(!this.base)throw Error("請等網站路線載入後再匯入");if(file.size>15000000)throw Error("檔案超過 15 MB");const data=validate(JSON.parse(await file.text()),this.width,this.height);if(!root.confirm("匯入會取代目前草稿，可按復原。確定匯入？"))return;this.remember();this.data=data;this.selected=-1;this.multiple.clear();this.pending=[];this.save();}catch(error){this.message="匯入失敗："+error.message;this.render();}finally{this.el("editorImport").value="";}}
@@ -91,7 +91,7 @@ class RouteEditor{
   this.el("editorReset").disabled=!this.base;this.el("editorExport").disabled=!this.data;
   if(ids.length&&this.mode!=="add")this.el("editorType").value=ids.every(i=>this.paths[i].type===this.paths[ids[0]].type)?this.paths[ids[0]].type:"";
   if(this.mode==="add"&&!TYPES.includes(this.el("editorType").value))this.el("editorType").value="railway";
-  this.el("editorInfo").textContent=!this.data?"路線尚未載入。":this.mode==="multi"?`已選 ${ids.length} 條。逐條點選／取消；可批次刪除或改種類。切回選線／調整才會拖動控制點。`:this.mode==="add"?`已放 ${this.pending.length} 個點；點城市可吸附，完成後按「完成新增」。`:this.mode==="pan"?"拖曳地圖、雙指縮放；調整完切回「選線／調整」。":route?`已選路線 #${this.selected+1}（${route.curves?.length?"曲線":"折線"}）。拖曳圓點調整；端點靠近城市會吸附。`:"點白色實線鐵路／白色虛線土路／已開啟的機場線來選取。";
+  this.el("editorInfo").textContent=!this.data?"路線尚未載入。":this.mode==="multi"?`已選 ${ids.length} 條。逐條點選／取消；可批次刪除或改種類。切回選線／調整才會拖動控制點。`:this.mode==="add"?(this.pending.length?`這條線已放 ${this.pending.length} 個點；按「完成新增」後可直接畫下一條獨立線。`:"連續新增中：點擊新的起點。每條完成後重新開始，不會接上上一條；要停止請切回選線／調整。"):this.mode==="pan"?"拖曳地圖、雙指縮放；調整完切回「選線／調整」。":route?`已選路線 #${this.selected+1}（${route.curves?.length?"曲線":"折線"}）。拖曳圓點調整；端點靠近城市會吸附。`:"點白色實線鐵路／白色虛線土路／已開啟的機場線來選取。";
   this.el("editorStatus").textContent=this.message||"修改只影響本機草稿，不上傳、不停止即時更新。";
  }
  draw(ctx,view){if(!this.active)return;const screen=p=>[view.offsetX+p[0]*view.scale,view.offsetY+p[1]*view.scale];ctx.save();const r=this.paths[this.selected];
