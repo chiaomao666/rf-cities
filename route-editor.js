@@ -22,12 +22,13 @@ function sample(route){
 function distance(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy||1)));return Math.hypot(p[0]-a[0]-dx*t,p[1]-a[1]-dy*t);}
 class RouteEditor{
  constructor({width,height,onChange,getCities,isVisible,document:doc=root.document,storage}){
-  Object.assign(this,{width,height,onChange,getCities,isVisible,doc});this.active=false;this.selected=-1;this.mode="select";this.history=[];this.pending=[];this.drag=null;this.consumed=new Set();this.message="";
+  Object.assign(this,{width,height,onChange,getCities,isVisible,doc});this.active=false;this.selected=-1;this.mode="select";this.history=[];this.future=[];this.pending=[];this.drag=null;this.consumed=new Set();this.message="";
   try{this.storage=storage||root.localStorage;}catch{}
   this.el=id=>doc.getElementById(id);
   this.el("editorClose").onclick=()=>this.close();
-  for(const mode of ["select","add","pan"])this.el("editor"+mode).onclick=()=>{this.mode=mode;this.pending=[];this.render();this.onChange();};
+  for(const mode of ["select","add","pan"])this.el("editor"+mode).onclick=()=>{if(this.pending.length)this.remember();this.mode=mode;this.pending=[];this.render();this.onChange();};
   this.el("editorUndo").onclick=()=>this.undo();
+  this.el("editorRedo").onclick=()=>this.redo();
   this.el("editorDelete").onclick=()=>{if(this.selected<0)return;this.remember();this.data.paths.splice(this.selected,1);this.selected=-1;this.save();};
   this.el("editorType").onchange=()=>{if(this.selected<0||this.mode==="add")return;this.remember();this.data.paths[this.selected].type=this.el("editorType").value;this.save();};
   this.el("editorSmooth").onclick=()=>this.smooth();
@@ -45,8 +46,11 @@ class RouteEditor{
  get paths(){return this.data?.paths||[];}
  open(){this.active=true;this.el("routeEditor").hidden=false;this.render();this.onChange();}
  close(){this.active=false;this.drag=null;this.consumed.clear();this.pending=[];this.el("routeEditor").hidden=true;this.onChange();}
- remember(){this.history.push(clone(this.data));if(this.history.length>12)this.history.shift();}
- undo(){if(this.pending.length){this.pending.pop();this.render();this.onChange();return;}if(!this.history.length)return;this.data=this.history.pop();this.selected=-1;this.save();}
+ snapshot(){return clone({data:this.data,pending:this.pending,mode:this.mode,selected:this.selected,type:this.el("editorType").value});}
+ restore(state){this.data=state.data;this.pending=state.pending;this.mode=state.mode;this.selected=state.selected;this.el("editorType").value=state.type;}
+ remember(){this.history.push(this.snapshot());if(this.history.length>12)this.history.shift();this.future=[];}
+ undo(){if(!this.history.length||this.drag)return;this.future.push(this.snapshot());this.restore(this.history.pop());this.save();}
+ redo(){if(!this.future.length||this.drag)return;this.history.push(this.snapshot());if(this.history.length>12)this.history.shift();this.restore(this.future.pop());this.save();}
  save(){this.message="";try{if(!this.storage)throw Error();this.storage.setItem(KEY,JSON.stringify({base:JSON.stringify(this.base),data:this.data}));this.oldDraft=null;this.message="草稿已保存在這個瀏覽器，尚未發布。";}catch{this.message="瀏覽器無法保存（可能容量不足）。請立即匯出備份，關閉頁面會遺失修改。";}this.render();this.onChange();}
  point(event,view){return [(event.clientX-view.offsetX)/view.scale,(event.clientY-view.offsetY)/view.scale];}
  snap(p,view){let best=null,limit=14/view.scale;for(const city of this.getCities()){const x=Number(city.x_position),y=Number(city.y_position);if(!Number.isFinite(x)||!Number.isFinite(y))continue;const d=Math.hypot(p[0]-x,p[1]-y);if(d<limit){limit=d;best=city;}}return best?{p:[Number(best.x_position),Number(best.y_position)],id:best.city_id}:{p,id:null};}
@@ -55,13 +59,14 @@ class RouteEditor{
   if(!this.active||!this.data||this.mode==="pan")return false;
   if(this.consumed.size){this.message="編輯時請使用單指；切換「移動地圖」可雙指縮放。";this.render();this.consumed.add(event.pointerId);return true;}
   this.consumed.add(event.pointerId);const p=this.point(event,view),route=this.paths[this.selected];
-  if(this.mode==="add"){const hit=this.snap(p,view);this.pending.push(hit);this.render();this.onChange();return true;}
-  if(route){let best=null,limit=10/view.scale;for(const h of this.handles(route)){const d=Math.hypot(p[0]-h.p[0],p[1]-h.p[1]);if(d<limit){limit=d;best=h;}}if(best){this.remember();this.drag={id:event.pointerId,h:best,moved:false};return true;}}
+  if(this.mode==="add"){const hit=this.snap(p,view);this.remember();this.pending.push(hit);this.render();this.onChange();return true;}
+  if(route){let best=null,limit=10/view.scale;for(const h of this.handles(route)){const d=Math.hypot(p[0]-h.p[0],p[1]-h.p[1]);if(d<limit){limit=d;best=h;}}if(best){this.drag={id:event.pointerId,h:best,moved:false,future:this.future};return true;}}
   let best=-1,limit=9/view.scale;this.paths.forEach((r,index)=>{if(!this.isVisible(r.type))return;const pts=r.points;for(let i=1;i<pts.length;i++){const d=distance(p,pts[i-1],pts[i]);if(d<limit){limit=d;best=index;}}});this.selected=best;this.render();this.onChange();return true;
  }
  move(event,view){
   if(!this.consumed.has(event.pointerId))return false;
   if(!this.drag||this.drag.id!==event.pointerId)return true;
+  if(!this.drag.moved)this.remember();
   const r=this.paths[this.selected],h=this.drag.h;let p=this.point(event,view);
   p=[Math.max(0,Math.min(this.width,p[0])),Math.max(0,Math.min(this.height,p[1]))];
   const end=h.start||h.index===0||h.index===r.points.length-1||h.j===4&&h.curve===r.curves.length-1;
@@ -71,14 +76,14 @@ class RouteEditor{
   if(r.curves?.length)r.points=sample(r);
   r.review="manual-editor-v1";delete r.referenceBounds;delete r.referenceRegions;this.drag.moved=true;this.onChange();return true;
  }
- up(event,cancel=false){if(!this.consumed.delete(event.pointerId))return false;if(this.drag?.id===event.pointerId){if(cancel){this.data=this.history.pop();this.render();this.onChange();}else if(this.drag.moved)this.save();else this.history.pop();this.drag=null;}return true;}
+ up(event,cancel=false){if(!this.consumed.delete(event.pointerId))return false;if(this.drag?.id===event.pointerId){if(cancel&&this.drag.moved){this.restore(this.history.pop());this.future=this.drag.future;this.render();this.onChange();}else if(this.drag.moved)this.save();this.drag=null;}return true;}
  finish(){if(this.pending.length<2)return;this.remember();const first=this.pending[0],last=this.pending.at(-1);this.paths.push({type:this.el("editorType").value,from:first.id,to:last.id,review:"manual-editor-v1",points:this.pending.map(h=>h.p)});this.selected=this.paths.length-1;this.pending=[];this.mode="select";this.save();}
  smooth(){const r=this.paths[this.selected];if(!r||r.curves?.length||!root.confirm("將所選折線改成一段曲線？原本中間的線形會被取代，可按復原。"))return;this.remember();const a=r.points[0],b=r.points.at(-1);r.curves=[[a[0]+(b[0]-a[0])/3,a[1]+(b[1]-a[1])/3,a[0]+(b[0]-a[0])*2/3,a[1]+(b[1]-a[1])*2/3,...b]];r.points=sample(r);r.review="manual-editor-v1";this.save();}
  export(){const data=this.oldDraft?.data||this.data;if(!data){this.message="路線尚未載入，無法匯出。";this.render();return;}const url=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"})),a=this.doc.createElement("a");a.href=url;a.download="reference-route-geometry-edited.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);this.message=this.oldDraft?"已匯出未套用的舊草稿。":"已匯出完整路線。這不會發布；可把檔案交給我更新網站。";this.render();}
  async import(file){if(!file)return;try{if(!this.base)throw Error("請等網站路線載入後再匯入");if(file.size>15000000)throw Error("檔案超過 15 MB");const data=validate(JSON.parse(await file.text()),this.width,this.height);if(!root.confirm("匯入會取代目前草稿，可按復原。確定匯入？"))return;this.remember();this.data=data;this.selected=-1;this.pending=[];this.save();}catch(error){this.message="匯入失敗："+error.message;this.render();}finally{this.el("editorImport").value="";}}
  render(){
   const route=this.paths[this.selected];for(const mode of ["select","add","pan"])this.el("editor"+mode).setAttribute("aria-pressed",String(mode===this.mode));
-  this.el("editorDelete").disabled=!route;this.el("editorSmooth").disabled=!route||!!route.curves?.length;this.el("editorFinish").disabled=this.pending.length<2;this.el("editorUndo").disabled=!this.history.length&&!this.pending.length;
+  this.el("editorDelete").disabled=!route;this.el("editorSmooth").disabled=!route||!!route.curves?.length;this.el("editorFinish").disabled=this.pending.length<2;this.el("editorUndo").disabled=!this.history.length;this.el("editorRedo").disabled=!this.future.length;
   this.el("editorReset").disabled=!this.base;this.el("editorExport").disabled=!this.data;
   if(route&&this.mode!=="add")this.el("editorType").value=route.type;
   this.el("editorInfo").textContent=!this.data?"路線尚未載入。":this.mode==="add"?`已放 ${this.pending.length} 個點；點城市可吸附，完成後按「完成新增」。`:this.mode==="pan"?"拖曳地圖、雙指縮放；調整完切回「選線／調整」。":route?`已選路線 #${this.selected+1}（${route.curves?.length?"曲線":"折線"}）。拖曳圓點調整；端點靠近城市會吸附。`:"點白色／橘色／已開啟的機場線來選取。";

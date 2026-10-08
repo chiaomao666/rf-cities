@@ -48,7 +48,7 @@
 <p id="editorInfo" role="status"></p>
 <div class="plan-actions"><button id="editorselect" type="button">選線／調整</button><button id="editoradd" type="button">新增線</button><button id="editorpan" type="button">移動地圖</button></div>
 <label>路線種類 <select id="editorType"><option value="railway">白色鐵路</option><option value="dirt">橘色土路</option><option value="airport">機場遷移</option></select></label>
-<div class="plan-actions"><button id="editorFinish" type="button">完成新增</button><button id="editorSmooth" type="button">改成曲線</button><button id="editorDelete" type="button">刪除所選</button><button id="editorUndo" type="button">復原</button></div>
+<div class="plan-actions"><button id="editorFinish" type="button">完成新增</button><button id="editorSmooth" type="button">改成曲線</button><button id="editorDelete" type="button">刪除所選</button><button id="editorUndo" type="button">復原</button><button id="editorRedo" type="button" title="恢復剛才復原的操作">重做</button></div>
 <p>選線後拖曳綠色端點／折點；曲線的黃色點用來調整彎度。新增線依序點位置，再按完成；可接著改成曲線。滾輪或右下角按鈕可縮放。</p>
 <div class="plan-actions"><button id="editorExport" type="button">匯出備份</button><button id="editorReset" type="button">還原網站路線</button></div>
 <label class="editor-import">匯入路線檔案<input id="editorImport" type="file" accept=".json,application/json"></label>
@@ -56,7 +56,7 @@
 </section>
 <script src="./monitor-config.js"></script>
 <script src="./route-planner.js"></script>
-<script src="./route-editor.js?v=1"></script>
+<script src="./route-editor.js?v=2"></script>
 <script>
 (function(){
 "use strict";
