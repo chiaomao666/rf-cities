@@ -46,8 +46,8 @@
 <section class="panel route-editor" id="routeEditor" hidden aria-labelledby="editorTitle">
 <div class="plan-heading"><h2 id="editorTitle">路線編輯器</h2><button id="editorClose" type="button" aria-label="關閉路線編輯器">✕</button></div>
 <p id="editorInfo" role="status"></p>
-<div class="plan-actions"><button id="editorselect" type="button">選線／調整</button><button id="editoradd" type="button">新增線</button><button id="editorpan" type="button">移動地圖</button></div>
-<label>路線種類 <select id="editorType"><option value="railway">白色實線鐵路</option><option value="dirt">白色虛線土路</option><option value="airport">機場遷移</option></select></label>
+<div class="plan-actions"><button id="editorselect" type="button">選線／調整</button><button id="editormulti" type="button">多選</button><button id="editorDeselect" type="button">取消選取</button><button id="editoradd" type="button">新增線</button><button id="editorpan" type="button">移動地圖</button></div>
+<label>路線種類（多選可批次更改） <select id="editorType"><option value="" disabled hidden>多種路線，請選擇</option><option value="railway" selected>白色實線鐵路</option><option value="dirt">白色虛線土路</option><option value="airport">機場遷移</option></select></label>
 <div class="plan-actions"><button id="editorFinish" type="button">完成新增</button><button id="editorSmooth" type="button">改成曲線</button><button id="editorDelete" type="button">刪除所選</button><button id="editorUndo" type="button">復原</button><button id="editorRedo" type="button" title="恢復剛才復原的操作">重做</button></div>
 <p>選線後拖曳綠色端點／折點；曲線的黃色點用來調整彎度。新增線依序點位置，再按完成；可接著改成曲線。滾輪或右下角按鈕可縮放。</p>
 <div class="plan-actions"><button id="editorExport" type="button">匯出備份</button><button id="editorReset" type="button">還原網站路線</button></div>
@@ -56,7 +56,7 @@
 </section>
 <script src="./monitor-config.js"></script>
 <script src="./route-planner.js"></script>
-<script src="./route-editor.js?v=3"></script>
+<script src="./route-editor.js?v=4"></script>
 <script>
 (function(){
 "use strict";
