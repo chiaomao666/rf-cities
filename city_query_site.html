@@ -18,11 +18,13 @@
 <dialog id="siteMenu" class="site-menu" aria-labelledby="menuTitle">
 <div class="menu-shell">
 <div class="menu-heading"><h2 id="menuTitle">選單</h2><button id="menuClose" type="button" aria-label="關閉選單">✕</button></div>
-<nav id="menuLinks" class="menu-links" aria-label="網站功能"><button id="openSettings" type="button"><span aria-hidden="true">⚙</span> 設定 <span aria-hidden="true">›</span></button></nav>
+<nav id="menuLinks" class="menu-links" aria-label="網站功能"><button id="openSettings" type="button"><span aria-hidden="true">⚙</span> 設定 <span aria-hidden="true">›</span></button><button id="openRoutePlanner" type="button"><span aria-hidden="true">⌁</span> 路線規劃 <span aria-hidden="true">›</span></button></nav>
 <section id="menuSettings" class="menu-settings" hidden aria-label="地圖設定">
 <button id="settingsBack" type="button">← 返回選單</button>
 <h3>地圖顯示</h3>
 <label><input id="settingsOnlyBattle" type="checkbox">只顯示戰況</label>
+<label><input id="showRoutes" type="checkbox" checked>顯示推估城市連線</label>
+<p id="routeInfo">正在讀取推估路線…</p>
 <p>此設定只影響地圖顯示，不會停止即時資料更新。</p>
 </section>
 <p class="menu-note">逆統戰 · 即時據點戰地圖</p>
@@ -30,9 +32,16 @@
 </dialog>
 <aside class="panel battles"><h2>⚔ 據點戰</h2><p id="summary">正在讀取城市資料…</p><div id="battleList"></div></aside>
 <section class="panel detail" id="detail" hidden></section>
+<section class="panel route-plan" id="routePlan" hidden aria-labelledby="planTitle">
+<div class="plan-heading"><h2 id="planTitle">路線規劃</h2><button id="planClose" type="button" aria-label="關閉路線規劃">✕</button></div>
+<p id="planInfo" role="status"></p><div class="plan-actions"><button id="planToggle" type="button">暫停畫線</button><button id="planUndo" type="button">復原</button><button id="planClear" type="button">清除</button></div>
+<ol id="planPoints" aria-label="規劃的途經點"></ol>
+<p>黃色線是你的規劃，灰色線依舊圖推估；兩者皆不保證遊戲可以通行。</p><p id="planStorage"></p>
+</section>
 <nav class="panel zoom" aria-label="地圖縮放"><button id="zoomIn" aria-label="放大">＋</button><button id="zoomOut" aria-label="縮小">－</button><button id="fit">全圖</button></nav>
 <footer class="panel status"><span id="status" role="status">連線中…</span><span>⚔ 據點戰 · Oracle 持續採集</span></footer>
 <script src="./monitor-config.js"></script>
+<script src="./route-planner.js"></script>
 <script>
 (function(){
 "use strict";
@@ -65,9 +74,11 @@
   let sourceStatus=null, allCities=[], cities=[], catalog=[];
 let fetching=false,refreshAgain=false,realtimeReady=false,socket=null,reconnect=null,failures=0,stopped=false;
 let scale=1,offsetX=0,offsetY=0,width=0,height=0,selected=null,frame=0,dragDistance=0,listSignature="",detailSignature="";
-const CONFIG={tiles:"./tiles",width:11036,height:7505};
+const CONFIG={background:"./portal-map.png",width:11036,height:7505};
 const $=id=>document.getElementById(id);
-const canvas=$("map"),ctx=canvas.getContext("2d"),tiles=new Map(),pointers=new Map();
+const canvas=$("map"),ctx=canvas.getContext("2d"),pointers=new Map();
+let backgroundImage=null,backgroundReady=false,inferredRoutes=[];
+let routePlanner=null;
 function setupMenu(){
  const menu=$("siteMenu"),toggle=$("menuToggle");
  function syncFilter(){ $("settingsOnlyBattle").checked=$("onlyBattle").checked; }
@@ -87,6 +98,8 @@ function setupMenu(){
  $("settingsBack").onclick=()=>{showSettings(false);$("openSettings").focus();};
  $("settingsOnlyBattle").onchange=()=>{ $("onlyBattle").checked=$("settingsOnlyBattle").checked;requestDraw(); };
  $("onlyBattle").addEventListener("change",syncFilter);
+ $("showRoutes").onchange=requestDraw;
+ $("openRoutePlanner").onclick=()=>{menu.close();routePlanner?.open();};
 }
 // 依陣營圖示的主色調整明度；只參考配色，不使用圖示素材。
 // 控制陣營配色；不以主權國或城市所在地判定。
@@ -200,38 +213,39 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
     function requestDraw() {
         if (!frame) frame = requestAnimationFrame(draw);
     }
-    function tileImage(z, x, y) {
-        const key = `${z}/${x}/${y}`;
-        if (tiles.has(key)) return tiles.get(key);
-        const image = new Image();
-        const entry = {image, ready: false};
-        tiles.set(key, entry);
-        image.onload = () => { entry.ready = true; requestDraw(); };
-        image.onerror = () => { entry.failed = true; };
-        image.src = `${CONFIG.tiles}/${key}.png`;
-        // 固定容量；只保留最近使用的圖塊，避免長期縮放堆積圖片。
-        if (tiles.size > 600) tiles.delete(tiles.keys().next().value);
-        return entry;
+    function loadBackground(){
+        if(typeof Image==="undefined")return;
+        backgroundImage=new Image();
+        backgroundImage.onload=()=>{backgroundReady=true;requestDraw();};
+        backgroundImage.onerror=()=>setConnection("背景圖載入失敗；請重新整理頁面",true);
+        backgroundImage.src=CONFIG.background;
+    }
+    async function loadRoutes(){
+        try{
+            const response=await fetch("./inferred-routes.json",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
+            const data=await response.json();
+            if(!Array.isArray(data.routes)||data.authoritative!==false)throw new Error("格式錯誤");
+            inferredRoutes=data.routes.filter(r=>Number.isSafeInteger(r.from)&&Number.isSafeInteger(r.to)&&r.from!==r.to);
+            $("routeInfo").textContent=`${inferredRoutes.length} 條推估連線，可能遺漏或誤判；非遊戲正式路線。`;requestDraw();
+        }catch{$("routeInfo").textContent="推估路線載入失敗；仍可手動規劃。";}
+    }
+    function drawInferredRoutes(){
+        if(!$("showRoutes").checked||!inferredRoutes.length)return;
+        const byId=new Map(cities.filter(hasPosition).map(c=>[c.city_id,c]));
+        ctx.save();ctx.beginPath();
+        for(const route of inferredRoutes){
+            const a=byId.get(route.from),b=byId.get(route.to);if(!a||!b)continue;
+            ctx.moveTo(offsetX+a.x_position*scale,offsetY+a.y_position*scale);ctx.lineTo(offsetX+b.x_position*scale,offsetY+b.y_position*scale);
+        }
+        ctx.strokeStyle="rgba(224,234,231,.45)";ctx.lineWidth=1;ctx.stroke();ctx.restore();
     }
     function draw() {
         frame = 0;
         const dpr = window.devicePixelRatio || 1;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.fillStyle = "#081614"; ctx.fillRect(0, 0, width, height);
-        const z = Math.max(0, Math.min(6, Math.ceil(6 + Math.log2(scale))));
-        const span = 256 * Math.pow(2, 6 - z);
-        const minX = Math.max(0, Math.floor(-offsetX / scale / span));
-        const minY = Math.max(0, Math.floor(-offsetY / scale / span));
-        const maxX = Math.min(Math.ceil(CONFIG.width / span) - 1, Math.floor((width - offsetX) / scale / span));
-        const maxY = Math.min(Math.ceil(CONFIG.height / span) - 1, Math.floor((height - offsetY) / scale / span));
-        ctx.save();
-        ctx.filter = "grayscale(1)";
-        ctx.beginPath();ctx.rect(offsetX, offsetY, CONFIG.width * scale, CONFIG.height * scale);ctx.clip();
-        for (let x = minX; x <= maxX; x++) for (let y = minY; y <= maxY; y++) {
-            const tile = tileImage(z, x, y);
-            if (tile.ready) ctx.drawImage(tile.image, offsetX + x * span * scale, offsetY + y * span * scale, span * scale + .5, span * scale + .5);
-        }
-        ctx.restore();
+        if(backgroundReady)ctx.drawImage(backgroundImage,offsetX,offsetY,CONFIG.width*scale,CONFIG.height*scale);
+        drawInferredRoutes();
         const pulse = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : (Math.sin(Date.now()/350) + 1)/2;
         ctx.textAlign = "center";
         for (const city of visibleCities()) {
@@ -257,6 +271,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
                 ctx.fillStyle=battle?(stale()?"#e0b15c":"#ffbdbd"):"#fff";ctx.fillText(city.name || String(city.city_id),x,y+27);
             }
         }
+        routePlanner?.draw(ctx,{scale,offsetX,offsetY});
     }
     function zoom(factor,x=width/2,y=height/2) {
         const next = Math.max(.035,Math.min(2,scale*factor)), ratio=next/scale;
@@ -390,12 +405,15 @@ async function loadCatalog(){
     });
     canvas.addEventListener("pointerup",event=>{
         if(dragDistance<6&&pointers.size===1){
-            let nearest=null,distance=25;
-            for(const city of visibleCities()){
+            let nearest=null,distance=routePlanner?.active?14:25;
+            for(const city of (routePlanner?.active?cities.filter(hasPosition):visibleCities())){
                 const d=Math.hypot(offsetX+city.x_position*scale-event.clientX,offsetY+city.y_position*scale-event.clientY);
                 if(d<distance){nearest=city;distance=d;}
             }
-            if(nearest)focusCity(nearest);
+            if(routePlanner?.active){
+                const x=(event.clientX-offsetX)/scale,y=(event.clientY-offsetY)/scale;
+                routePlanner.addPoint(nearest?{x:Number(nearest.x_position),y:Number(nearest.y_position),city_id:nearest.city_id,name:nearest.name||String(nearest.city_id)}:{x,y,name:"自訂位置",city_id:null});
+            }else if(nearest)focusCity(nearest);
         }
         pointers.delete(event.pointerId);
     });
@@ -409,6 +427,8 @@ async function loadCatalog(){
     };
 
 setupMenu();
+if(window.RFRoutePlanner)routePlanner=new window.RFRoutePlanner({width:CONFIG.width,height:CONFIG.height,onChange:()=>{canvas.classList.toggle("planning",routePlanner?.active);requestDraw();}});
+loadBackground();loadRoutes();
 addEventListener("resize",resize);resize();fit();loadCatalog();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh();});
 addEventListener("pagehide",()=>{stopped=true;realtimeReady=false;clearTimeout(reconnect);if(useSupabase){if(socket)supabaseClient?.removeChannel(socket);}else socket?.close();});

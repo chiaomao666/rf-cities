@@ -1,0 +1,1305 @@
+{
+  "source": "old-map-raster",
+  "inferred": true,
+  "authoritative": false,
+  "note": "依舊背景圖道路像素推估，可能遺漏彎曲路線或包含誤判；不是遊戲通行資料。",
+  "coordinateWidth": 11036,
+  "coordinateHeight": 7505,
+  "routes": [
+    {
+      "from": 1,
+      "to": 3,
+      "confidence": 1.0
+    },
+    {
+      "from": 1,
+      "to": 4,
+      "confidence": 1.0
+    },
+    {
+      "from": 1,
+      "to": 15,
+      "confidence": 1.0
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "confidence": 1.0
+    },
+    {
+      "from": 3,
+      "to": 15,
+      "confidence": 1.0
+    },
+    {
+      "from": 4,
+      "to": 307,
+      "confidence": 1.0
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "confidence": 1.0
+    },
+    {
+      "from": 5,
+      "to": 8,
+      "confidence": 1.0
+    },
+    {
+      "from": 5,
+      "to": 308,
+      "confidence": 1.0
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "confidence": 1.0
+    },
+    {
+      "from": 6,
+      "to": 8,
+      "confidence": 1.0
+    },
+    {
+      "from": 8,
+      "to": 10,
+      "confidence": 1.0
+    },
+    {
+      "from": 9,
+      "to": 124,
+      "confidence": 1.0
+    },
+    {
+      "from": 10,
+      "to": 11,
+      "confidence": 1.0
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "confidence": 1.0
+    },
+    {
+      "from": 12,
+      "to": 13,
+      "confidence": 1.0
+    },
+    {
+      "from": 13,
+      "to": 19,
+      "confidence": 1.0
+    },
+    {
+      "from": 14,
+      "to": 124,
+      "confidence": 0.943
+    },
+    {
+      "from": 14,
+      "to": 298,
+      "confidence": 1.0
+    },
+    {
+      "from": 14,
+      "to": 476,
+      "confidence": 1.0
+    },
+    {
+      "from": 25,
+      "to": 26,
+      "confidence": 1.0
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "confidence": 1.0
+    },
+    {
+      "from": 28,
+      "to": 29,
+      "confidence": 1.0
+    },
+    {
+      "from": 28,
+      "to": 30,
+      "confidence": 1.0
+    },
+    {
+      "from": 28,
+      "to": 31,
+      "confidence": 0.944
+    },
+    {
+      "from": 28,
+      "to": 35,
+      "confidence": 1.0
+    },
+    {
+      "from": 29,
+      "to": 306,
+      "confidence": 1.0
+    },
+    {
+      "from": 30,
+      "to": 31,
+      "confidence": 1.0
+    },
+    {
+      "from": 30,
+      "to": 35,
+      "confidence": 1.0
+    },
+    {
+      "from": 31,
+      "to": 305,
+      "confidence": 1.0
+    },
+    {
+      "from": 32,
+      "to": 33,
+      "confidence": 1.0
+    },
+    {
+      "from": 34,
+      "to": 124,
+      "confidence": 1.0
+    },
+    {
+      "from": 34,
+      "to": 296,
+      "confidence": 1.0
+    },
+    {
+      "from": 37,
+      "to": 39,
+      "confidence": 1.0
+    },
+    {
+      "from": 37,
+      "to": 40,
+      "confidence": 1.0
+    },
+    {
+      "from": 38,
+      "to": 39,
+      "confidence": 0.966
+    },
+    {
+      "from": 40,
+      "to": 45,
+      "confidence": 1.0
+    },
+    {
+      "from": 40,
+      "to": 46,
+      "confidence": 1.0
+    },
+    {
+      "from": 40,
+      "to": 52,
+      "confidence": 1.0
+    },
+    {
+      "from": 41,
+      "to": 42,
+      "confidence": 1.0
+    },
+    {
+      "from": 42,
+      "to": 43,
+      "confidence": 1.0
+    },
+    {
+      "from": 43,
+      "to": 44,
+      "confidence": 1.0
+    },
+    {
+      "from": 45,
+      "to": 46,
+      "confidence": 1.0
+    },
+    {
+      "from": 46,
+      "to": 48,
+      "confidence": 1.0
+    },
+    {
+      "from": 47,
+      "to": 48,
+      "confidence": 1.0
+    },
+    {
+      "from": 47,
+      "to": 56,
+      "confidence": 1.0
+    },
+    {
+      "from": 48,
+      "to": 49,
+      "confidence": 1.0
+    },
+    {
+      "from": 49,
+      "to": 50,
+      "confidence": 1.0
+    },
+    {
+      "from": 49,
+      "to": 51,
+      "confidence": 1.0
+    },
+    {
+      "from": 49,
+      "to": 56,
+      "confidence": 1.0
+    },
+    {
+      "from": 49,
+      "to": 277,
+      "confidence": 0.93
+    },
+    {
+      "from": 50,
+      "to": 51,
+      "confidence": 1.0
+    },
+    {
+      "from": 52,
+      "to": 54,
+      "confidence": 1.0
+    },
+    {
+      "from": 53,
+      "to": 57,
+      "confidence": 1.0
+    },
+    {
+      "from": 53,
+      "to": 62,
+      "confidence": 0.943
+    },
+    {
+      "from": 56,
+      "to": 59,
+      "confidence": 1.0
+    },
+    {
+      "from": 57,
+      "to": 58,
+      "confidence": 1.0
+    },
+    {
+      "from": 57,
+      "to": 60,
+      "confidence": 1.0
+    },
+    {
+      "from": 57,
+      "to": 61,
+      "confidence": 1.0
+    },
+    {
+      "from": 58,
+      "to": 59,
+      "confidence": 1.0
+    },
+    {
+      "from": 58,
+      "to": 277,
+      "confidence": 1.0
+    },
+    {
+      "from": 59,
+      "to": 277,
+      "confidence": 1.0
+    },
+    {
+      "from": 59,
+      "to": 278,
+      "confidence": 1.0
+    },
+    {
+      "from": 60,
+      "to": 61,
+      "confidence": 1.0
+    },
+    {
+      "from": 60,
+      "to": 284,
+      "confidence": 0.979
+    },
+    {
+      "from": 60,
+      "to": 286,
+      "confidence": 1.0
+    },
+    {
+      "from": 60,
+      "to": 303,
+      "confidence": 1.0
+    },
+    {
+      "from": 63,
+      "to": 64,
+      "confidence": 1.0
+    },
+    {
+      "from": 68,
+      "to": 75,
+      "confidence": 1.0
+    },
+    {
+      "from": 70,
+      "to": 71,
+      "confidence": 1.0
+    },
+    {
+      "from": 73,
+      "to": 74,
+      "confidence": 1.0
+    },
+    {
+      "from": 76,
+      "to": 77,
+      "confidence": 0.912
+    },
+    {
+      "from": 77,
+      "to": 78,
+      "confidence": 0.995
+    },
+    {
+      "from": 77,
+      "to": 83,
+      "confidence": 0.927
+    },
+    {
+      "from": 78,
+      "to": 79,
+      "confidence": 1.0
+    },
+    {
+      "from": 79,
+      "to": 80,
+      "confidence": 1.0
+    },
+    {
+      "from": 79,
+      "to": 83,
+      "confidence": 1.0
+    },
+    {
+      "from": 81,
+      "to": 82,
+      "confidence": 1.0
+    },
+    {
+      "from": 81,
+      "to": 86,
+      "confidence": 1.0
+    },
+    {
+      "from": 82,
+      "to": 83,
+      "confidence": 1.0
+    },
+    {
+      "from": 83,
+      "to": 87,
+      "confidence": 1.0
+    },
+    {
+      "from": 84,
+      "to": 87,
+      "confidence": 1.0
+    },
+    {
+      "from": 85,
+      "to": 86,
+      "confidence": 1.0
+    },
+    {
+      "from": 86,
+      "to": 87,
+      "confidence": 0.876
+    },
+    {
+      "from": 86,
+      "to": 88,
+      "confidence": 1.0
+    },
+    {
+      "from": 87,
+      "to": 88,
+      "confidence": 1.0
+    },
+    {
+      "from": 87,
+      "to": 89,
+      "confidence": 1.0
+    },
+    {
+      "from": 88,
+      "to": 89,
+      "confidence": 1.0
+    },
+    {
+      "from": 88,
+      "to": 95,
+      "confidence": 1.0
+    },
+    {
+      "from": 89,
+      "to": 90,
+      "confidence": 1.0
+    },
+    {
+      "from": 89,
+      "to": 92,
+      "confidence": 0.967
+    },
+    {
+      "from": 89,
+      "to": 93,
+      "confidence": 0.982
+    },
+    {
+      "from": 90,
+      "to": 91,
+      "confidence": 1.0
+    },
+    {
+      "from": 93,
+      "to": 94,
+      "confidence": 1.0
+    },
+    {
+      "from": 94,
+      "to": 95,
+      "confidence": 1.0
+    },
+    {
+      "from": 94,
+      "to": 96,
+      "confidence": 1.0
+    },
+    {
+      "from": 95,
+      "to": 96,
+      "confidence": 1.0
+    },
+    {
+      "from": 96,
+      "to": 292,
+      "confidence": 1.0
+    },
+    {
+      "from": 96,
+      "to": 293,
+      "confidence": 1.0
+    },
+    {
+      "from": 100,
+      "to": 101,
+      "confidence": 0.978
+    },
+    {
+      "from": 100,
+      "to": 114,
+      "confidence": 1.0
+    },
+    {
+      "from": 101,
+      "to": 102,
+      "confidence": 1.0
+    },
+    {
+      "from": 101,
+      "to": 104,
+      "confidence": 1.0
+    },
+    {
+      "from": 102,
+      "to": 103,
+      "confidence": 1.0
+    },
+    {
+      "from": 103,
+      "to": 105,
+      "confidence": 1.0
+    },
+    {
+      "from": 103,
+      "to": 485,
+      "confidence": 1.0
+    },
+    {
+      "from": 104,
+      "to": 118,
+      "confidence": 0.99
+    },
+    {
+      "from": 104,
+      "to": 482,
+      "confidence": 1.0
+    },
+    {
+      "from": 104,
+      "to": 486,
+      "confidence": 1.0
+    },
+    {
+      "from": 108,
+      "to": 110,
+      "confidence": 1.0
+    },
+    {
+      "from": 109,
+      "to": 115,
+      "confidence": 1.0
+    },
+    {
+      "from": 111,
+      "to": 112,
+      "confidence": 0.939
+    },
+    {
+      "from": 112,
+      "to": 113,
+      "confidence": 1.0
+    },
+    {
+      "from": 116,
+      "to": 117,
+      "confidence": 1.0
+    },
+    {
+      "from": 117,
+      "to": 118,
+      "confidence": 1.0
+    },
+    {
+      "from": 118,
+      "to": 517,
+      "confidence": 1.0
+    },
+    {
+      "from": 120,
+      "to": 122,
+      "confidence": 0.927
+    },
+    {
+      "from": 121,
+      "to": 122,
+      "confidence": 1.0
+    },
+    {
+      "from": 121,
+      "to": 293,
+      "confidence": 1.0
+    },
+    {
+      "from": 122,
+      "to": 123,
+      "confidence": 1.0
+    },
+    {
+      "from": 122,
+      "to": 293,
+      "confidence": 0.954
+    },
+    {
+      "from": 122,
+      "to": 295,
+      "confidence": 0.992
+    },
+    {
+      "from": 123,
+      "to": 124,
+      "confidence": 1.0
+    },
+    {
+      "from": 276,
+      "to": 277,
+      "confidence": 0.792
+    },
+    {
+      "from": 277,
+      "to": 278,
+      "confidence": 1.0
+    },
+    {
+      "from": 278,
+      "to": 279,
+      "confidence": 1.0
+    },
+    {
+      "from": 280,
+      "to": 281,
+      "confidence": 1.0
+    },
+    {
+      "from": 280,
+      "to": 283,
+      "confidence": 1.0
+    },
+    {
+      "from": 281,
+      "to": 283,
+      "confidence": 1.0
+    },
+    {
+      "from": 282,
+      "to": 283,
+      "confidence": 1.0
+    },
+    {
+      "from": 282,
+      "to": 289,
+      "confidence": 1.0
+    },
+    {
+      "from": 283,
+      "to": 289,
+      "confidence": 1.0
+    },
+    {
+      "from": 284,
+      "to": 285,
+      "confidence": 1.0
+    },
+    {
+      "from": 284,
+      "to": 286,
+      "confidence": 1.0
+    },
+    {
+      "from": 284,
+      "to": 287,
+      "confidence": 1.0
+    },
+    {
+      "from": 284,
+      "to": 288,
+      "confidence": 0.93
+    },
+    {
+      "from": 285,
+      "to": 286,
+      "confidence": 1.0
+    },
+    {
+      "from": 286,
+      "to": 303,
+      "confidence": 1.0
+    },
+    {
+      "from": 287,
+      "to": 288,
+      "confidence": 1.0
+    },
+    {
+      "from": 288,
+      "to": 289,
+      "confidence": 1.0
+    },
+    {
+      "from": 288,
+      "to": 294,
+      "confidence": 1.0
+    },
+    {
+      "from": 290,
+      "to": 291,
+      "confidence": 1.0
+    },
+    {
+      "from": 292,
+      "to": 293,
+      "confidence": 1.0
+    },
+    {
+      "from": 293,
+      "to": 294,
+      "confidence": 1.0
+    },
+    {
+      "from": 295,
+      "to": 296,
+      "confidence": 1.0
+    },
+    {
+      "from": 296,
+      "to": 297,
+      "confidence": 1.0
+    },
+    {
+      "from": 297,
+      "to": 298,
+      "confidence": 1.0
+    },
+    {
+      "from": 299,
+      "to": 300,
+      "confidence": 1.0
+    },
+    {
+      "from": 299,
+      "to": 564,
+      "confidence": 1.0
+    },
+    {
+      "from": 299,
+      "to": 565,
+      "confidence": 1.0
+    },
+    {
+      "from": 300,
+      "to": 560,
+      "confidence": 1.0
+    },
+    {
+      "from": 300,
+      "to": 561,
+      "confidence": 1.0
+    },
+    {
+      "from": 300,
+      "to": 563,
+      "confidence": 0.929
+    },
+    {
+      "from": 300,
+      "to": 564,
+      "confidence": 0.958
+    },
+    {
+      "from": 301,
+      "to": 302,
+      "confidence": 1.0
+    },
+    {
+      "from": 301,
+      "to": 303,
+      "confidence": 1.0
+    },
+    {
+      "from": 302,
+      "to": 568,
+      "confidence": 1.0
+    },
+    {
+      "from": 302,
+      "to": 570,
+      "confidence": 0.969
+    },
+    {
+      "from": 302,
+      "to": 575,
+      "confidence": 1.0
+    },
+    {
+      "from": 303,
+      "to": 304,
+      "confidence": 1.0
+    },
+    {
+      "from": 304,
+      "to": 305,
+      "confidence": 0.977
+    },
+    {
+      "from": 304,
+      "to": 570,
+      "confidence": 1.0
+    },
+    {
+      "from": 307,
+      "to": 308,
+      "confidence": 0.974
+    },
+    {
+      "from": 477,
+      "to": 478,
+      "confidence": 1.0
+    },
+    {
+      "from": 478,
+      "to": 479,
+      "confidence": 1.0
+    },
+    {
+      "from": 479,
+      "to": 485,
+      "confidence": 1.0
+    },
+    {
+      "from": 480,
+      "to": 484,
+      "confidence": 1.0
+    },
+    {
+      "from": 481,
+      "to": 482,
+      "confidence": 1.0
+    },
+    {
+      "from": 481,
+      "to": 483,
+      "confidence": 1.0
+    },
+    {
+      "from": 483,
+      "to": 484,
+      "confidence": 1.0
+    },
+    {
+      "from": 483,
+      "to": 485,
+      "confidence": 1.0
+    },
+    {
+      "from": 487,
+      "to": 489,
+      "confidence": 1.0
+    },
+    {
+      "from": 487,
+      "to": 492,
+      "confidence": 1.0
+    },
+    {
+      "from": 487,
+      "to": 517,
+      "confidence": 1.0
+    },
+    {
+      "from": 488,
+      "to": 489,
+      "confidence": 1.0
+    },
+    {
+      "from": 488,
+      "to": 490,
+      "confidence": 1.0
+    },
+    {
+      "from": 488,
+      "to": 491,
+      "confidence": 1.0
+    },
+    {
+      "from": 488,
+      "to": 518,
+      "confidence": 1.0
+    },
+    {
+      "from": 489,
+      "to": 519,
+      "confidence": 0.922
+    },
+    {
+      "from": 493,
+      "to": 495,
+      "confidence": 1.0
+    },
+    {
+      "from": 494,
+      "to": 496,
+      "confidence": 1.0
+    },
+    {
+      "from": 494,
+      "to": 502,
+      "confidence": 1.0
+    },
+    {
+      "from": 495,
+      "to": 502,
+      "confidence": 1.0
+    },
+    {
+      "from": 495,
+      "to": 533,
+      "confidence": 1.0
+    },
+    {
+      "from": 496,
+      "to": 529,
+      "confidence": 1.0
+    },
+    {
+      "from": 497,
+      "to": 501,
+      "confidence": 1.0
+    },
+    {
+      "from": 497,
+      "to": 524,
+      "confidence": 1.0
+    },
+    {
+      "from": 498,
+      "to": 501,
+      "confidence": 1.0
+    },
+    {
+      "from": 499,
+      "to": 505,
+      "confidence": 1.0
+    },
+    {
+      "from": 499,
+      "to": 512,
+      "confidence": 0.957
+    },
+    {
+      "from": 505,
+      "to": 506,
+      "confidence": 1.0
+    },
+    {
+      "from": 505,
+      "to": 510,
+      "confidence": 1.0
+    },
+    {
+      "from": 505,
+      "to": 512,
+      "confidence": 1.0
+    },
+    {
+      "from": 506,
+      "to": 512,
+      "confidence": 1.0
+    },
+    {
+      "from": 508,
+      "to": 511,
+      "confidence": 1.0
+    },
+    {
+      "from": 508,
+      "to": 530,
+      "confidence": 1.0
+    },
+    {
+      "from": 511,
+      "to": 562,
+      "confidence": 1.0
+    },
+    {
+      "from": 514,
+      "to": 518,
+      "confidence": 1.0
+    },
+    {
+      "from": 514,
+      "to": 526,
+      "confidence": 1.0
+    },
+    {
+      "from": 515,
+      "to": 518,
+      "confidence": 1.0
+    },
+    {
+      "from": 516,
+      "to": 517,
+      "confidence": 1.0
+    },
+    {
+      "from": 519,
+      "to": 520,
+      "confidence": 1.0
+    },
+    {
+      "from": 521,
+      "to": 523,
+      "confidence": 1.0
+    },
+    {
+      "from": 522,
+      "to": 523,
+      "confidence": 1.0
+    },
+    {
+      "from": 522,
+      "to": 528,
+      "confidence": 1.0
+    },
+    {
+      "from": 522,
+      "to": 531,
+      "confidence": 1.0
+    },
+    {
+      "from": 523,
+      "to": 526,
+      "confidence": 1.0
+    },
+    {
+      "from": 523,
+      "to": 528,
+      "confidence": 1.0
+    },
+    {
+      "from": 525,
+      "to": 529,
+      "confidence": 1.0
+    },
+    {
+      "from": 525,
+      "to": 532,
+      "confidence": 1.0
+    },
+    {
+      "from": 525,
+      "to": 533,
+      "confidence": 1.0
+    },
+    {
+      "from": 527,
+      "to": 535,
+      "confidence": 1.0
+    },
+    {
+      "from": 528,
+      "to": 531,
+      "confidence": 1.0
+    },
+    {
+      "from": 529,
+      "to": 533,
+      "confidence": 1.0
+    },
+    {
+      "from": 530,
+      "to": 562,
+      "confidence": 1.0
+    },
+    {
+      "from": 534,
+      "to": 535,
+      "confidence": 1.0
+    },
+    {
+      "from": 536,
+      "to": 541,
+      "confidence": 1.0
+    },
+    {
+      "from": 536,
+      "to": 542,
+      "confidence": 1.0
+    },
+    {
+      "from": 536,
+      "to": 543,
+      "confidence": 1.0
+    },
+    {
+      "from": 536,
+      "to": 557,
+      "confidence": 1.0
+    },
+    {
+      "from": 537,
+      "to": 557,
+      "confidence": 1.0
+    },
+    {
+      "from": 538,
+      "to": 545,
+      "confidence": 1.0
+    },
+    {
+      "from": 539,
+      "to": 540,
+      "confidence": 1.0
+    },
+    {
+      "from": 539,
+      "to": 541,
+      "confidence": 1.0
+    },
+    {
+      "from": 540,
+      "to": 541,
+      "confidence": 1.0
+    },
+    {
+      "from": 540,
+      "to": 549,
+      "confidence": 0.933
+    },
+    {
+      "from": 541,
+      "to": 543,
+      "confidence": 1.0
+    },
+    {
+      "from": 542,
+      "to": 543,
+      "confidence": 1.0
+    },
+    {
+      "from": 546,
+      "to": 549,
+      "confidence": 1.0
+    },
+    {
+      "from": 546,
+      "to": 551,
+      "confidence": 1.0
+    },
+    {
+      "from": 547,
+      "to": 552,
+      "confidence": 1.0
+    },
+    {
+      "from": 547,
+      "to": 555,
+      "confidence": 1.0
+    },
+    {
+      "from": 551,
+      "to": 552,
+      "confidence": 1.0
+    },
+    {
+      "from": 552,
+      "to": 556,
+      "confidence": 1.0
+    },
+    {
+      "from": 553,
+      "to": 557,
+      "confidence": 1.0
+    },
+    {
+      "from": 554,
+      "to": 556,
+      "confidence": 1.0
+    },
+    {
+      "from": 555,
+      "to": 558,
+      "confidence": 1.0
+    },
+    {
+      "from": 555,
+      "to": 569,
+      "confidence": 1.0
+    },
+    {
+      "from": 558,
+      "to": 562,
+      "confidence": 0.936
+    },
+    {
+      "from": 558,
+      "to": 568,
+      "confidence": 1.0
+    },
+    {
+      "from": 559,
+      "to": 561,
+      "confidence": 1.0
+    },
+    {
+      "from": 559,
+      "to": 562,
+      "confidence": 1.0
+    },
+    {
+      "from": 559,
+      "to": 565,
+      "confidence": 0.933
+    },
+    {
+      "from": 559,
+      "to": 568,
+      "confidence": 0.908
+    },
+    {
+      "from": 560,
+      "to": 564,
+      "confidence": 1.0
+    },
+    {
+      "from": 561,
+      "to": 563,
+      "confidence": 0.982
+    },
+    {
+      "from": 561,
+      "to": 565,
+      "confidence": 1.0
+    },
+    {
+      "from": 562,
+      "to": 563,
+      "confidence": 0.959
+    },
+    {
+      "from": 563,
+      "to": 564,
+      "confidence": 0.962
+    },
+    {
+      "from": 565,
+      "to": 568,
+      "confidence": 0.981
+    },
+    {
+      "from": 566,
+      "to": 567,
+      "confidence": 1.0
+    },
+    {
+      "from": 567,
+      "to": 573,
+      "confidence": 1.0
+    },
+    {
+      "from": 569,
+      "to": 570,
+      "confidence": 1.0
+    },
+    {
+      "from": 569,
+      "to": 575,
+      "confidence": 1.0
+    },
+    {
+      "from": 570,
+      "to": 575,
+      "confidence": 1.0
+    },
+    {
+      "from": 573,
+      "to": 574,
+      "confidence": 0.977
+    },
+    {
+      "from": 574,
+      "to": 580,
+      "confidence": 0.875
+    },
+    {
+      "from": 577,
+      "to": 579,
+      "confidence": 0.968
+    },
+    {
+      "from": 579,
+      "to": 580,
+      "confidence": 1.0
+    }
+  ]
+}
