@@ -12,6 +12,17 @@ Oracle 8787 只監聽本機，不需要公開後端網址或額外開啟連接�
 
 ## 2. 設定金鑰
 
+### 啟用雲端控制權歷史（新增）
+
+在同一專案 SQL Editor 執行 [supabase/history.sql](supabase/history.sql) 全部內容。
+它新增 `battle_monitor_history` 與捕捉 trigger，保留现有 `battle_monitor_state` 內容與 Realtime；不需更新權杖、不需重啟 Oracle。
+訪客只有 SELECT 權限，不能写入歷史。只存已公開的城市名稱、陣營及聯盟，不存私密封包、權杖或歷史比分。
+每分鐘至多一個快照，同分鐘保留最後控制權，沒有中間資料就不插值。下一次控制權更新時清理超過 7 天或 2000 個的紀錄；免费額度仍需監看。
+執行前的資料無法追回。執行後到網站「歷史縮時與戰報 → 紀錄來源：雲端歷史」確認是否有今日快照。
+如果目前採集已斷線，安裝當下不把過期快照當成新資料；等待主機恢復並發布。
+
+本機／Oracle 同站 `/api/history` 需要部署新版 `backend`；GitHub Pages 直接讀雲端表，不需要這一步。
+
 Supabase Settings → API Keys：
 
 - Publishable（或舊 anon）公開金鑰：填本機 `monitor-config.js` 的 `publishableKey`，隨前端發布。

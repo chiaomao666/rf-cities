@@ -22,7 +22,7 @@ test('游標只顯示城市端點相連的機場線，移開、拖曳與編輯�
  let draws=0,strokes=0;const checked={showRoutes:true,showAirRoutes:false,showRailways:false,showDirtRoads:false};
  const context=vm.createContext({cities,ctx:{save(){},restore(){},setLineDash(){},beginPath(){},moveTo(){},lineTo(){},stroke(){strokes++;}},
   inferredRoutes:routes,routeEditor:null,scale:1,offsetX:0,offsetY:0,pointers:new Map(),visibleCities:()=>cities,hasPosition:c=>Number.isFinite(c.x_position)&&Number.isFinite(c.y_position),
-  requestDraw(){draws++;},$:id=>({checked:checked[id]})});
+  mapCities:()=>cities,requestDraw(){draws++;},$:id=>({checked:checked[id]})});
  vm.runInContext(script.slice(script.indexOf('let hoveredCity=null;'),script.indexOf('function setupBattleSidebar(')),context);
  vm.runInContext(script.slice(script.indexOf('    function drawInferredRoutes('),script.indexOf('    function draw()')),context);
  const drawCount=()=>{strokes=0;context.drawInferredRoutes();return strokes;};

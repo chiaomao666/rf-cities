@@ -5,6 +5,11 @@ import vm from 'node:vm';
 import {SupabasePublisher} from './publisher.mjs';
 const url='https://example.supabase.co';
 const snapshot=()=>({cities:[{city_id:1,name:'測試城',control_union_id:4923,control_union_name:'測試聯盟',nation_battle:'{}',token:'PRIVATE'}],status:{state:'live',connected:true,userToken:'PRIVATE',knownCities:1}});
+
+test('歷史讀取限合法日期與分頁，只回傳公開控制資料、不洩漏後端金鑰',async()=>{
+ let request;const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:snapshot,Fetch:async(u,o)=>{request={u,o};return {ok:true,json:async()=>[{captured_at:'2026-10-09T01:00:00Z',token:'PRIVATE',cities:snapshot().cities}]};}});
+ try{const rows=await p.readHistory('2026-10-09',500);assert.ok(!JSON.stringify(rows).includes('PRIVATE'));assert.match(String(request.u),/battle_monitor_history/);assert.ok(String(request.u).includes('offset=500'));assert.ok(String(request.u).includes('2026-10-08T16'));await assert.rejects(p.readHistory('bad',0));await assert.rejects(p.readHistory('2026-10-09',999));}finally{p.stop();}
+});
 test('發布僅包含公開白名單；空清單完整替換',async()=>{
   const calls=[];let current=snapshot();
   const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:()=>current,Fetch:async(u,o)=>{calls.push({u,o});return {ok:true};}});

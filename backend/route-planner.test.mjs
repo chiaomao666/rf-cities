@@ -22,6 +22,22 @@ test('路線只在規劃模式新增，座標驗證、防止重複點及本機�
  p.close();assert.equal(p.active,false);assert.equal(p.points.length,2);
  assert.ok(f.getChanged()>0);
 });
+test('規劃可重做、反轉與移除途經點；新修改清除重做',()=>{
+ const {planner:p}=fixture();p.open();p.addPoint({x:10,y:10,name:'A'});p.addPoint({x:20,y:20,name:'B'});
+ p.undo();assert.equal(p.points.length,1);p.redo();assert.equal(p.points.length,2);
+ p.reverse();assert.equal(p.points[0].name,'B');p.undo();assert.equal(p.points[0].name,'A');
+ p.editPoint(0,null);assert.equal(p.points[0].name,'B');assert.equal(p.future.length,0);
+ p.undo();assert.equal(p.points.length,2);
+});
+test('規劃匯入保留曲線並可復原；拒絕壞座標且不覆寫',async()=>{
+ const {planner:p,elements}=fixture();p.open();p.addPoint({x:10,y:10,name:'原本'});
+ const data={kind:'rf-planned-route',version:1,points:[{x:20,y:20,name:'匯入'}],segments:[{type:'railway',points:[[20,20],[30,30]],curves:[[21,22,23,24,30,30]]}]};
+ await p.import({size:100,text:async()=>JSON.stringify(data)});assert.equal(p.segments[0].curves.length,1);assert.equal(p.active,false);
+ p.undo();assert.equal(p.points[0].name,'原本');p.redo();assert.equal(p.points[0].name,'匯入');
+ data.segments[0].points[0][0]=null;await p.import({size:100,text:async()=>JSON.stringify(data)});
+ assert.match(elements.get('planInfo').textContent,/匯入失敗/);assert.equal(p.points[0].name,'匯入');
+ assert.throws(()=>p.validateSegments([{type:'railway',points:[[0,0],[1,1]],curves:[[NaN,0,0,0,1,1]]}]));
+});
 test('採用使用者手動編輯的完整路線，不覆寫成先前的臺灣描圖',async()=>{
  const data=JSON.parse(await readFile(new URL('../reference-route-geometry.json',import.meta.url),'utf8'));
  const {createHash}=await import('node:crypto');

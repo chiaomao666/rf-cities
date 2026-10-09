@@ -31,6 +31,13 @@ const server=http.createServer(async (req,res)=>{
     const keepalive=setInterval(()=>res.write(': keepalive\n\n'),15000);
     req.on('close',()=>{clients.delete(res);clearInterval(keepalive);});return;
   }
+  if (pathname==='/api/history') {
+    const params=new URL(req.url,'http://localhost').searchParams;
+    try{const rows=await publisher.readHistory(params.get('date'),Number(params.get('offset')||0));
+      res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(rows));
+    }catch{res.writeHead(503,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify({error:'歷史尚未啟用或讀取失敗'}));}
+    return;
+  }
   // 不公開任意檔案：.env、後端原始碼、憑證一律不會被靜態網站送出。
   if (pathname==='/monitor-config.js') {
     try {
@@ -39,7 +46,7 @@ const server=http.createServer(async (req,res)=>{
     } catch {res.writeHead(404);res.end();}
     return;
   }
-  const publicFiles={'/battle-map.css':'text/css; charset=utf-8','/cities-map.json':'application/json; charset=utf-8','/portal-map.png':'image/png','/inferred-routes.json':'application/json; charset=utf-8','/reference-route-geometry.json':'application/json; charset=utf-8','/route-planner.js':'text/javascript; charset=utf-8'};
+  const publicFiles={'/battle-map.css':'text/css; charset=utf-8','/cities-map.json':'application/json; charset=utf-8','/portal-map.png':'image/png','/inferred-routes.json':'application/json; charset=utf-8','/reference-route-geometry.json':'application/json; charset=utf-8','/route-planner.js':'text/javascript; charset=utf-8','/route-editor.js':'text/javascript; charset=utf-8','/map-features.js':'text/javascript; charset=utf-8'};
   const tile=/^\/tiles\/[0-6]\/\d{1,2}\/\d{1,2}\.png$/.test(pathname);
   if (publicFiles[pathname] || tile) {
     try {

@@ -59,4 +59,16 @@ export class SupabasePublisher {
     }
   }
   stop() {this.stopped=true;clearTimeout(this.timer);clearInterval(this.heartbeat);this.abort?.abort();}
+  async readHistory(date,offset=0){
+    if(!this.status.enabled||!/^\d{4}-\d{2}-\d{2}$/.test(date)||![0,500,1000].includes(offset))throw Error('歷史查詢無效');
+    const start=new Date(date+'T00:00:00+08:00'),end=new Date(start.getTime()+86400000);
+    if(!Number.isFinite(start.getTime()))throw Error('日期無效');
+    const params=new URLSearchParams({select:'captured_at,cities',order:'captured_at.asc',limit:'500',offset:String(offset)});
+    params.append('captured_at','gte.'+start.toISOString());params.append('captured_at','lt.'+end.toISOString());
+    const headers={apikey:this.key};if(!this.key.startsWith('sb_secret_'))headers.Authorization='Bearer '+this.key;
+    try{const response=await this.Fetch(new URL('/rest/v1/battle_monitor_history?'+params,this.endpoint),{headers,signal:AbortSignal.timeout(15000)});
+      if(!response.ok)throw Error();const rows=await response.json();if(!Array.isArray(rows)||rows.length>500)throw Error();
+      return rows.map(row=>({captured_at:row.captured_at,cities:(Array.isArray(row.cities)?row.cities:[]).slice(0,700).map(c=>({city_id:c.city_id,name:c.name,control_nation_name:c.control_nation_name,control_union_id:c.control_union_id,control_union_name:c.control_union_name}))}));
+    }catch{throw Error('歷史讀取失敗');}
+  }
 }

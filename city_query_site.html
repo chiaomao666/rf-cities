@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>逆統戰 · 即時據點戰地圖</title>
-<link rel="stylesheet" href="./battle-map.css?v=battle-sidebar-1">
+<link rel="stylesheet" href="./battle-map.css?v=features-1">
 </head>
 <body>
 <canvas id="map" aria-label="逆統戰城市與據點戰地圖"></canvas>
@@ -19,10 +19,15 @@
 <div class="menu-shell">
 <div class="menu-heading"><h2 id="menuTitle">選單</h2><button id="menuClose" type="button" aria-label="關閉選單">✕</button></div>
 <nav id="menuLinks" class="menu-links" aria-label="網站功能"><button id="openSettings" type="button"><span aria-hidden="true">⚙</span> 設定 <span aria-hidden="true">›</span></button><button id="openRoutePlanner" type="button"><span aria-hidden="true">⌁</span> 路線規劃 <span aria-hidden="true">›</span></button><button id="openRouteEditor" type="button">✎ 路線編輯器 <span aria-hidden="true">›</span></button></nav>
+<div class="menu-links"><button id="openRankings" type="button">▤ 陣營／聯盟排行榜</button><button id="openHistory" type="button">◷ 歷史縮時與戰報</button></div>
 <section id="menuSettings" class="menu-settings" hidden aria-label="地圖設定">
 <button id="settingsBack" type="button">← 返回選單</button>
 <h3>地圖顯示</h3>
 <label><input id="settingsOnlyBattle" type="checkbox">只顯示戰況</label>
+<label><input id="showTerritories" type="checkbox">控制區色塊示意（估算，非官方邊界）</label>
+<label>色塊分類 <select id="territoryMode"><option value="nation">控制陣營</option><option value="union">控制聯盟</option></select></label>
+<label>色塊透明度 <input id="territoryOpacity" type="range" min="10" max="60" value="25" aria-label="色塊透明度"></label>
+<p>色塊依城市位置劃分最近區域，最遠延伸 500 底圖單位；不是遊戲的領土邊界，可能涵蓋部分海域。城市易主時配色立即更新。</p>
 <label><input id="showRoutes" type="checkbox" checked>顯示參考路線</label>
 <label><input id="showRailways" type="checkbox" checked>白色實線：鐵路</label>
 <label><input id="showDirtRoads" type="checkbox" checked>白色虛線：土路</label>
@@ -39,6 +44,9 @@
 <section class="panel route-plan" id="routePlan" hidden aria-labelledby="planTitle">
 <div class="plan-heading"><h2 id="planTitle">路線規劃</h2><button id="planClose" type="button" aria-label="關閉路線規劃">✕</button></div>
 <p id="planInfo" role="status"></p><div class="plan-actions"><button id="planToggle" type="button">暫停畫線</button><button id="planUndo" type="button">復原</button><button id="planClear" type="button">清除</button></div>
+<div class="plan-actions"><button id="planRedo" type="button">重做</button><button id="planReverse" type="button">反轉順序</button><button id="planExport" type="button">匯出規劃</button></div>
+<label>匯入規劃<input id="planImport" type="file" accept=".json,application/json"></label>
+<details><summary>依現有路線自動規劃</summary><label>起點<select id="planFrom" aria-label="規劃起點"></select></label><label>終點<select id="planTo" aria-label="規劃終點"></select></label><label><input id="planRail" type="checkbox" checked>鐵路</label><label><input id="planDirt" type="checkbox" checked>土路</label><label><input id="planAir" type="checkbox">機場</label><button id="planAuto" type="button">尋找相連路線</button><p>以底圖線長找最短路徑，不是遊戲移動時間。僅連接城市端點；交叉不轉乘，缺線不補造。</p></details>
 <ol id="planPoints" aria-label="規劃的途經點"></ol>
 <p>黃色實線是你的規劃、黃色虛線是機場遷移；白色實線是鐵路、白色虛線是土路。交叉不代表可轉乘，仍須以遊戲現況為準。</p><p id="planStorage"></p>
 </section>
@@ -55,8 +63,12 @@
 <label class="editor-import">匯入路線檔案<input id="editorImport" type="file" accept=".json,application/json"></label>
 <p id="editorStatus" role="status"></p><p>草稿只存在這台裝置。匯出後可交給我發布到網站，或在另一台裝置匯入。請定期匯出備份。</p>
 </section>
+<section class="panel feature-panel" id="rankPanel" hidden aria-labelledby="rankTitle"><div class="plan-heading"><h2 id="rankTitle">陣營／聯盟排行榜</h2><button id="rankClose" type="button" aria-label="關閉排行榜">✕</button></div><p id="rankSummary"></p><input id="rankSearch" aria-label="搜尋陣營或聯盟" placeholder="名稱或聯盟 ID"><button id="rankClear" type="button">顯示全部</button><p id="rankFilter"></p><h3>陣營控制城市數</h3><div id="nationRanks"></div><h3>聯盟控制城市數</h3><div id="unionRanks"></div></section>
+<section class="panel feature-panel history-panel" id="historyPanel" hidden aria-labelledby="historyTitle"><div class="plan-heading"><h2 id="historyTitle">歷史縮時與戰報</h2><button id="historyClose" type="button">回到即時</button></div><label>紀錄來源<select id="historySource"><option value="local">本機紀錄</option><option value="cloud">雲端歷史</option><option value="import">匯入戰報</option></select></label><label>日期（臺灣時間）<input id="historyDate" type="date"></label><p id="historyStatus" role="status"></p><p id="historyTime"></p><input id="historySlider" type="range" min="0" max="0" value="0" aria-label="歷史時間軸"><div class="plan-actions"><button id="historyPlay" type="button">播放</button><label>播放速度<select id="historySpeed"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option><option value="16">16×</option><option value="32">32×</option><option value="64">64×</option></select></label></div><p>每次前進一個真實快照；時間跳躍代表沒有中間紀錄，不插值、不推定戰鬥勝負。歷史播放不會停止即時採集。</p><p id="historyChanges"></p><div class="plan-actions"><button id="historyExport" type="button">匯出本日戰報 JSON</button><button id="historyCsv" type="button">匯出控制權變化 CSV</button></div><label>匯入戰報<input id="historyImport" type="file" accept=".json,application/json"></label><p>只讀取本站戰報格式，不保證相容參考網站的匯出檔；匯入不寫入雲端。</p></section>
+<nav class="panel mobile-nav" aria-label="手機功能選單"><button id="navMap" type="button">⌖ 地圖</button><button id="navRank" type="button">▤ 排行</button><button id="navHistory" type="button">◷ 縮時</button><button id="navMore" type="button">☰ 更多</button></nav>
 <script src="./monitor-config.js"></script>
-<script src="./route-planner.js"></script>
+<script src="./map-features.js?v=1"></script>
+<script src="./route-planner.js?v=2"></script>
 <script src="./route-editor.js?v=5"></script>
 <script>
 (function(){
@@ -95,6 +107,8 @@ const $=id=>document.getElementById(id);
 const canvas=$("map"),ctx=canvas.getContext("2d"),pointers=new Map();
 let backgroundImage=null,backgroundReady=false,inferredRoutes=[];
 let routePlanner=null,routeEditor=null;
+let mapFeatures=null;
+function mapCities(){return mapFeatures?.frameCities(catalog)??cities;}
 let hoveredCity=null;
 function clearCityHover(){if(hoveredCity!==null){hoveredCity=null;requestDraw();}}
 function updateCityHover(event){
@@ -114,7 +128,7 @@ function airportRouteConnected(route,cityId){
  const end=route.curves?.length?route.curves[route.curves.length-1].slice(4):route.points[route.points.length-1];
  return [route.points[0],end].some(point=>{
   let nearest=null,distance=40;
-  for(const city of cities.filter(hasPosition)){
+  for(const city of mapCities().filter(hasPosition)){
    const d=Math.hypot(Number(city.x_position)-point[0],Number(city.y_position)-point[1]);
    if(d<distance){nearest=city.city_id;distance=d;}
   }
@@ -199,7 +213,7 @@ function attackerColor(city){
   function countdown(city){
     const deadline = Date.parse(parseBattle(city.nation_battle)?.close_roll_call_at);
     if (!Number.isFinite(deadline)) return '未取得';
-    const seconds = Math.ceil((deadline - Date.now()) / 1000);
+    const seconds = Math.ceil((deadline - (mapFeatures?.now()??Date.now())) / 1000);
     return seconds > 0 ? `${Math.floor(seconds / 60)}分 ${seconds % 60}秒` : '報到已截止';
   }
 
@@ -224,14 +238,15 @@ function attackerColor(city){
   }
 
 
-function stale(){
+function liveStale(){
  return !sourceStatus?.connected || (useSupabase&&(!cloudUpdatedAt||Date.now()-Date.parse(cloudUpdatedAt)>90000));
 }
+function stale(){return mapFeatures?.frame?false:liveStale();}
 function battleState(city){
  if(!activeBattle(city))return null;
  const battle=parseBattle(city.nation_battle)||{};
  const deadline=Date.parse(battle.close_roll_call_at);
- return {label:stale()?"上次戰況":deadline>Date.now()?"集結中":"交戰中",battle};
+ return {label:stale()?"上次戰況":deadline>(mapFeatures?.now()??Date.now())?"集結中":"交戰中",battle};
 }
 function mergeCity(base,live){
  const merged={...base,...live};
@@ -263,7 +278,7 @@ function rebuildCities(){
  renderBattleList();updateDetail();requestDraw();
 }
 function hasPosition(city){return city.x_position!=null&&city.y_position!=null&&Number.isFinite(Number(city.x_position))&&Number.isFinite(Number(city.y_position));}
-function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBattle):cities).filter(hasPosition);}
+function visibleCities(){const rows=mapFeatures?.filterCities(mapCities())??mapCities();return ($("onlyBattle").checked?rows.filter(activeBattle):rows).filter(hasPosition);}
     function requestDraw() {
         if (!frame) frame = requestAnimationFrame(draw);
     }
@@ -321,6 +336,7 @@ function visibleCities(){return ($("onlyBattle").checked?cities.filter(activeBat
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.fillStyle = "#081614"; ctx.fillRect(0, 0, width, height);
         if(backgroundReady)ctx.drawImage(backgroundImage,offsetX,offsetY,CONFIG.width*scale,CONFIG.height*scale);
+        mapFeatures?.drawTerritories(ctx,{scale,offsetX,offsetY});
         drawInferredRoutes();
         const pulse = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : (Math.sin(Date.now()/350) + 1)/2;
         ctx.textAlign = "center";
@@ -372,7 +388,8 @@ function focusCity(city){
 }
 function updateDetail(){
  const detail=$("detail");if(detail.hidden||!selected)return;
- const city=selected,battle=battleState(city);
+ if(mapFeatures?.frame&&!mapCities().some(c=>String(c.city_id)===String(selected.city_id))){detail.hidden=true;return;}
+ const city=mapCities().find(c=>String(c.city_id)===String(selected.city_id))||selected,battle=battleState(city);
  const signature=JSON.stringify([city,battle?.label,battle?countdown(city):null]);
  if(signature===detailSignature)return;detailSignature=signature;detail.replaceChildren();
  const close=document.createElement("button");close.textContent="關閉";close.onclick=()=>{detail.hidden=true;};
@@ -393,8 +410,8 @@ function battleListText(city){
  return `${label} · 比分 ${state.battle._rf_monitor?.score??"未取得"}`;
 }
 function renderBattleList(){
- const active=cities.filter(activeBattle),list=$("battleList");
- $("summary").textContent=`${cities.filter(hasPosition).length} 座城市 · ${active.length} 處${stale()?"上次":"即時"}戰況`;
+ const active=(mapFeatures?.filterCities(mapCities())??mapCities()).filter(activeBattle),list=$("battleList");
+ $("summary").textContent=`${mapCities().filter(hasPosition).length} 座城市 · ${active.length} 處${mapFeatures?.frame?"歷史":stale()?"上次":"即時"}戰況`;
  const signature=JSON.stringify(active.map(c=>[c.city_id,c.name,battleState(c).label,c.nation_battle,c.updated_at,attackerNation(c)]));
  if(signature===listSignature){
   // 倒數只更新文字，不每秒重建按鈕，保留焦點與捲動位置。
@@ -417,6 +434,7 @@ function renderBattleList(){
 }
 function setConnection(text,error=false){$("status").textContent=text;$("status").classList.toggle("error",error);}
 function showSourceStatus(){
+ if(mapFeatures?.frame){setConnection("歷史播放 · "+new Date(mapFeatures.frame.captured_at).toLocaleString("zh-TW")+" · 即時採集仍在背景更新");return;}
  if(useSupabase&&cloudUpdatedAt&&Date.now()-Date.parse(cloudUpdatedAt)>90000){
   setConnection("採集主機超過 90 秒未回報；雙刀顯示上次戰況，資料可能過期",true);return;
  }
@@ -462,6 +480,21 @@ async function refresh(){
     if (!stopped) reconnect = setTimeout(poll, realtimeReady ? 60000 : Math.min(30000, 1000 * 2 ** Math.min(failures, 5)));
   }
 
+async function loadHistoryCloud(date){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error("日期格式無效");
+ const start=new Date(date+"T00:00:00+08:00"),end=new Date(start.getTime()+86400000);
+ const headers=useSupabase?{apikey:publicKey}:{};
+ if(useSupabase&&!publicKey.startsWith("sb_publishable_"))headers.Authorization="Bearer "+publicKey;
+ const frames=[];
+ for(let offset=0;offset<1500;offset+=500){
+  const params=new URLSearchParams({select:"captured_at,cities",order:"captured_at.asc",limit:"500",offset:String(offset)});
+  params.append("captured_at","gte."+start.toISOString());params.append("captured_at","lt."+end.toISOString());
+  const url=useSupabase?supabaseUrl+"/rest/v1/battle_monitor_history?"+params:API_BASE+"/api/history?date="+date+"&offset="+offset;
+  const response=await fetch(url,{headers,cache:"no-store",signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error("歷史讀取失敗");
+  const rows=await response.json();if(!Array.isArray(rows)||rows.length>500)throw Error("歷史格式錯誤");frames.push(...rows);if(rows.length<500)break;
+ }
+ return frames;
+}
 async function loadCatalog(){
  try{
   const response=await fetch("./cities-map.json",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
@@ -488,7 +521,7 @@ async function loadCatalog(){
         if(routeEditor?.up(event))return;
         if(dragDistance<6&&pointers.size===1){
             let nearest=null,distance=routePlanner?.active?14:25;
-            for(const city of (routePlanner?.active?cities.filter(hasPosition):visibleCities())){
+            for(const city of (routePlanner?.active?mapCities().filter(hasPosition):visibleCities())){
                 const d=Math.hypot(offsetX+city.x_position*scale-event.clientX,offsetY+city.y_position*scale-event.clientY);
                 if(d<distance){nearest=city;distance=d;}
             }
@@ -505,20 +538,21 @@ async function loadCatalog(){
     $("refresh").onclick=refresh;$("onlyBattle").onchange=requestDraw;
     $("search").onsubmit=event=>{
         event.preventDefault();const query=$("query").value.trim();if(!query)return;
-        const city=cities.find(c=>String(c.city_id)===query||c.name===query)||cities.find(c=>c.name&&c.name.includes(query));
+        const city=mapCities().find(c=>String(c.city_id)===query||c.name===query)||mapCities().find(c=>c.name&&c.name.includes(query));
         if(city)focusCity(city);else $("status").textContent=`找不到城市「${query}」`;
     };
 
 setupMenu();
 setupBattleSidebar();
 if(window.RFRouteEditor)routeEditor=new window.RFRouteEditor({width:CONFIG.width,height:CONFIG.height,getCities:()=>cities.filter(hasPosition),isVisible:type=>$("showRoutes").checked&&$(type==="railway"?"showRailways":type==="dirt"?"showDirtRoads":"showAirRoutes").checked,onChange:()=>{canvas.classList.toggle("editing",routeEditor?.active);requestDraw();}});
-if(window.RFRoutePlanner)routePlanner=new window.RFRoutePlanner({width:CONFIG.width,height:CONFIG.height,onChange:()=>{canvas.classList.toggle("planning",routePlanner?.active);requestDraw();}});
+if(window.RFRoutePlanner)routePlanner=new window.RFRoutePlanner({width:CONFIG.width,height:CONFIG.height,getCities:()=>mapCities().filter(hasPosition),getRoutes:()=>routeEditor?.data?routeEditor.paths:inferredRoutes,onChange:()=>{canvas.classList.toggle("planning",routePlanner?.active);requestDraw();}});
+if(window.RFMapFeatures)mapFeatures=new window.RFMapFeatures({width:CONFIG.width,height:CONFIG.height,getCities:()=>mapCities().filter(hasPosition),getLive:()=>allCities,focusCity,onChange:()=>{listSignature="";detailSignature="";renderBattleList();updateDetail();showSourceStatus();requestDraw();},loadCloud:loadHistoryCloud,beforePanel:()=>{$("siteMenu").close();routeEditor?.close();routePlanner?.close();},openMenu:()=>$("menuToggle").click()});
 loadBackground();loadRoutes();
 addEventListener("resize",resize);resize();fit();loadCatalog();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh();});
 addEventListener("pagehide",()=>{stopped=true;realtimeReady=false;clearTimeout(reconnect);if(useSupabase){if(socket)supabaseClient?.removeChannel(socket);}else socket?.close();});
 addEventListener("pageshow",event=>{if(event.persisted&&!configError){stopped=false;connectRealtime();poll();}});
-setInterval(()=>{if(!document.hidden&&!stopped){renderBattleList();updateDetail();requestDraw();if(sourceStatus&&!failures)showSourceStatus();}},1000);
+setInterval(()=>{if(!document.hidden&&!stopped){mapFeatures?.capture(allCities.filter(c=>catalog.some(base=>String(base.city_id)===String(c.city_id))),!liveStale());mapFeatures?.renderRanks();renderBattleList();updateDetail();requestDraw();if(sourceStatus&&!failures)showSourceStatus();}},1000);
 setInterval(()=>{if(!document.hidden&&!stopped&&cities.some(activeBattle))requestDraw();},250);
 if(configError){setConnection(configError,true);$("refresh").disabled=true;}else{connectRealtime();poll();}
 })();
