@@ -68,6 +68,11 @@ test('選單可開關、返回，設定同步顯示篩選且不停止更新',()=
  assert.equal($('menuSettings').hidden,true);
  $('onlyBattle').checked=true;$('openSettings').onclick();
  assert.equal($('menuSettings').hidden,false);assert.equal($('settingsOnlyBattle').checked,true);
+ assert.equal($('menuLinks').hidden,true);
+ const mainMenu=html.match(/<nav id="menuLinks"[\s\S]*?<\/nav>/)[0];
+ assert.match(mainMenu,/id="openRankings"/);assert.match(mainMenu,/id="openHistory"/);
+ const settings=html.match(/<section id="menuSettings"[\s\S]*?<\/section>/)[0];
+ assert.doesNotMatch(settings,/id="openRankings"|id="openHistory"/);
  $('settingsOnlyBattle').checked=false;$('settingsOnlyBattle').onchange();
  assert.equal($('onlyBattle').checked,false);assert.equal(draws,1);
  $('settingsBack').onclick();assert.equal($('menuLinks').hidden,false);
