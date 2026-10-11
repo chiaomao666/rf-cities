@@ -41,11 +41,14 @@ test('規劃匯入保留曲線並可復原；拒絕壞座標且不覆寫',async(
 test('採用使用者手動編輯的完整路線，不覆寫成先前的臺灣描圖',async()=>{
  const data=JSON.parse(await readFile(new URL('../reference-route-geometry.json',import.meta.url),'utf8'));
  const {createHash}=await import('node:crypto');
- assert.equal(createHash('sha256').update(JSON.stringify(data)).digest('hex'),'b86aa09420548284d37b96ec74417d93980fb74d8fcb99bf49aa234dee39d0fd');
+ assert.equal(createHash('sha256').update(JSON.stringify(data)).digest('hex'),'309612026d7ce79c60f8afbefa21a05bbb10dd744751c5dcc4c31b7d968c179a');
  assert.equal(data.paths.length,479);
- assert.equal(data.paths.filter(p=>p.type==='railway').length,278);
+ assert.equal(data.paths.filter(p=>p.type==='railway').length,279);
  assert.equal(data.paths.filter(p=>p.type==='dirt').length,177);
- assert.equal(data.paths.filter(p=>p.type==='airport').length,24);
+ assert.equal(data.paths.filter(p=>p.type==='airport').length,23);
+ assert.ok(data.paths.some(p=>p.from===566&&p.to===567&&p.type==='railway'));
+ assert.ok(data.paths.some(p=>p.from===572&&p.to===566&&p.type==='dirt'));
+ assert.ok(!data.paths.some(p=>p.type==='airport'&&JSON.stringify(p.points)===JSON.stringify([[10516,733],[10490,887.94]])));
  assert.ok(data.paths.some(p=>p.review==='manual-editor-v1'));
  for(const p of data.paths)for(const c of p.curves||[]){assert.equal(c.length,6);assert.ok(c.every(Number.isFinite));}
  const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');assert.match(html,/ctx\.bezierCurveTo/);

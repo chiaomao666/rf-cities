@@ -290,7 +290,7 @@ function visibleCities(){const rows=mapFeatures?.filterCities(mapCities())??mapC
     }
     async function loadRoutes(){
         try{
-            const response=await fetch("./reference-route-geometry.json",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
+            const response=await fetch("./reference-route-geometry.json?v=30961202",{cache:"no-cache"});if(!response.ok)throw new Error("HTTP "+response.status);
             const data=await response.json();
             if(!Array.isArray(data.paths)||data.authoritative!==false||data.coordinateWidth!==CONFIG.width||data.coordinateHeight!==CONFIG.height)throw new Error("格式錯誤");
             inferredRoutes=data.paths.filter(r=>["railway","dirt","airport"].includes(r.type)&&Array.isArray(r.points)&&r.points.length>=2&&r.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)));
