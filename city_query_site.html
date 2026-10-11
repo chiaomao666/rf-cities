@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>逆統戰 · 即時據點戰地圖</title>
-<link rel="stylesheet" href="./battle-map.css?v=features-1">
+<link rel="stylesheet" href="./battle-map.css?v=detail-2">
 </head>
 <body>
 <canvas id="map" aria-label="逆統戰城市與據點戰地圖"></canvas>
@@ -389,19 +389,36 @@ function updateDetail(){
  const detail=$("detail");if(detail.hidden||!selected)return;
  if(mapFeatures?.frame&&!mapCities().some(c=>String(c.city_id)===String(selected.city_id))){detail.hidden=true;return;}
  const city=mapCities().find(c=>String(c.city_id)===String(selected.city_id))||selected,battle=battleState(city);
- const signature=JSON.stringify([city,battle?.label,battle?countdown(city):null]);
- if(signature===detailSignature)return;detailSignature=signature;detail.replaceChildren();
- const close=document.createElement("button");close.textContent="關閉";close.onclick=()=>{detail.hidden=true;};
- const title=document.createElement("h2");title.textContent=city.name||String(city.city_id);
- const text=document.createElement("p");
- text.textContent=`城市 #${city.city_id}\n${battle?"⚔ "+battle.label:"目前沒有據點戰標記"}\n控制陣營：${city.control_nation_name||"未知"}`;
- text.textContent+=`\n控制聯盟：${city.control_union_name||"未取得"}\n聯盟 ID：${city.control_union_id??"未取得"}`;
- text.textContent+=`\n主權：${city.sovereign||"未知"}`;
- if(city.control_observed_at)text.textContent+=`\n控制資料時間：${new Date(city.control_observed_at).toLocaleString("zh-TW")}`;
- if(battle){text.textContent+=`\n活動 ID：${battle.battle.id??"未取得"}\n報到倒數：${countdown(city)}\n比分：${battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得"}\n更新：${city.updated_at?new Date(city.updated_at).toLocaleString("zh-TW"):"未知"}`;}
- if(battle)text.textContent+=`\n攻擊方：${attackerNation(city)||"未取得"}`;
- if(!hasPosition(city))text.textContent+="\n尚未取得城市座標";
- detail.append(close,title,text);
+ const signature=JSON.stringify([city,battle?.label,battle?countdown(city):null,!!mapFeatures?.frame,stale()]);
+ if(signature===detailSignature)return;
+ const metaOpen=detail.querySelector?.(".detail-meta")?.open||false;
+ const scrollTop=detail.scrollTop||0;
+ const focusClass=detail.contains?.(document.activeElement)?document.activeElement?.className:null;
+ const focusMeta=detail.querySelector?.(".detail-meta summary")===document.activeElement;
+ detailSignature=signature;detail.replaceChildren();
+ const node=(tag,cls,value)=>{const el=document.createElement(tag);el.className=cls;if(value!=null)el.textContent=String(value);return el;};
+ const field=(label,value,cls="detail-field")=>{const el=node("div",cls);el.append(node("span","detail-label",label+"："),node("strong","detail-value",value));return el;};
+ const formatTime=value=>{const time=new Date(value);return value&&Number.isFinite(time.getTime())?time.toLocaleString("zh-TW",{timeZone:"Asia/Taipei",hour12:false}):"未取得";};
+ const close=node("button","detail-close","關閉");close.type="button";close.setAttribute("aria-label","關閉城市資訊");close.onclick=()=>{detail.hidden=true;};
+ const title=node("h2","detail-title",city.name||String(city.city_id));
+ const body=node("div","detail-body"),badges=node("div","detail-badges");
+ badges.append(node("span","detail-chip",`城市 #${city.city_id}`),node("span","detail-state "+(battle?.label==="集結中"?"rally":battle?"fighting":"peace"),battle?"⚔ "+battle.label:"目前沒有據點戰標記"));
+ if(mapFeatures?.frame)badges.append(node("span","detail-chip","歷史快照"));else if(stale())badges.append(node("span","detail-chip detail-warning","資料可能過期"));
+ body.append(badges);
+ if(battle){
+  const matchup=node("div","detail-matchup"),attacker=attackerNation(city),defender=city.control_nation_name;
+  for(const [label,name,color]of [["攻擊方",attacker,NATION_COLORS[attacker]],["防守方",defender,NATION_COLORS[defender]]]){const card=field(label,name||"未取得","detail-faction");card.style.setProperty("--faction-color",color||"#808080");matchup.append(card);}
+  const metrics=node("div","detail-metrics");metrics.append(field("比分",battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得","detail-metric"),field("報到倒數",countdown(city),"detail-metric"));body.append(matchup,metrics);
+ }
+ const control=node("section","detail-card");control.append(node("h3","detail-section-title","城市控制"),field("控制陣營",city.control_nation_name||"未知"),field("控制聯盟",city.control_union_name||"未取得"),field("聯盟 ID",city.control_union_id??"未取得"));body.append(control);
+ const meta=node("details","detail-meta");meta.open=metaOpen;meta.append(node("summary","","其他資料"),field("主權",city.sovereign||"未知"));
+ if(battle)meta.append(field("活動 ID",battle.battle.id??"未取得"));
+ if(city.control_observed_at)meta.append(field("控制資料時間",formatTime(city.control_observed_at)));
+ body.append(meta);if(battle)body.append(node("p","detail-updated","更新："+formatTime(city.updated_at)));
+ if(!hasPosition(city))body.append(node("p","detail-warning","尚未取得城市座標"));
+ detail.setAttribute("aria-label","城市資訊："+(city.name||city.city_id));detail.append(close,title,body);
+ detail.scrollTop=scrollTop;
+ if(focusMeta)meta.querySelector("summary")?.focus({preventScroll:true});else if(focusClass==="detail-close")close.focus({preventScroll:true});
 }
 function battleListText(city){
  const state=battleState(city);

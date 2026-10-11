@@ -109,6 +109,10 @@ test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
   assert.match(script,/ctx.fillStyle=cityColor\(city\)/);
 });
 class Element {
+  get textContent(){return (this._text||'')+this.children.map(child=>child.textContent||'').join('');}
+  set textContent(value){this._text=value;this.children=[];}
+  setAttribute(key,value){this[key]=value;}
+  querySelector(selector){for(const child of this.children){if(selector==='.'+child.className)return child;const match=child.querySelector?.(selector);if(match)return match;}return null;}
   constructor(){this.hidden=true;this.children=[];this.textContent='';this.value='';this.checked=false;this.classList={toggle(){}};this.style={setProperty(key,value){this[key]=value;}};}
   append(...children){this.children.push(...children);}
   replaceChildren(){this.children=[];this.textContent='';}
@@ -155,6 +159,9 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
   assert.match(elements.get('battleList').children[0].children[0].textContent,/交戰中 · 比分 0:0/);
   elements.get('battleList').children[0].onclick();
   assert.match(elements.get('detail').children[2].textContent,/比分：0:0/);
+  assert.equal(elements.get('detail').querySelector('.detail-matchup').children.length,2);
+  assert.equal(elements.get('detail').querySelector('.detail-metrics').children.length,2);
+  elements.get('detail').querySelector('.detail-meta').open=true;
   current.cities[0].control_nation_name='蒙古';
   current.cities[0].nation_battle=JSON.stringify({id:9,nation_icon:'/images/nation/color_icon/minicoa02HK.png',_rf_monitor:{active:true,score:'2:1'}});
   await eventSource.change();
@@ -164,6 +171,7 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
   await eventSource.change();
   assert.equal(elements.get('battleList').children[0].style['--attacker-color'],'#49cf87');
   assert.match(elements.get('detail').children[2].textContent,/比分：2:1/);
+  assert.equal(elements.get('detail').querySelector('.detail-meta').open,true);
   current={cities:[{city_id:3,name:'基隆',control_nation_name:'紅軍',control_union_id:4923,control_union_name:'新聯盟',updated_at:'2026-10-07T01:02:00Z',nation_battle:null}],status:{state:'live',connected:true}};
   await eventSource.change();
   assert.equal(elements.get('battleList').children.length,0);
