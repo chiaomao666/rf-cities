@@ -3,15 +3,26 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 const code=await readFile(new URL('../map-features.js',import.meta.url),'utf8');
-function fixture(){
+function fixture(source='local'){
  let now=Date.parse('2026-10-09T00:00:00Z'),changed=0;class Clock extends Date{static now(){return now;}}
  const timers=new Map();let timerId=0;const elements=new Map(),values=new Map();
  const doc={body:{append(){}},getElementById(id){if(!elements.has(id))elements.set(id,{hidden:true,value:'',children:[],style:{setProperty(){}},setAttribute(){},append(...c){this.children.push(...c);},replaceChildren(){this.children=[];},click(){this.onclick?.();},remove(){}});return elements.get(id);},createElement(){return {style:{setProperty(){}},setAttribute(){},children:[],append(...c){this.children.push(...c);},click(){},remove(){}};}};
  const context=vm.createContext({Date:Clock,document:doc,localStorage:{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)},setInterval(fn){timers.set(++timerId,fn);return timerId;},clearInterval(id){timers.delete(id);},setTimeout(){},Blob,URL});vm.runInContext(code,context);
  const cities=[{city_id:1,name:'改名城市',control_nation_name:'紅軍',control_union_id:5,control_union_name:'同名聯盟',x_position:100,y_position:100},{city_id:2,name:'第二城',control_nation_name:'香港',control_union_id:6,control_union_name:'同名聯盟',x_position:500,y_position:100},{city_id:3,name:'第三城',control_nation_name:'反賊聯盟',control_union_id:null,x_position:800,y_position:100}];
  const f=new context.RFMapFeatures({getCities:()=>cities,getLive:()=>cities,onChange(){changed++;},loadCloud:async()=>[],width:1000,height:1000,document:doc});
- doc.getElementById('historySource').value='local';return {f,tools:context.RFMapTools,cities,doc,values,timers,context,advance(ms){now+=ms;},changed:()=>changed};
+ const initialSource=doc.getElementById('historySource').value;doc.getElementById('historySource').value=source;return {f,initialSource,tools:context.RFMapTools,cities,doc,values,timers,context,advance(ms){now+=ms;},changed:()=>changed};
 }
+
+test('預設雲端歷史，本機保留為備用且失敗時不暗中切換',async()=>{
+ const {f,initialSource,doc,cities,advance,values}=fixture('cloud');assert.equal(initialSource,'cloud');
+ assert.equal(doc.getElementById('historyDate').min,'2026-10-10');assert.equal(doc.getElementById('historyAvailability').hidden,false);
+ advance(86400000);doc.getElementById('historyDate').value='2026-10-10';f.capture(cities,true);
+ const saved=values.get('rf-history-local-v1');let calls=0;
+ f.loadCloud=async()=>{calls++;return [{captured_at:'2026-10-10T01:00:00Z',cities:[{...cities[0],control_nation_name:'香港'}]}];};
+ await f.loadHistory();assert.equal(calls,1);assert.equal(f.frame.cities[0].control_nation_name,'香港');assert.equal(f.localFrames[0].cities[0].control_nation_name,'紅軍');assert.equal(values.get('rf-history-local-v1'),saved);
+ f.loadCloud=async()=>{throw Error('offline');};await f.loadHistory();assert.equal(doc.getElementById('historySource').value,'cloud');assert.equal(f.frames.length,0);assert.equal(f.frame,null);assert.match(doc.getElementById('historyStatus').textContent,/手動切換/);
+ doc.getElementById('historySource').value='local';await f.loadHistory();assert.equal(f.frame.cities[0].control_nation_name,'紅軍');assert.match(doc.getElementById('historyStatus').textContent,/最多保留 60/);
+});
 test('雲端日曆限制保存起日並解釋無紀錄，本機及匯入不受限制',async()=>{
  const {f,doc}=fixture();let calls=0;f.loadCloud=async()=>{calls++;return [];};
  doc.getElementById('historySource').value='cloud';doc.getElementById('historyDate').value='2026-10-09';await f.loadHistory();

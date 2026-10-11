@@ -71,7 +71,8 @@ class MapFeatures{
   try{this.storage=storage||root.localStorage;const saved=JSON.parse(this.storage.getItem('rf-history-local-v1')||'null');if(saved)this.localFrames=validateReport(saved).frames.slice(-60);}catch{this.localStorageError=true;}
   this.el('rankClose').onclick=()=>this.closePanels();this.el('historyClose').onclick=()=>this.live();
   this.el('openRankings').onclick=()=>this.openRankings();this.el('openHistory').onclick=()=>this.openHistory();
-  this.el('historySource').onchange=()=>this.loadHistory();this.el('historyDate').onchange=()=>this.loadHistory();this.el('historyDate').value=dateKey(Date.now());
+  this.el('historySource').value='cloud';this.el('historySource').onchange=()=>this.loadHistory();this.el('historyDate').onchange=()=>this.loadHistory();this.el('historyDate').value=dateKey(Date.now());
+  this.el('historyDate').min=CLOUD_HISTORY_START;this.el('historyAvailability').hidden=false;
   this.el('historySlider').oninput=()=>this.selectFrame(Number(this.el('historySlider').value));
   this.el('historyPlay').onclick=()=>this.togglePlayback();this.el('historySpeed').onchange=()=>{if(this.playing){this.pause();this.togglePlayback();}};
   this.el('historyExport').onclick=()=>this.exportReport();this.el('historyCsv').onclick=()=>this.exportCsv();
@@ -79,7 +80,7 @@ class MapFeatures{
   this.el('rankClear').onclick=()=>{this.filter=null;this.renderRanks();onChange();};this.el('rankSearch').oninput=()=>this.renderRanks();
   this.el('navMap').onclick=()=>{this.closePanels();this.filter=null;this.live();};this.el('navRank').onclick=()=>this.openRankings();this.el('navHistory').onclick=()=>this.openHistory();this.el('navMore').onclick=openMenu;
   this.el('showTerritories').onchange=onChange;this.el('territoryMode').onchange=onChange;this.el('territoryOpacity').oninput=onChange;
-  this.el('historyStatus').textContent='本機紀錄僅在本頁開啟且收到新資料時保存；不代表全天採集。';
+  this.el('historyStatus').textContent='預設讀取雲端歷史；本機紀錄保留為備用，可手動切換，不會與雲端混合。';
   this.setFrameControls();
  }
  closePanels(){this.el('rankPanel').hidden=true;this.el('historyPanel').hidden=true;}
@@ -112,7 +113,7 @@ class MapFeatures{
    if(token!==this.loadToken)return;rows=rows.filter(f=>dateKey(f.captured_at)===date);this.frames=rows.length?validateReport({kind:'rf-battle-report',version:1,frames:rows}).frames:[];this.setFrameControls();
    this.el('historyStatus').textContent=this.frames.length?`${source==='cloud'?'雲端控制權':source==='import'?'匯入':'本機'} · ${this.frames.length} 個真實快照；紀錄間空白不補造。${source==='local'?'只涵蓋此瀏覽器收到資料的時段，最多保留 60 個快照。':''}${source==='cloud'?'雲端僅存陣營與聯盟變化，不含歷史比分／戰鬥詳情；每分鐘保留最後快照。':''}${this.localStorageError?' 本機儲存失敗，請匯出備份。':''}`:'這一天沒有紀錄。未啟用歷史保存或尚未開始採集時，不會有過去資料。';
    if(this.frames.length)this.selectFrame(0);
-  }catch{if(token===this.loadToken)this.el('historyStatus').textContent='雲端歷史尚未啟用或連線失敗；請使用本機紀錄／匯入戰報。雲端需先執行 supabase/history.sql。';}
+  }catch{if(token===this.loadToken)this.el('historyStatus').textContent='雲端歷史讀取失敗，請稍後重試，或手動切換「本機紀錄（備用）」／匯入戰報；不會自動混入本機紀錄。';}
  }
  selectFrame(index){this.pause();this.applyFrame(index);}
  applyFrame(index){if(!this.frames.length)return;this.index=Math.max(0,Math.min(this.frames.length-1,index));this.frame=this.frames[this.index];this.el('historySlider').value=this.index;this.el('historyTime').textContent=new Date(this.frame.captured_at).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'});this.el('historyChanges').textContent=`這一天記錄到 ${reportChanges(this.frames).length} 次控制陣營／聯盟變化（不是逐場勝負戰報）。`;this.onChange();}
