@@ -1,7 +1,7 @@
 (function(root){
 "use strict";
 const NATIONS={紅軍:'#ff3732',香港:'#bd55f5',蒙古:'#008af7',藏國:'#49cf87',哈薩克:'#00e2ca',維吾爾:'#9abaff',滿洲:'#ffc400',滿州:'#ffc400',臺灣:'#08a2bc',台灣:'#08a2bc',反賊聯盟:'#ffffff',無:'#808080'};
-const DAY=86400000,MAX_FRAMES=1500,MAX_CITIES=700,MAX_BYTES=60000000;
+const DAY=86400000,MAX_FRAMES=1500,MAX_CITIES=700,MAX_BYTES=60000000,CLOUD_HISTORY_START='2026-10-10';
 const dateKey=t=>new Date(new Date(t).getTime()+8*3600000).toISOString().slice(0,10);
 const string=v=>typeof v==='string'?v.slice(0,160):null;
 function cleanBattle(value){
@@ -103,7 +103,11 @@ class MapFeatures{
  setFrameControls(){const disabled=!this.frames.length;for(const id of ['historyPlay','historySlider','historyExport','historyCsv'])this.el(id).disabled=disabled;this.el('historySlider').max=Math.max(0,this.frames.length-1);}
  async loadHistory(){
   const token=++this.loadToken;this.pause();this.frame=null;this.frames=[];this.index=0;this.el('historyTime').textContent='';this.el('historyChanges').textContent='';this.setFrameControls();this.onChange();const source=this.el('historySource').value,date=this.el('historyDate').value;
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return;this.el('historyStatus').textContent='正在讀取紀錄…';
+  this.el('historyDate').min=source==='cloud'?CLOUD_HISTORY_START:'';
+  this.el('historyAvailability').hidden=source!=='cloud';
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return;
+  if(source==='cloud'&&date<CLOUD_HISTORY_START){this.el('historyStatus').textContent='2026/10/10 之前沒有雲端紀錄，請選擇 10/10 或之後的日期。';return;}
+  this.el('historyStatus').textContent='正在讀取紀錄…';
   try{let rows=source==='cloud'?await this.loadCloud(date):source==='import'?this.imported:this.localFrames;
    if(token!==this.loadToken)return;rows=rows.filter(f=>dateKey(f.captured_at)===date);this.frames=rows.length?validateReport({kind:'rf-battle-report',version:1,frames:rows}).frames:[];this.setFrameControls();
    this.el('historyStatus').textContent=this.frames.length?`${source==='cloud'?'雲端控制權':source==='import'?'匯入':'本機'} · ${this.frames.length} 個真實快照；紀錄間空白不補造。${source==='local'?'只涵蓋此瀏覽器收到資料的時段，最多保留 60 個快照。':''}${source==='cloud'?'雲端僅存陣營與聯盟變化，不含歷史比分／戰鬥詳情；每分鐘保留最後快照。':''}${this.localStorageError?' 本機儲存失敗，請匯出備份。':''}`:'這一天沒有紀錄。未啟用歷史保存或尚未開始採集時，不會有過去資料。';

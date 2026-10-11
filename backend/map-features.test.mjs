@@ -12,6 +12,13 @@ function fixture(){
  const f=new context.RFMapFeatures({getCities:()=>cities,getLive:()=>cities,onChange(){changed++;},loadCloud:async()=>[],width:1000,height:1000,document:doc});
  doc.getElementById('historySource').value='local';return {f,tools:context.RFMapTools,cities,doc,values,timers,context,advance(ms){now+=ms;},changed:()=>changed};
 }
+test('雲端日曆限制保存起日並解釋無紀錄，本機及匯入不受限制',async()=>{
+ const {f,doc}=fixture();let calls=0;f.loadCloud=async()=>{calls++;return [];};
+ doc.getElementById('historySource').value='cloud';doc.getElementById('historyDate').value='2026-10-09';await f.loadHistory();
+ assert.equal(doc.getElementById('historyDate').min,'2026-10-10');assert.equal(calls,0);assert.match(doc.getElementById('historyStatus').textContent,/10\/10 之前沒有/);assert.equal(doc.getElementById('historyAvailability').hidden,false);
+ doc.getElementById('historyDate').value='2026-10-10';await f.loadHistory();assert.equal(calls,1);
+ for(const source of ['local','import']){doc.getElementById('historySource').value=source;await f.loadHistory();assert.equal(doc.getElementById('historyDate').min,'');assert.equal(doc.getElementById('historyAvailability').hidden,true);}
+});
 test('排行依控制陣營、聯盟 ID 分组，同名聯盟不合併，反賊不是未知',()=>{
  const {tools,cities,f,doc}=fixture();const ranks=tools.rankings(cities);assert.equal(ranks.unions.length,2);assert.equal(ranks.unknownUnions,1);assert.equal(ranks.nations.find(n=>n.name==='反賊聯盟').color,'#ffffff');
  f.openRankings();doc.getElementById('unionRanks').children[0].onclick();assert.equal(f.filterCities(cities).length,1);doc.getElementById('rankClear').onclick();assert.equal(f.filterCities(cities).length,3);
@@ -38,7 +45,7 @@ test('播放使用真正快照，不改即時清單；返回即時及載入競�
  const {f,cities,advance,doc,timers}=fixture();f.capture(cities,true);advance(60000);cities[0].control_nation_name='香港';f.capture(cities,true);
  await f.loadHistory();assert.equal(f.frame.cities[0].control_nation_name,'紅軍');assert.equal(cities[0].control_nation_name,'香港');assert.equal(f.frameCities(cities)[0].x_position,100);
  doc.getElementById('historySpeed').value='2';f.togglePlayback();[...timers.values()][0]();assert.equal(f.frame.cities[0].control_nation_name,'香港');[...timers.values()][0]();assert.equal(f.playing,false);f.live();assert.equal(f.frame,null);assert.equal(f.now(),Date.parse('2026-10-09T00:01:00Z'));
- let resolve;f.loadCloud=()=>new Promise(r=>resolve=r);doc.getElementById('historySource').value='cloud';const pending=f.loadHistory();f.live();resolve(f.localFrames);await pending;assert.equal(f.frame,null);
+ let resolve;f.loadCloud=()=>new Promise(r=>resolve=r);doc.getElementById('historySource').value='cloud';doc.getElementById('historyDate').value='2026-10-10';const pending=f.loadHistory();f.live();resolve(f.localFrames);await pending;assert.equal(f.frame,null);
 });
 test('匯入失敗不覆寫戰報，匯入成功可播放；控制變化不推定逐場勝負',async()=>{
  const {f,cities,tools}=fixture();await f.importReport({size:5,text:async()=>'{bad'});assert.equal(f.imported.length,0);
