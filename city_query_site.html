@@ -66,7 +66,7 @@
 <section class="panel feature-panel history-panel" id="historyPanel" hidden aria-labelledby="historyTitle"><div class="plan-heading"><h2 id="historyTitle">歷史縮時與戰報</h2><button id="historyClose" type="button">回到即時</button></div><label>紀錄來源<select id="historySource"><option value="cloud" selected>雲端歷史（預設）</option><option value="local">本機紀錄（備用）</option><option value="import">匯入戰報</option></select></label><label>日期（臺灣時間）<input id="historyDate" type="date"></label><p id="historyAvailability" hidden>雲端歷史自 2026/10/10 凌晨 2:48（臺灣時間）開始保存；10/10 之前沒有雲端紀錄。保留期限內仍可能有採集空白。</p><p>本機紀錄僅保留此瀏覽器收到的最近 60 個快照，供連線失敗時手動切換；不代表全天紀錄，不與雲端混合。</p><p id="historyStatus" role="status"></p><p id="historyTime"></p><input id="historySlider" type="range" min="0" max="0" value="0" aria-label="歷史時間軸"><div class="plan-actions"><button id="historyPlay" type="button">播放</button><label>播放速度<select id="historySpeed"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option><option value="16">16×</option><option value="32">32×</option><option value="64">64×</option></select></label></div><p>每次前進一個真實快照；時間跳躍代表沒有中間紀錄，不插值、不推定戰鬥勝負。歷史播放不會停止即時採集。</p><p id="historyChanges"></p><div class="plan-actions"><button id="historyExport" type="button">匯出本日戰報 JSON</button><button id="historyCsv" type="button">匯出控制權變化 CSV</button></div><label>匯入戰報<input id="historyImport" type="file" accept=".json,application/json"></label><p>只讀取本站戰報格式，不保證相容參考網站的匯出檔；匯入不寫入雲端。</p></section>
 <nav class="panel mobile-nav" aria-label="手機功能選單"><button id="navMap" type="button">⌖ 地圖</button><button id="navRank" type="button">▤ 排行</button><button id="navHistory" type="button">◷ 縮時</button><button id="navMore" type="button">☰ 更多</button></nav>
 <script src="./monitor-config.js"></script>
-<script src="./map-features.js?v=4"></script>
+<script src="./map-features.js?v=5"></script>
 <script src="./route-planner.js?v=2"></script>
 <script src="./route-editor.js?v=5"></script>
 <script>
@@ -382,6 +382,7 @@ function visibleCities(){const rows=mapFeatures?.filterCities(mapCities())??mapC
 
 function focusCity(city){
  selected=city;
+ $("rankPanel").hidden=true;
  if(hasPosition(city)){scale=Math.max(scale,.4);offsetX=width/2-Number(city.x_position)*scale;offsetY=height/2-Number(city.y_position)*scale;}
  $("detail").hidden=!!routeEditor?.active;detailSignature="";updateDetail();requestDraw();
 }

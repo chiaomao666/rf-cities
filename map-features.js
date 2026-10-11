@@ -82,6 +82,7 @@ class MapFeatures{
   this.el('showTerritories').onchange=onChange;this.el('territoryMode').onchange=onChange;this.el('territoryOpacity').oninput=onChange;
   this.el('historyStatus').textContent='預設讀取雲端歷史；本機紀錄保留為備用，可手動切換，不會與雲端混合。';
   this.setFrameControls();
+  this.openRankings();
  }
  closePanels(){this.el('rankPanel').hidden=true;this.el('historyPanel').hidden=true;}
  openRankings(){this.beforePanel?.();this.pause();this.rankSignature=null;this.el('historyPanel').hidden=true;this.el('rankPanel').hidden=false;this.renderRanks();}

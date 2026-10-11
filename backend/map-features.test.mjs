@@ -35,6 +35,14 @@ test('排行依控制陣營、聯盟 ID 分组，同名聯盟不合併，反賊�
  f.openRankings();doc.getElementById('unionRanks').children[0].onclick();assert.equal(f.filterCities(cities).length,1);doc.getElementById('rankClear').onclick();assert.equal(f.filterCities(cities).length,3);
  const button=doc.getElementById('nationRanks').children[0];f.renderRanks();assert.equal(doc.getElementById('nationRanks').children[0],button);
 });
+
+test('排行榜預設開啟且更新數字；使用者關閉後不自動重開',()=>{
+ const {f,doc,cities}=fixture();assert.equal(doc.getElementById('rankPanel').hidden,false);assert.equal(doc.getElementById('historyPanel').hidden,true);
+ assert.equal(doc.getElementById('nationRanks').children.length,3);
+ cities[1].control_nation_name='紅軍';f.renderRanks();assert.equal(doc.getElementById('nationRanks').children.length,2);
+ doc.getElementById('rankClose').onclick();f.renderRanks();assert.equal(doc.getElementById('rankPanel').hidden,true);
+ doc.getElementById('openRankings').onclick();assert.equal(doc.getElementById('rankPanel').hidden,false);
+});
 test('戰報嚴格驗證並剔除私密欄位、任意網址，不執行檔案內容',()=>{
  const {tools,cities}=fixture();const report=tools.validateReport({kind:'rf-battle-report',version:1,token:'PRIVATE',frames:[{captured_at:'2026-10-09T01:00:00Z',cities:[{...cities[0],token:'PRIVATE',nation_battle:JSON.stringify({token:'PRIVATE',nation_icon:'https://evil.example',_rf_monitor:{active:true,score:'1:0',token:'PRIVATE'}})}]}]});
  assert.ok(!JSON.stringify(report).includes('PRIVATE'));assert.ok(!JSON.stringify(report).includes('evil.example'));assert.match(report.frames[0].cities[0].nation_battle,/1:0/);
