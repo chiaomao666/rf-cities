@@ -139,7 +139,7 @@ test('城市資料保留遊戲擷取的控制權、主權與座標',async()=>{
 test('完整地圖沿用即時快照：開始、比分更新、清除戰況與城市搜尋',async()=>{
   let now=Date.parse('2026-10-07T01:00:00Z');
   class ClockDate extends Date {static now(){return now;}}
-  let current={cities:[{city_id:3,name:'基隆',nation_battle:JSON.stringify({id:9,close_roll_call_at:'2026-10-07T01:01:05Z',_rf_monitor:{active:true,score:'0:0'}})}],status:{state:'live',connected:true}};
+  let current={cities:[{city_id:3,name:'基隆',nation_battle:JSON.stringify({id:9,close_roll_call_at:'2026-10-07T01:01:05Z',_rf_monitor:{active:true,score:'0:0',details:{offender:{power:10253,roll_count:0},defender:{power:96931,roll_count:25},observed_at:'2026-10-07T00:57:00Z'}}})}],status:{state:'live',connected:true}};
   const elements=new Map(),intervals=[];let eventSource;
   const context={URL,atob,AbortSignal,console,Date:ClockDate,queueMicrotask,innerWidth:1200,innerHeight:800,devicePixelRatio:1,
     location:{hostname:'localhost',protocol:'http:'},window:{RF_MONITOR_CONFIG:{}},
@@ -161,6 +161,11 @@ test('完整地圖沿用即時快照：開始、比分更新、清除戰況與�
   assert.match(elements.get('detail').children[2].textContent,/比分：0:0/);
   assert.equal(elements.get('detail').querySelector('.detail-matchup').children.length,2);
   assert.equal(elements.get('detail').querySelector('.detail-metrics').children.length,2);
+  assert.match(elements.get('detail').children[2].textContent,/戰力：10,253/);
+  assert.match(elements.get('detail').children[2].textContent,/報到人數：0/);
+  assert.match(elements.get('detail').children[2].textContent,/戰力：96,931/);
+  assert.match(elements.get('detail').children[2].textContent,/報到人數：25/);
+  assert.match(elements.get('detail').children[2].textContent,/超過 90 秒未更新/);
   elements.get('detail').querySelector('.detail-meta').open=true;
   current.cities[0].control_nation_name='蒙古';
   current.cities[0].nation_battle=JSON.stringify({id:9,nation_icon:'/images/nation/color_icon/minicoa02HK.png',_rf_monitor:{active:true,score:'2:1'}});

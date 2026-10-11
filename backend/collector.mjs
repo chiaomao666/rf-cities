@@ -1,10 +1,13 @@
 // Phoenix v2 JSON 格式：[join_ref, ref, topic, event, payload]。
-// 只使用主程式已確認的頻道及讀取 cities 指令；不參戰、不寫入遊戲。
+// 只讀本人頻道與明確設定、伺服器允許的本人聯盟；不參戰、不寫入遊戲。
 export class Collector {
-  constructor({state, token, userId, locale='zh_TW', url='wss://api.komisureiya.com/socket', onChange=()=>{}, Socket=globalThis.WebSocket}) {
+  constructor({state, token, userId, unionId, locale='zh_TW', url='wss://api.komisureiya.com/socket', onChange=()=>{}, Socket=globalThis.WebSocket}) {
     Object.assign(this,{state,token,userId,locale,url,onChange,Socket});
     this.status = {state:'waiting_credentials',connected:false,lastMessage:null,lastSnapshot:null,error:null,transportCode:null};
     this.ref=0; this.pending=new Map(); this.joins=new Map(); this.stopped=false; this.retry=0; this.closing=new WeakSet();
+    this.unionTopic=/^[1-9]\d*$/.test(String(unionId||''))?`union:${unionId}`:null;
+    this.battleQueries=new Map();this.battleDenied=false;
+    this.status.battleDetails={state:this.unionTopic?'waiting':'disabled',lastUpdated:null};
   }
   notify() { this.onChange(); }
   close(socket=this.socket) {
@@ -24,7 +27,7 @@ export class Collector {
     const finish=()=>{
       if (closed || this.socket!==socket) return;
       closed=true;
-      clearInterval(this.heartbeat); clearInterval(this.snapshotTimer); clearTimeout(this.joinTimer);
+      clearInterval(this.heartbeat); clearInterval(this.snapshotTimer); clearInterval(this.battleTimer); clearTimeout(this.unionJoinTimer); clearTimeout(this.joinTimer);
       this.pending.clear(); this.joins.clear(); this.heartbeatRef=null; this.buffer=null;
       this.status.connected=false;
       if (!this.stopped && this.status.state!=='auth_error') {
@@ -38,6 +41,10 @@ export class Collector {
       this.status.transportCode=null;
       this.retry=0; this.status.state='subscribing'; this.notify();
       for (const topic of ['all_players',`locale:${this.locale}`,`player:${this.userId}`]) this.send(topic,'phx_join',{},'join');
+      if(this.unionTopic && !this.battleDenied) {
+        const ref=this.send(this.unionTopic,'phx_join',{},'union_join');
+        this.unionJoinTimer=setTimeout(()=>{if(this.pending.delete(ref)){this.status.battleDetails.state='timeout';this.notify();}},20000);
+      }
       this.heartbeat=setInterval(()=>{
         if (this.heartbeatRef) { this.close(socket); return; }
         this.heartbeatRef=this.send('phoenix','heartbeat',{},'heartbeat');
@@ -72,6 +79,22 @@ export class Collector {
     this.buffer=[];
     this.send(`player:${this.userId}`,'cities',{body:''},'cities');
   }
+  pollBattleDetails(now=Date.now()) {
+    if(this.battleDenied || !this.status.connected || !this.joins.has(this.unionTopic)) return;
+    const pending=[...this.pending.entries()].find(([,r])=>r.kind==='battle_details');
+    if(pending) {
+      if(now-pending[1].time<20000) return;
+      this.pending.delete(pending[0]);this.status.battleDetails.state='timeout';this.notify();
+    }
+    for(const city of [...this.state.cities.values()].sort((a,b)=>(this.battleQueries.get(a.id)?.time||0)-(this.battleQueries.get(b.id)?.time||0))) {
+      if(!this.state.active(city)) continue;
+      const key=this.state.battleKey(city),last=this.battleQueries.get(city.id);
+      if(last?.key===key && now-last.time<60000) continue;
+      const ref=this.send(this.unionTopic,'nation_battle',{city_id:city.id},'battle_details');
+      if(ref) {Object.assign(this.pending.get(ref),{cityId:city.id,battleKey:key});this.battleQueries.set(city.id,{key,time:now});}
+      break; // 每五秒至多一場，不同時大量查詢。
+    }
+  }
   receive(raw) {
     let frame; try { frame=JSON.parse(raw); } catch { return; }
     if (!Array.isArray(frame) || frame.length!==5) return;
@@ -80,6 +103,21 @@ export class Collector {
       const request=this.pending.get(ref); if (!request || request.topic!==topic) return;
       this.pending.delete(ref);
       if (request.kind==='heartbeat') { this.heartbeatRef=null; return; }
+      if(request.kind==='union_join' || request.kind==='battle_details') {
+        if(request.kind==='union_join')clearTimeout(this.unionJoinTimer);
+        if(payload?.status!=='ok') {
+          this.battleDenied=true;clearInterval(this.battleTimer);
+          this.status.battleDetails.state='denied';this.notify();return;
+        }
+        if(request.kind==='union_join') {
+          this.joins.set(topic,ref);this.status.battleDetails.state='ready';
+          this.battleTimer=setInterval(()=>this.pollBattleDetails(),5000);
+        } else if(Date.now()-request.time>20000) {this.status.battleDetails.state='timeout';}
+        else if(this.state.ingestBattleDetails(request.cityId,payload.response,request.battleKey)) {
+          this.status.battleDetails.state='live';this.status.battleDetails.lastUpdated=new Date().toISOString();
+        } else this.status.battleDetails.state='unavailable';
+        this.notify();return;
+      }
       if (payload?.status!=='ok') {
         // 拒絕訂閱就停下，不嘗試猜 token／其他玩家頻道或繞過資格。
         this.status.state='auth_error';this.status.error='遊戲拒絕訂閱或讀取；請確認採集帳號的登入與權限';
@@ -87,10 +125,10 @@ export class Collector {
       }
       if (request.kind==='join') {
         this.joins.set(topic,ref);
-        if (this.joins.size===3) {
+        if (['all_players',`locale:${this.locale}`,`player:${this.userId}`].every(t=>this.joins.has(t)) && !this.status.connected) {
           clearTimeout(this.joinTimer);this.status.connected=true;this.status.state='live';this.snapshot();
           this.snapshotTimer=setInterval(()=>{
-            if ([...this.pending.values()].some(item=>Date.now()-item.time>20000)) {this.close();return;}
+            if ([...this.pending.values()].some(item=>!['battle_details','union_join'].includes(item.kind)&&Date.now()-item.time>20000)) {this.close();return;}
             this.snapshot();
           },60000);
           this.notify();
@@ -106,7 +144,10 @@ export class Collector {
       this.status.lastMessage=new Date().toISOString();
       if (this.buffer) this.buffer.push(payload.cities);
       this.state.ingest(payload.cities);this.notify();
-    } else if (event==='phx_error' || event==='phx_close') this.close();
+    } else if (event==='phx_error' || event==='phx_close') {
+      if(topic===this.unionTopic){this.battleDenied=true;clearInterval(this.battleTimer);this.joins.delete(topic);this.status.battleDetails.state='denied';this.notify();}
+      else this.close();
+    }
   }
   stop() { this.stopped=true;clearTimeout(this.reconnect);this.close(); }
 }

@@ -181,7 +181,10 @@ function attackerNation(city){
  const battle=parseBattle(city.nation_battle)||{};
  const code=typeof battle.nation_icon==="string"?battle.nation_icon.match(/^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB(?:\d{2}|51B)?)\.png$/)?.[1]:null;
  // 圖示編號不等於遊戲陣營 ID，依字母代碼判定。
- return ({CM:"紅軍",HK:"香港",MG:"蒙古",TB:"藏國",KZ:"哈薩克",UG:"維吾爾",MC:"滿洲",TW:"臺灣",RB:"反賊聯盟"})[code?.startsWith("RB")?"RB":code]||battle._rf_monitor?.attacker_nation_name||null;
+ const flag=battle._rf_monitor?.details?.offender?.flag;
+ const flagCode=typeof flag==="string"?flag.match(/^\/images\/cities\/triangle\/smallflag\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB(?:\d{2}|51B)?)\.png$/)?.[1]:null;
+ const faction=code||flagCode;
+ return ({CM:"紅軍",HK:"香港",MG:"蒙古",TB:"藏國",KZ:"哈薩克",UG:"維吾爾",MC:"滿洲",TW:"臺灣",RB:"反賊聯盟"})[faction?.startsWith("RB")?"RB":faction]||battle._rf_monitor?.attacker_nation_name||null;
 }
 function attackerColor(city){
  const name=attackerNation(city);
@@ -408,8 +411,12 @@ function updateDetail(){
  body.append(badges);
  if(battle){
   const matchup=node("div","detail-matchup"),attacker=attackerNation(city),defender=city.control_nation_name;
-  for(const [label,name,color]of [["攻擊方",attacker,NATION_COLORS[attacker]],["防守方",defender,NATION_COLORS[defender]]]){const card=field(label,name||"未取得","detail-faction");card.style.setProperty("--faction-color",color||"#808080");matchup.append(card);}
+  const battleDetails=battle.battle._rf_monitor?.details;
+  const number=value=>typeof value==="number"&&Number.isFinite(value)&&value>=0?value.toLocaleString("zh-TW"):"未取得";
+  for(const [label,name,color,side]of [["攻擊方",attacker,NATION_COLORS[attacker],battleDetails?.offender],["防守方",defender,NATION_COLORS[defender],battleDetails?.defender]]){const card=field(label,name||"未取得","detail-faction");card.style.setProperty("--faction-color",color||"#808080");card.append(field("戰力",number(side?.power)),field("報到人數",number(side?.roll_count)));matchup.append(card);}
   const metrics=node("div","detail-metrics");metrics.append(field("比分",battle.battle._rf_monitor?.score??city.nation_battle_score??"未取得","detail-metric"),field("報到倒數",countdown(city),"detail-metric"));body.append(matchup,metrics);
+  body.append(node("p","detail-updated",battleDetails?.observed_at?"戰力／報到人數查詢："+formatTime(battleDetails.observed_at)+"（非房間內人數）":"戰力／報到人數尚無授權查詢資料"));
+  if(battleDetails?.observed_at && Date.now()-Date.parse(battleDetails.observed_at)>90000)body.append(node("p","detail-warning","戰力／報到人數超過 90 秒未更新，僅供參考"));
  }
  const control=node("section","detail-card");control.append(node("h3","detail-section-title","城市控制"),field("控制陣營",city.control_nation_name||"未知"),field("控制聯盟",city.control_union_name||"未取得"),field("聯盟 ID",city.control_union_id??"未取得"));body.append(control);
  const meta=node("details","detail-meta");meta.open=metaOpen;meta.append(node("summary","","其他資料"),field("主權",city.sovereign||"未知"));
