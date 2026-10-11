@@ -53,7 +53,7 @@ export class CityState {
             if (own(battle,key) && (battle[key]===null || ['number','string','boolean'].includes(typeof battle[key]))) city.battle[key] = battle[key];
           // 僅保留已確認的公開陣營圖示路徑，不儲存任意網址或完整戰況封包。
           if (own(battle,'nation_icon')) city.battle.nation_icon =
-            typeof battle.nation_icon==='string' && /^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB)\.png$/.test(battle.nation_icon)
+            typeof battle.nation_icon==='string' && /^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB(?:\d{2}|51B)?)\.png$/.test(battle.nation_icon)
               ? battle.nation_icon : null;
         }
         if (battle === null && !own(patch,'nation_battle_score')) city.nation_battle_score = null;

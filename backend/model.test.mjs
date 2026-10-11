@@ -36,6 +36,15 @@ test('保留攻擊方陣營圖示，增量省略時保留；結束與换場不�
  s.ingest([{id:1,nation_battle:{id:102,nation_icon:'https://example.com/private?token=secret'}}]);
  assert.equal(battle(s).nation_icon,null);
 });
+test('反賊專屬編號圖示不會被清空，仍拒絕任意網址及錯誤後綴',()=>{
+ for(const icon of ['minicoa09RB.png','minicoa09RB01.png','minicoa09RB78.png','minicoa09RB51B.png']){
+  const s=seed(),path='/images/nation/color_icon/'+icon;s.ingest([{id:1,nation_battle:{id:101,nation_icon:path}}]);
+  assert.equal(battle(s).nation_icon,path);s.ingest([{id:1,nation_battle:{id:101}}]);assert.equal(battle(s).nation_icon,path);
+ }
+ for(const icon of ['minicoa09RB01.png?token=private','minicoa09RB01.svg','minicoa09RB51BB.png']){
+  const s=seed();s.ingest([{id:1,nation_battle:{id:101,nation_icon:'/images/nation/color_icon/'+icon}}]);assert.equal(battle(s).nation_icon,null);
+ }
+});
 test('完整補查省略活動欄位仍保留持續交戰 ID，缺席城市移除',()=>{
   const s=seed();s.ingest([{id:1,sword:true}],{replace:true});
   assert.equal(battle(s).id,101);assert.equal(s.cities.has(2),false);

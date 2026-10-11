@@ -7,7 +7,7 @@ const string=v=>typeof v==='string'?v.slice(0,160):null;
 function cleanBattle(value){
  try{const b=typeof value==='string'?JSON.parse(value):value;if(!b||typeof b!=='object'||Array.isArray(b))return null;
   const result={};for(const k of ['id','close_roll_call_at','ended_at','finished_at','ended','finished'])if(['string','number','boolean'].includes(typeof b[k])||b[k]===null)result[k]=b[k];
-  if(typeof b.nation_icon==='string'&&/^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB)\.png$/.test(b.nation_icon))result.nation_icon=b.nation_icon;
+  if(typeof b.nation_icon==='string'&&/^\/images\/nation\/color_icon\/minicoa\d{2}(CM|HK|MG|TB|KZ|UG|MC|TW|RB(?:\d{2}|51B)?)\.png$/.test(b.nation_icon))result.nation_icon=b.nation_icon;
   if(b._rf_monitor&&typeof b._rf_monitor==='object'){result._rf_monitor={active:b._rf_monitor.active===true};if(['number','string'].includes(typeof b._rf_monitor.score))result._rf_monitor.score=String(b._rf_monitor.score).slice(0,40);}
   return JSON.stringify(result);
  }catch{return null;}

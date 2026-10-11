@@ -23,6 +23,12 @@ test('戰報嚴格驗證並剔除私密欄位、任意網址，不執行檔案�
  assert.throws(()=>tools.validateReport({kind:'wrong',frames:[]}));assert.throws(()=>tools.validateReport({kind:'rf-battle-report',version:1,frames:[{captured_at:'bad',cities:[]}]}));
  assert.throws(()=>tools.cleanCities([cities[0],cities[0]]));assert.equal(tools.dateKey('2026-10-08T16:01:00Z'),'2026-10-09');
 });
+test('歷史戰報保留反賊各聯盟專屬編號圖示',()=>{
+ const {tools,cities}=fixture();for(const icon of ['minicoa09RB01.png','minicoa09RB78.png','minicoa09RB51B.png']){
+  const path='/images/nation/color_icon/'+icon;
+  const rows=tools.cleanCities([{...cities[0],nation_battle:{id:1,nation_icon:path}}]);assert.equal(JSON.parse(rows[0].nation_battle).nation_icon,path);
+ }
+});
 test('本機只記錄新鮮快照、至多每分鐘一次，不記錄斷線或每秒重複心跳',()=>{
  const {f,cities,advance,values}=fixture();f.capture(cities,false);assert.equal(f.localFrames.length,0);f.capture(cities,true);f.capture(cities,true);assert.equal(f.localFrames.length,1);
  cities[0].control_nation_name='蒙古';f.capture(cities,true);assert.equal(f.localFrames.length,1);advance(60000);f.capture(cities,true);assert.equal(f.localFrames.length,2);assert.ok(values.has('rf-history-local-v1'));

@@ -101,6 +101,10 @@ test('城市圓點使用控制陣營，未知陣營為灰色',()=>{
     assert.equal(context.attackerNation(city),name);
     assert.equal(context.attackerColor(city),context.cityColor({control_nation_name:name}));
   }
+  for(const icon of ['minicoa09RB01.png','minicoa09RB78.png','minicoa09RB51B.png']){
+   const city={control_nation_name:'紅軍',nation_battle:{nation_icon:'/images/nation/color_icon/'+icon}};
+   assert.equal(context.attackerNation(city),'反賊聯盟');assert.equal(context.attackerColor(city),'#ffffff');
+  }
   assert.equal(context.attackerNation({nation_battle:{nation_icon:'/unknown.png'}}),null);
   assert.match(script,/ctx.fillStyle=cityColor\(city\)/);
 });
