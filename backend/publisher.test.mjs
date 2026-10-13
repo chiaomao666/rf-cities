@@ -33,9 +33,28 @@ test('寫入錯誤不洩漏敏感例外訊息',async()=>{
   try {await p.flush();assert.ok(p.status.error);assert.ok(!JSON.stringify(p.status).includes('SECRET'));} finally {p.stop();}
 });
 test('寫入期間的更新安排後續發布',async()=>{
-  let release,calls=0;
-  const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:snapshot,Fetch:async()=>{calls++;if(calls===1)await new Promise(r=>release=r);return {ok:true};}});
-  try {const first=p.flush();p.request();release();await first;assert.ok(p.timer);await p.flush();assert.equal(calls,2);} finally {p.stop();}
+  let release,calls=0,current=snapshot();
+  const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:()=>current,Fetch:async()=>{calls++;if(calls===1)await new Promise(r=>release=r);return {ok:true};}});
+  try {const first=p.flush();current={...snapshot(),cities:[]};p.request();release();await first;assert.ok(p.timer);await p.flush();assert.equal(calls,2);} finally {p.stop();}
+});
+
+test('未變城市不重送；心跳只 PATCH 狀態，改變城市才更新版本',async()=>{
+  let time=1000,current=snapshot();const calls=[];
+  const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:()=>current,Now:()=>time,Fetch:async(u,o)=>{calls.push({u,o});return {ok:true};}});
+  try {
+    await p.flush();const version=JSON.parse(calls[0].o.body).status.citiesVersion;
+    time+=30000;current.status.lastMessage='2026-10-14T00:00:00Z';await p.flush();assert.equal(calls.length,1);
+    time+=30000;await p.flush();assert.equal(calls.length,2);assert.equal(calls[1].o.method,'PATCH');
+    assert.equal(JSON.parse(calls[1].o.body).cities,undefined);assert.equal(JSON.parse(calls[1].o.body).status.citiesVersion,version);
+    current.status.connected=false;await p.flush();assert.equal(calls.length,3);
+    current.cities=[];await p.flush();assert.equal(calls[3].o.method,'POST');
+    assert.notEqual(JSON.parse(calls[3].o.body).status.citiesVersion,version);
+  }finally{p.stop();}
+});
+test('發布失敗不記住未發布版本，下次仍送完整城市',async()=>{
+  let ok=false;const calls=[];
+  const p=new SupabasePublisher({url,key:'sb_secret_test',getSnapshot:snapshot,Fetch:async(u,o)=>{calls.push(o);return {ok,status:503};}});
+  try{await p.flush();ok=true;await p.flush();assert.deepEqual(calls.map(o=>o.method),['POST','POST']);assert.equal(p.status.error,null);}finally{p.stop();}
 });
 test('前端語法有效；GitHub 模式拒絕私密金鑰',async()=>{
   const html=await readFile(new URL('../city_query_site.html',import.meta.url),'utf8');

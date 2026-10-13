@@ -1,7 +1,7 @@
 // 只發布公開戰況快照；登入權杖、原始封包、私密金鑰不進資料庫。
 export class SupabasePublisher {
-  constructor({url, key, getSnapshot, Fetch=globalThis.fetch}) {
-    Object.assign(this,{url,key,getSnapshot,Fetch});
+  constructor({url, key, getSnapshot, Fetch=globalThis.fetch, Now=Date.now}) {
+    Object.assign(this,{url,key,getSnapshot,Fetch,Now});
     this.status={enabled:false,lastPublished:null,error:null};
     this.stopped=false;this.busy=false;this.dirty=false;this.failures=0;
     if (!url && !key) return;
@@ -21,11 +21,12 @@ export class SupabasePublisher {
     if (!this.status.enabled) return;
     this.request();this.heartbeat=setInterval(()=>this.request(),30000);
   }
-  request(delay=250) {
+  request(delay=2000) {
     if (!this.status.enabled || this.stopped) return;
     this.dirty=true;
     if (this.busy || this.timer) return;
-    this.timer=setTimeout(()=>{this.timer=null;void this.flush();},delay);
+    const wait=Math.max(delay,2000-(this.Now()-(this.lastAttemptAt ?? -Infinity)));
+    this.timer=setTimeout(()=>{this.timer=null;void this.flush();},wait);
   }
   async flush() {
     if (this.stopped || !this.status.enabled) return;
@@ -39,16 +40,29 @@ export class SupabasePublisher {
         control_union_name:c.control_union_name,updated_at:c.updated_at,nation_battle:c.nation_battle}));
       const status={};
       for (const field of ['state','connected','lastMessage','lastSnapshot','error','transportCode','knownCities']) status[field]=current.status[field] ?? null;
+      const signature=JSON.stringify(cities);
+      const changed=signature!==this.citiesSignature;
+      const statusSignature=JSON.stringify([status.state,status.connected,status.error,status.transportCode,status.knownCities]);
+      // 無變化最多每分鐘回報一次。只變更狀態時 PATCH，不重送城市 JSON。
+      if(!changed && statusSignature===this.statusSignature && this.Now()-this.lastPublishedAt<60000)return;
+      const citiesVersion=changed?String(this.Now())+':'+String((this.versionSequence||0)+1):this.citiesVersion;
+      status.citiesVersion=citiesVersion;
       const headers={'Content-Type':'application/json',apikey:this.key,Prefer:'resolution=merge-duplicates,return=minimal'};
       if (!this.key.startsWith('sb_secret_')) headers.Authorization='Bearer '+this.key;
       this.abort=new AbortController();
       const timeout=setTimeout(()=>this.abort.abort(),10000);
       try {
-        const response=await this.Fetch(this.endpoint,{method:'POST',headers,
-          body:JSON.stringify({id:1,cities,status}),signal:this.abort.signal});
+        this.lastAttemptAt=this.Now();
+        const endpoint=changed?this.endpoint:this.endpoint.replace('?on_conflict=id','?id=eq.1');
+        const response=await this.Fetch(endpoint,{method:changed?'POST':'PATCH',headers,
+          body:JSON.stringify(changed?{id:1,cities,status}:{status}),signal:this.abort.signal});
         // 不輸出回覆本文或例外訊息，避免敏感設定出現在狀態 API。
         if (!response.ok) {this.status.error='Supabase 寫入失敗：HTTP '+response.status;failed=true;}
-        else {this.status.lastPublished=new Date().toISOString();this.status.error=null;this.failures=0;}
+        else {
+          this.status.lastPublished=new Date().toISOString();this.status.error=null;this.failures=0;
+          this.citiesSignature=signature;this.statusSignature=statusSignature;this.lastPublishedAt=this.Now();
+          this.citiesVersion=citiesVersion;if(changed)this.versionSequence=(this.versionSequence||0)+1;
+        }
         await response.body?.cancel();
       } finally {clearTimeout(timeout);this.abort=null;}
     } catch {failed=true;this.status.error='Supabase 寫入連線失敗或逾時';}

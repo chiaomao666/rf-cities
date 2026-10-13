@@ -220,10 +220,19 @@ function attackerColor(city){
   }
 
 
-  async function fetchCities(){
+  let citiesVersion=null;
+  function applyCloudSnapshot(data){
+    if(!data || !Array.isArray(data.cities) || !data.status || !Number.isFinite(Date.parse(data.updated_at)))throw new Error('雲端資料格式錯誤');
+    // 防止較早的 HTTP 回覆覆蓋剛收到的即時事件。
+    if(cloudUpdatedAt && Date.parse(data.updated_at)<Date.parse(cloudUpdatedAt))return allCities;
+    cloudUpdatedAt=data.updated_at;sourceStatus=data.status;citiesVersion=data.status.citiesVersion ?? null;
+    return data.cities;
+  }
+  async function fetchCities(metadataOnly=false){
     const headers = useSupabase ? {apikey:publicKey} : {};
     if (useSupabase && !publicKey.startsWith('sb_publishable_')) headers.Authorization = 'Bearer ' + publicKey;
-    const endpoint = useSupabase ? supabaseUrl + '/rest/v1/battle_monitor_state?id=eq.1&select=cities,status,updated_at' : API_BASE + '/api/battles';
+    const metadata=useSupabase && metadataOnly && citiesVersion!==null;
+    const endpoint = useSupabase ? supabaseUrl + '/rest/v1/battle_monitor_state?id=eq.1&select='+(metadata?'status,updated_at':'cities,status,updated_at') : API_BASE + '/api/battles';
     const resp = await fetch(endpoint, {headers,cache:'no-store',signal:AbortSignal.timeout(15000)});
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     let data = await resp.json();
@@ -231,8 +240,13 @@ function attackerColor(city){
       if (!Array.isArray(data)) throw new Error('雲端資料格式錯誤');
       if (!data.length) throw new Error('等待採集主機首次發布戰況');
       data = data[0];
-      cloudUpdatedAt = data.updated_at;
-      if (!Number.isFinite(Date.parse(cloudUpdatedAt))) throw new Error('雲端更新時間無效');
+      if(metadata){
+        if(!data.status || !Number.isFinite(Date.parse(data.updated_at)))throw new Error('雲端資料格式錯誤');
+        if(cloudUpdatedAt && Date.parse(data.updated_at)<Date.parse(cloudUpdatedAt))return allCities;
+        if(data.status.citiesVersion!==citiesVersion)return fetchCities(false);
+        cloudUpdatedAt=data.updated_at;sourceStatus=data.status;return allCities;
+      }
+      return applyCloudSnapshot(data);
     }
     if (!Array.isArray(data.cities) || !data.status) throw new Error('後端資料格式錯誤');
     sourceStatus = data.status;
@@ -466,26 +480,38 @@ function showSourceStatus(){
  setConnection((labels[sourceStatus?.state]||"等待採集主機")+(sourceStatus?.error?"："+sourceStatus.error:"")+
  (cloudUpdatedAt?" · 更新 "+new Date(cloudUpdatedAt).toLocaleTimeString("zh-TW"):"")+(realtimeReady?" · 即時通知已連接":" · 自動補查"),!sourceStatus?.connected);
 }
-async function refresh(){
+async function refresh(metadataOnly=false){
  if(stopped||configError)return;
  if(fetching){refreshAgain=true;return;}fetching=true;$("refresh").disabled=true;
- try{allCities=await fetchCities();failures=0;rebuildCities();showSourceStatus();}
+ try{allCities=await fetchCities(metadataOnly===true);failures=0;rebuildCities();showSourceStatus();}
  catch(error){failures++;setConnection("同步失敗："+error.message+"；保留上次戰況並自動重試",true);}
  finally{fetching=false;$("refresh").disabled=false;if(refreshAgain&&!stopped){refreshAgain=false;queueMicrotask(refresh);}}
 }
+  let realtimeGeneration=0;
+  function disconnectRealtime(){
+    realtimeGeneration++;realtimeReady=false;
+    const previous=socket;socket=null;
+    if(useSupabase){if(previous)void supabaseClient?.removeChannel(previous);}else previous?.close();
+  }
   async function connectRealtime(){
-    if (stopped) return;
+    if (stopped || document.hidden || socket) return;
+    const generation=++realtimeGeneration;
     if (useSupabase) {
       try {
         const {createClient} = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
-        if (stopped) return;
+        if (stopped || document.hidden || generation!==realtimeGeneration) return;
         supabaseClient ||= createClient(supabaseUrl,publicKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
         socket = supabaseClient.channel('rf-city-battles')
-          .on('postgres_changes',{event:'*',schema:'public',table:'battle_monitor_state',filter:'id=eq.1'},()=>{if (!stopped) refresh();})
+          .on('postgres_changes',{event:'*',schema:'public',table:'battle_monitor_state',filter:'id=eq.1'},payload=>{
+            if(stopped || document.hidden || generation!==realtimeGeneration)return;
+            // Realtime 已附完整資料，直接採用，不再額外下載一次。
+            try{allCities=applyCloudSnapshot(payload.new);failures=0;rebuildCities();showSourceStatus();}
+            catch{void refresh(true);}
+          })
           .subscribe(state=>{
-            if (stopped) return;
+            if (stopped || generation!==realtimeGeneration) return;
             realtimeReady = state === 'SUBSCRIBED';
-            if (realtimeReady) refresh();
+            if (realtimeReady) refresh(true);
             else if (['CHANNEL_ERROR','TIMED_OUT','CLOSED'].includes(state)) setConnection('雲端即時通知中斷，改用自動補查',true);
           });
       } catch {realtimeReady=false;setConnection('即時通知尚未連上，使用自動補查',true);}
@@ -497,11 +523,11 @@ async function refresh(){
     socket.onerror = () => { realtimeReady = false; setConnection('網站與後端連線中斷，自動重連中', true); };
   }
 
-  // 即時事件收到就更新；未啟用 Realtime 時每秒補查，失敗時逐步退避。
+  // 備援查詢只先讀取小型版本／狀態；背景分頁不下載。
   async function poll(){
     if (stopped) return;
-    await refresh();
-    if (!stopped) reconnect = setTimeout(poll, realtimeReady ? 60000 : Math.min(30000, 1000 * 2 ** Math.min(failures, 5)));
+    if(!document.hidden)await refresh(true);
+    if (!stopped) reconnect = setTimeout(poll, realtimeReady ? 60000 : Math.min(120000, 30000 * 2 ** Math.min(failures, 2)));
   }
 
 async function loadHistoryCloud(date){
@@ -573,8 +599,11 @@ if(window.RFRoutePlanner)routePlanner=new window.RFRoutePlanner({width:CONFIG.wi
 if(window.RFMapFeatures)mapFeatures=new window.RFMapFeatures({width:CONFIG.width,height:CONFIG.height,getCities:()=>mapCities().filter(hasPosition),getLive:()=>allCities,focusCity,onChange:()=>{listSignature="";detailSignature="";renderBattleList();updateDetail();showSourceStatus();requestDraw();},loadCloud:loadHistoryCloud,beforePanel:()=>{$("siteMenu").close();routeEditor?.close();routePlanner?.close();},openMenu:()=>$("menuToggle").click()});
 loadBackground();loadRoutes();
 addEventListener("resize",resize);resize();fit();loadCatalog();
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh();});
-addEventListener("pagehide",()=>{stopped=true;realtimeReady=false;clearTimeout(reconnect);if(useSupabase){if(socket)supabaseClient?.removeChannel(socket);}else socket?.close();});
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden)disconnectRealtime();
+ else if(!stopped&&!configError){connectRealtime();void refresh(true);}
+});
+addEventListener("pagehide",()=>{stopped=true;clearTimeout(reconnect);disconnectRealtime();});
 addEventListener("pageshow",event=>{if(event.persisted&&!configError){stopped=false;connectRealtime();poll();}});
 setInterval(()=>{if(!document.hidden&&!stopped){mapFeatures?.capture(allCities.filter(c=>catalog.some(base=>String(base.city_id)===String(c.city_id))),!liveStale());mapFeatures?.renderRanks();renderBattleList();updateDetail();requestDraw();if(sourceStatus&&!failures)showSourceStatus();}},1000);
 setInterval(()=>{if(!document.hidden&&!stopped&&cities.some(activeBattle))requestDraw();},250);
