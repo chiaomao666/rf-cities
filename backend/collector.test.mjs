@@ -3,6 +3,35 @@ import assert from 'node:assert/strict';
 import {CityState} from './model.mjs';
 import {Collector} from './collector.mjs';
 
+test('握手失敗後重新登入一次，再以新 token 連線',async()=>{
+  let calls=0;
+  const c=new Collector({state:new CityState(),token:'old',userId:'42',Socket,
+    refreshToken:async()=>{calls++;return 'new-token';}});
+  try {
+    c.start();const old=Socket.last;old.emit('error');old.emit('error');
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(calls,1);assert.notEqual(Socket.last,old);
+    assert.equal(new URL(Socket.last.url).searchParams.get('userToken'),'new-token');
+    assert(c.status.login.lastSuccess);
+  } finally {c.stop();}
+});
+test('已知網路錯誤不重新登入',()=>{
+  let calls=0;
+  const c=new Collector({state:new CityState(),token:'old',userId:'42',Socket,refreshToken:async()=>{calls++;return 'new';}});
+  try {
+    c.start();Socket.last.listeners.error({error:{cause:{code:'ENOTFOUND'}}});
+    assert.equal(calls,0);assert.equal(c.status.state,'reconnecting');
+  } finally {c.stop();}
+});
+test('登入尚未完成就停止，不再建立連線',async()=>{
+  let resolveLogin;
+  const c=new Collector({state:new CityState(),userId:'42',Socket,
+    refreshToken:()=>new Promise(resolve=>{resolveLogin=resolve;})});
+  c.start();const socket=Socket.last;c.stop();resolveLogin('new-token');
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(Socket.last,socket);assert.equal(c.reconnect,undefined);
+});
+
 class Socket {
   static last;
   constructor(url) {this.url=url;this.listeners={};this.sent=[];this.readyState=1;Socket.last=this;}

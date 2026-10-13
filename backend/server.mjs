@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {CityState} from './model.mjs';
 import {Collector} from './collector.mjs';
+import {createGameLogin} from './login.mjs';
 import {SupabasePublisher} from './publisher.mjs';
 
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -13,6 +14,7 @@ function snapshot() { return {cities:state.rows({includeInactive:true}),status:{
 const publisher=new SupabasePublisher({url:process.env.SUPABASE_URL,key:process.env.SUPABASE_WRITE_KEY,getSnapshot:snapshot});
 function broadcast() { publisher.request();for (const res of clients) res.write('event: change\ndata: {}\n\n'); }
 collector=new Collector({state,token:process.env.RF_USER_TOKEN,userId:process.env.RF_USER_ID,
+  refreshToken:createGameLogin({env:process.env}),
   unionId:process.env.RF_UNION_ID,
   locale:process.env.RF_LOCALE || 'zh_TW',url:process.env.RF_SOCKET_URL || 'wss://api.komisureiya.com/socket',onChange:broadcast});
 const server=http.createServer(async (req,res)=>{

@@ -67,6 +67,14 @@ curl -s http://127.0.0.1:8787/api/status
 發布 401/403 檢查私密金鑰；404 檢查同一專案 SQL 是否已執行。
 遊戲登入失效時更新本人有效 RF_USER_ID／RF_USER_TOKEN 再重啟。
 
+### 自動重新登入
+
+在 Oracle `/home/opc/rf-cities/.env` 設定同一採集帳號的 `RF_LOGIN_EMAIL`、`RF_LOGIN_PASSWORD`，並保留正確的 `RF_USER_ID`。可選 `RF_APP_VERSION=2.28`。帳密不可貼進聊天、放到前端、提交 Git 或寫進日誌。確保 `.env` 權限為 600，更新後重啟 `rf-cities`。
+
+未設定帳密時沿用手動 token 模式。設定完成後，缺少 token、WebSocket 握手失敗或本人玩家頻道訂閱拒絕時會重新登入，僅接受回傳玩家 ID 與 RF_USER_ID 相同的 token。新 token 僅留在程序記憶體，不覆寫 .env；程序重啟後若舊 token 失效會再次登入。公開 `/api/status` 的 `login.enabled` 顯示是否啟用，`login.lastSuccess` 顯示最近一次自動登入成功時間，不含帳密或 token。
+
+登入成功及失敗均至少冷卻十五分鐘，429 尊重更長的 Retry-After；DNS、TLS 等明確網路錯誤只重連，不登入。登入 HTTP 請求十二秒逾時。未成功時每分鐘檢查重試機會，但冷卻期間不發送登入請求。此功能不能繞過官方封鎖、驗證挑戰或帳號權限限制。
+
 ## 4. GitHub Pages
 
 將程式、HTML 與公開 monitor-config.js 提交推送至 rf-cities 倉庫。

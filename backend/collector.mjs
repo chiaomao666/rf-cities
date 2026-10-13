@@ -1,13 +1,14 @@
 // Phoenix v2 JSON 格式：[join_ref, ref, topic, event, payload]。
 // 只讀本人頻道與明確設定、伺服器允許的本人聯盟；不參戰、不寫入遊戲。
 export class Collector {
-  constructor({state, token, userId, unionId, locale='zh_TW', url='wss://api.komisureiya.com/socket', onChange=()=>{}, Socket=globalThis.WebSocket}) {
-    Object.assign(this,{state,token,userId,locale,url,onChange,Socket});
+  constructor({state, token, userId, unionId, locale='zh_TW', url='wss://api.komisureiya.com/socket', onChange=()=>{}, Socket=globalThis.WebSocket, refreshToken=null}) {
+    Object.assign(this,{state,token,userId,locale,url,onChange,Socket,refreshToken});
     this.status = {state:'waiting_credentials',connected:false,lastMessage:null,lastSnapshot:null,error:null,transportCode:null};
     this.ref=0; this.pending=new Map(); this.joins=new Map(); this.stopped=false; this.retry=0; this.closing=new WeakSet();
     this.unionTopic=/^[1-9]\d*$/.test(String(unionId||''))?`union:${unionId}`:null;
     this.battleQueries=new Map();this.battleDenied=false;
     this.status.battleDetails={state:this.unionTopic?'waiting':'disabled',lastUpdated:null};
+    this.status.login={enabled:!!refreshToken,lastSuccess:null};
   }
   notify() { this.onChange(); }
   close(socket=this.socket) {
@@ -16,6 +17,8 @@ export class Collector {
     socket.close();
   }
   start() {
+    if(this.stopped)return;
+    if(!this.token && this.refreshToken){void this.recoverLogin();return;}
     if (!this.token || !/^\d+$/.test(String(this.userId || ''))) { this.notify(); return; }
     this.status.state='connecting'; this.status.error=null; this.notify();
     const url = new URL(this.url);
@@ -23,13 +26,17 @@ export class Collector {
     url.pathname=url.pathname.replace(/\/$/,'')+'/websocket';
     url.searchParams.set('vsn','2.0.0'); url.searchParams.set('userToken',this.token); url.searchParams.set('locale',this.locale);
     const socket = this.socket = new this.Socket(url.toString());
-    let closed=false;
+    let closed=false, loginRequired=false;
     const finish=()=>{
       if (closed || this.socket!==socket) return;
       closed=true;
       clearInterval(this.heartbeat); clearInterval(this.snapshotTimer); clearInterval(this.battleTimer); clearTimeout(this.unionJoinTimer); clearTimeout(this.joinTimer);
       this.pending.clear(); this.joins.clear(); this.heartbeatRef=null; this.buffer=null;
       this.status.connected=false;
+      if(!this.stopped && loginRequired && this.refreshToken) {
+        void this.recoverLogin();
+        return;
+      }
       if (!this.stopped && this.status.state!=='auth_error') {
         this.status.state='reconnecting';
         this.reconnect=setTimeout(()=>this.start(),Math.min(60000,1000*2**Math.min(this.retry++,6)));
@@ -60,6 +67,9 @@ export class Collector {
         'ERR_TLS_CERT_ALTNAME_INVALID','UND_ERR_CONNECT_TIMEOUT']);
       const code=e.error?.cause?.code || e.error?.code;
       this.status.transportCode=codes.has(code)?code:'WEBSOCKET_CONNECTION_FAILED';
+      // Node 原生 WebSocket 隱藏握手 HTTP 狀態；一般握手失敗可嘗試一次
+      // 受冷卻限制的登入。已知 DNS／TLS／網路錯誤只重連，不重新登入。
+      loginRequired=this.status.transportCode==='WEBSOCKET_CONNECTION_FAILED';
       this.status.error='遊戲連線失敗，請檢查網路與登入設定';
       finish();
       if (socket.readyState<2) this.close(socket);
@@ -119,8 +129,12 @@ export class Collector {
         this.notify();return;
       }
       if (payload?.status!=='ok') {
-        // 拒絕訂閱就停下，不嘗試猜 token／其他玩家頻道或繞過資格。
+        // 僅允許重新登入本人帳號；其他拒絕停下，不猜其他頻道或繞過資格。
         this.status.state='auth_error';this.status.error='遊戲拒絕訂閱或讀取；請確認採集帳號的登入與權限';
+        // 僅本人頻道的登入拒絕可更新憑證，不嘗試其他玩家／聯盟。
+        if(request.kind==='join' && topic===`player:${this.userId}` && this.refreshToken) {
+          this.close();void this.recoverLogin();return;
+        }
         this.close(); this.notify(); return;
       }
       if (request.kind==='join') {
@@ -148,6 +162,22 @@ export class Collector {
       if(topic===this.unionTopic){this.battleDenied=true;clearInterval(this.battleTimer);this.joins.delete(topic);this.status.battleDetails.state='denied';this.notify();}
       else this.close();
     }
+  }
+  async recoverLogin() {
+    if(this.stopped || this.recovering || !this.refreshToken)return;
+    this.recovering=true;clearTimeout(this.reconnect);
+    this.status.connected=false;this.status.state='reconnecting';this.status.error='正在自動重新登入遊戲';this.notify();
+    try {
+      const token=await this.refreshToken();
+      if(this.stopped)return;
+      this.token=token;this.status.login.lastSuccess=new Date().toISOString();
+      this.status.transportCode=null;this.retry=0;
+      this.start();
+    } catch {
+      if(this.stopped)return;
+      this.status.state='reconnecting';this.status.error='自動登入尚未成功，請檢查主機登入設定；稍後重試';this.notify();
+      this.reconnect=setTimeout(()=>{void this.recoverLogin();},60000);
+    } finally {this.recovering=false;}
   }
   stop() { this.stopped=true;clearTimeout(this.reconnect);this.close(); }
 }
